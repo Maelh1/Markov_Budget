@@ -35,7 +35,7 @@ for i in $(seq 1 $NUM_GRAPHS); do
     "$AD_PATH" <<EOF
 connect
 setdomain INSTANCE${i}.LOCAL
-setparams adsimulator_config_${i}.json
+setparams ./Dataset/adsimulator_config_${i}.json
 generate
 exit
 EOF
