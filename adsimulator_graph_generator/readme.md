@@ -1,50 +1,38 @@
 # Active Directory Graph Dataset Generator
 
-The goal is to exploit the already existing ad simulator to generate custom graph.
-To do so there is special steps : generate, export, and post-process realistic Active Directory (AD) attack graphs. It generate a dataset suitable for machine learning, graph neural networks (GNNs), and random walk simulations.
+The goal of this repository is to leverage the existing `adsimulator` to generate custom, randomized Active Directory (AD) networks and transform them into standardized datasets. 
+
+This pipeline handles the generation, export, and advanced post-processing of AD attack graphs. It extracts the relevant attack paths, runs defense simulations, and structures the output into a strict machine-learning-ready JSON format suitable for Operations Research (OR), Graph Neural Networks (GNNs), and AI training and similar to reliability dataset.
 
 ## Pipeline Overview
 
-The pipeline consists of three main components that work together to create a varied dataset of Active Directory environments:
+The pipeline consists of modular components that work together to automate dataset creation:
 
-1. **`generate_configs.py`** (Configuration Randomizer) for adsimulator
-2. **`test.sh`** (Bash Orchestrator) Use to generate
-3. **`process_graph.py`** (Graph Post-Processor) -> convert the jsonl into npy cleaned graph
+1. **Configuration Randomizer** (`generate_configs.py`): Creates unique AD setups.
+2. **Bash Orchestrator** (`generate.sh`): Manages the database, runs the simulation, and exports the raw graph.
+3. **Graph Post-Processor & Simulator** (`process_graph.py`): Cleans the graph, extracts attack paths, simulates optimal defenses via Monte Carlo, and formats the dataset.
+4. **Tutorial.ipynb** let 
 
 ## File Descriptions
 
 ### 1. `generate_configs.py`
-This Python script is responsible for generating dynamic configuration files for `adsimulator`. 
-* **Purpose:** Ensures that every generated graph represents a unique Active Directory environment.
-* **Functionality:** It randomizes some AD properties (some can be add later) such as the number of users, computers, RDP percentages, PSRemote percentages, and ACL (Access Control List) misconfiguration probabilities.
-* **Output:** Produces JSON configuration files (e.g., `adsimulator_config_1.json`) that can be passed to `adsimulator`'s requirements.
+This script generates dynamic configuration files for `adsimulator`. 
+* **Purpose:** Ensures every generated graph represents a unique Active Directory environment to prevent model overfitting.
+* **Functionality:** Randomizes core AD parameters such as the number of users, computers, RDP percentages, PSRemote percentages, and ACL misconfiguration probabilities.
 
-### 2. `test.sh`
-The central script that make the entire pipeline.
-* **Purpose:** Automates the end-to-end generation loop.
-* **Functionality:** * Calls `generate_configs.py` to create a new simulation profile.
-  * Restarts the `neo4j` service to clear prior state and waits for the port (7687) to come online (I add trouble before as if not awake it doesn't work), Gemini gave me this work around.
-  * Feeds the generated configuration into `adsimulator` using the `setparams` and `generate` commands via a prompt block.
-  * Uses `cypher-shell` to trigger the APOC plugin to export the entire Neo4j graph into a JSONL format (it has been a bit a nightmare, to do this part maybe it's easier with the normal export command but i didn't achieve to make it works due to permission issue with my linux setup).
-  * Hands the exported graph over to the Python post-processor.
+### 2. `generate.sh`
+The central script that coordinates the entire generation loop.
+* **Purpose:** Automates the end-to-end pipeline.
+* **Functionality:** * Calls `generate_configs.py`.
+  * Wipes the Neo4j database state and restarts the backend.
+  * Injects the dynamic configuration into `adsimulator`.
+  * Exports the simulated raw graph using Cypher shell.
+  * Triggers the Python post-processor to finalize the output.
 
 ### 3. `process_graph.py`
-The data extraction and standardization engine.
-* **Purpose:** Converts the raw Neo4j JSONL export into structured, machine-learning-ready matrices.
+The core data extraction, simulation, and standardization engine.
+* **Purpose:** Converts the raw Neo4j export into a strictly formatted dataset and generates ground-truth labels for AI training.
 * **Functionality:**
-  * **Standardization:** Parses the Neo4j output and loads it into a standard `NetworkX` Directed Graph (`DiGraph`). By using directed edges, it inherently preserves hierarchical "MemberOf" group properties without creating looping logic.
-  * **Pathfinding:** Identifies source nodes (Compromised/Owned users) and target nodes (Domain Computers). It then calculates the shortest acyclic paths (preventing infinite circles/loops) between them.
-  * **Feature Extraction:** Extracts node features (e.g., IsComputer, IsUser, IsGroup, IsOwned) into vector format.
-* **Output:** Generates three `.npy` (NumPy) files per graph instance:
-  * `*_adj.npy`: The Adjacency matrix of the graph.
-  * `*_feat.npy`: The node feature matrix.
-  * `*_walks.npy`: An array of padded, cycle-free logical paths (random walks) traversing the graph.
-
-## Prerequisites
-
-Ensure you have the following installed and configured:
-* **Neo4j** (with APOC plugin installed and file export enabled in `apoc.conf`)
-* **adsimulator** (accessible via the path defined in `test.sh`)
-* **Python 3** with the following libraries:
-  ```bash
-  pip install networkx numpy
+  * **Attack Subgraph Extraction:** Uses pathfinding (BFS) to isolate only the relevant nodes and edges that form valid attack paths between compromised sources and target terminals, eliminating graph noise.
+  * **Monte Carlo Simulation:** Runs a probabilistic simulation based on a transition matrix to find the optimal defense budget allocation (`y`) that minimizes the attacker's success rate (`J_star`).
+  * **Feature & Class Extraction:** Extracts node properties into a

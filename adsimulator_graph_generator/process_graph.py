@@ -4,6 +4,7 @@ import numpy as np
 import os
 import sys
 import random
+from datetime import datetime
 
 REMEDIATION_EFFORT = {
     'HasSession': 1, 'CanRDP': 3, 'CanPSRemote': 3, 'ExecuteDCOM': 3,
@@ -26,228 +27,171 @@ def load_jsonl(filepath):
 
 def extract_attack_subgraph(G, source_nodes, target_nodes, max_hops=8):
     """
-    Uses Bidirectional BFS to mathematically guarantee extraction of 
-    EVERY node and edge that participates in a path from a source to a target 
-    within the max_hops limit. 
+    Extrait le sous-graphe des chemins possibles entre les sources et les cibles.
     """
     valid_nodes = set()
-    
-    # 1. Forward BFS: Find shortest distances from ANY source to all nodes
-    dist_from_sources = {}
     for s in source_nodes:
-        # Get distances from this specific source (up to max_hops)
-        lengths = nx.single_source_shortest_path_length(G, s, cutoff=max_hops)
-        for node, d in lengths.items():
-            # Keep the shortest distance found so far from any source
-            if node not in dist_from_sources or d < dist_from_sources[node]:
-                dist_from_sources[node] = d
-                
-    # 2. Backward BFS: Find shortest distances from all nodes to ANY target
-    G_rev = G.reverse(copy=False)
-    dist_to_targets = {}
-    for t in target_nodes:
-        # Get distances from this specific target backwards (up to max_hops)
-        lengths = nx.single_source_shortest_path_length(G_rev, t, cutoff=max_hops)
-        for node, d in lengths.items():
-            # Keep the shortest distance found so far to any target
-            if node not in dist_to_targets or d < dist_to_targets[node]:
-                dist_to_targets[node] = d
-                
-    # 3. Intersection: If Distance(Source -> Node) + Distance(Node -> Target) <= max_hops, 
-    # it is mathematically part of the attack path.
-    for node, d_S in dist_from_sources.items():
-        if node in dist_to_targets:
-            d_T = dist_to_targets[node]
-            if d_S + d_T <= max_hops:
+        # Parcours BFS limité à max_hops pour trouver les chemins vers les terminaux
+        paths = nx.single_source_shortest_path_length(G, s, cutoff=max_hops)
+        for node in paths:
+            if nx.has_path(G, node, target_nodes[0]): # Vérification basique de connectivité vers une cible
                 valid_nodes.add(node)
                 
-    # 4. Extract the perfect subgraph
+    # On garde toujours au moins nos sources et cibles
+    valid_nodes.update(source_nodes)
+    valid_nodes.update(target_nodes)
+    
     return G.subgraph(valid_nodes).copy()
 
-def process_and_save(jsonl_path, out_prefix):
-    nodes, edges = load_jsonl(jsonl_path)
-    out_dir = f"{out_prefix}_export"
-    os.makedirs(out_dir, exist_ok=True)
-    base_name = os.path.basename(out_prefix)
-    save_prefix = os.path.join(out_dir, base_name)
-    
-    # FIX: Must be a DiGraph for AD attack paths
-    G = nx.DiGraph()
-    for n in nodes:
-        node_id = str(n['id'])
-        props = n.get('properties', {})
-        labels = n.get('labels', [])
-        G.add_node(node_id, labels=labels, **props)
-        
-    for e in edges:
-        G.add_edge(str(e['start']['id']), str(e['end']['id']), type=e['label'], **e.get('properties', {}))
-    
-    nodes_list = list(G.nodes())
-    node_to_idx = {n: i for i, n in enumerate(nodes_list)}
-    
-    node_features = np.zeros((len(nodes_list), 7))
-    for i, n in enumerate(nodes_list):
-        d = G.nodes[n]
-        lbls = d.get('labels', [])
-        node_features[i, 0] = 1 if 'Computer' in lbls else 0
-        node_features[i, 1] = 1 if 'User' in lbls else 0
-        node_features[i, 2] = 1 if 'Group' in lbls else 0
-        node_features[i, 3] = 1 if d.get('owned') == True else 0
-        node_features[i, 4] = 1 if d.get('exploitable') == True else 0
-        node_features[i, 5] = 1 if d.get('highvalue') == True else 0
-        node_features[i, 6] = 1 if d.get('admincount') == True else 0
-
-    edge_types_unique = list(set(e['label'] for e in edges))
-    edge_type_to_id = {lbl: i for i, lbl in enumerate(edge_types_unique)}
-    
-    edge_index = np.zeros((2, len(edges)), dtype=np.int64)
-    edge_types = np.zeros((len(edges),), dtype=np.int64)
-    edge_efforts = np.zeros((len(edges),), dtype=np.float32)
-    edge_is_acl = np.zeros((len(edges),), dtype=np.int64)
-    
-    for i, e in enumerate(edges):
-        src_idx = node_to_idx[str(e['start']['id'])]
-        dst_idx = node_to_idx[str(e['end']['id'])]
-        lbl = e['label']
-        props = e.get('properties', {})
-        
-        edge_index[0, i] = src_idx
-        edge_index[1, i] = dst_idx
-        edge_types[i] = edge_type_to_id[lbl]
-        edge_efforts[i] = REMEDIATION_EFFORT.get(lbl, 5)
-        edge_is_acl[i] = 1 if props.get('isacl') == True else 0
-
-    corrupt_nodes = [n for n, d in G.nodes(data=True) if d.get('owned') == True or 'Compromised' in d.get('labels', [])]
-    domain = [n for n, d in G.nodes(data=True) if 'Domain' in d.get('labels', [])]
-
-    print(f"[*] Extracting mathematical attack surface between {len(corrupt_nodes)} sources and {len(domain)} targets (Max Depth: 8)...")
-    
-    attack_subgraph = extract_attack_subgraph(G, corrupt_nodes, domain, max_hops=8)
-    
-    if attack_subgraph.number_of_nodes() == 0:
-        print("[!] No paths exist between sources and targets within 8 hops.")
-    else:
-        print(f"[+] Attack Subgraph extracted perfectly!")
-        
-    print(f"[+] Attack Subgraph size: {attack_subgraph.number_of_nodes()} nodes, {attack_subgraph.number_of_edges()} edges")
-    print(f"[+] Attack Subgraph size: {attack_subgraph.number_of_nodes()} nodes, {attack_subgraph.number_of_edges()} edges")
-    
-    # FIX: Ensure subgraph files save to the correct subfolder (save_prefix)
-    subgraph_nodes = np.array([node_to_idx[n] for n in attack_subgraph.nodes()], dtype=np.int64)
-    np.save(f"{save_prefix}_subgraph_nodes.npy", subgraph_nodes)
-    
-    subgraph_edges = np.array([[node_to_idx[u], node_to_idx[v]] for u, v in attack_subgraph.edges()], dtype=np.int64).T
-    if subgraph_edges.size == 0:
-        subgraph_edges = np.empty((2, 0), dtype=np.int64) # Handle empty edge case cleanly
-    np.save(f"{save_prefix}_subgraph_edges.npy", subgraph_edges)
-    
-    np.save(f"{save_prefix}_node_features.npy", node_features)
-    np.save(f"{save_prefix}_edge_index.npy", edge_index)
-    np.save(f"{save_prefix}_edge_types.npy", edge_types)
-    np.save(f"{save_prefix}_edge_efforts.npy", edge_efforts)
-    np.save(f"{save_prefix}_edge_isacl.npy", edge_is_acl)
-    
-    with open(f"{save_prefix}_edge_mapping.json", "w") as f:
-        json.dump(edge_type_to_id, f, indent=4)
-        
-    return save_prefix
-
-# =======================================================
-# NEW: Matrix-based Subgraph Monte Carlo Logic
-# =======================================================
-
-
-
 def build_transition_matrix(edges, num_nodes):
+    """Construit la matrice de transition probabiliste T."""
     T = np.zeros((num_nodes, num_nodes))
-    if edges.size == 0: return T
+    if not edges: return T
     
-    sources, targets = edges[0], edges[1]
+    sources = [e[0] for e in edges]
+    targets = [e[1] for e in edges]
+    
     out_degrees = np.bincount(sources, minlength=num_nodes)
     out_degrees[out_degrees == 0] = 1.0 
+    
     T[sources, targets] = 1.0 / out_degrees[sources]
     return T
 
-def generate_subgraph_allocation(subgraph_nodes, num_nodes, budget):
-    num_sub_nodes = len(subgraph_nodes)
-    alpha = np.ones(num_sub_nodes) * 0.1 
-    raw_alloc = np.random.dirichlet(alpha) * budget
-    raw_alloc = np.clip(raw_alloc, 0.0, 1.0)
-    
-    full_alloc = np.zeros(num_nodes)
-    full_alloc[subgraph_nodes] = raw_alloc
-    return full_alloc
+def generate_subgraph_allocation(num_nodes, target_budget):
+    """Génère une allocation aléatoire via distribution de Dirichlet."""
+    alpha = np.ones(num_nodes) * 0.1 
+    raw_alloc = np.random.dirichlet(alpha) * target_budget
+    return np.clip(raw_alloc, 0.0, 1.0)
 
-def evaluate_subgraph_risk(budget_allocation, T, source_nodes, target_nodes, max_hops=8):
-    num_nodes = len(budget_allocation)
-    state = np.zeros(num_nodes)
+def evaluate_subgraph_risk(alloc, T, source_nodes, target_nodes, iterations=10):
+    """Évaluation du risque (probabilité d'atteindre les cibles) en fonction des défenses."""
+    state = np.zeros(len(alloc))
     state[source_nodes] = 1.0
-    survival_rates = 1.0 - budget_allocation
     
-    total_risk_reaching_targets = 0.0
-    for _ in range(max_hops):
-        state = state @ T
-        state = state * survival_rates
-        total_risk_reaching_targets += np.sum(state[target_nodes])
+    # L'allocation réduit la probabilité de transition
+    T_defended = T.copy()
+    for i in range(len(alloc)):
+        T_defended[:, i] *= max(0, 1.0 - alloc[i])
         
-    return total_risk_reaching_targets
-
-def run_monte_carlo(prefix, iterations=5000, target_budget=3.0):
-    nodes_file = f"{prefix}_subgraph_nodes.npy"
-    edges_file = f"{prefix}_subgraph_edges.npy"
-    feat_file = f"{prefix}_node_features.npy"
-    
-    if not os.path.exists(nodes_file) or not os.path.exists(edges_file):
-        return "Subgraph files missing. Simulation aborted."
+    for _ in range(iterations):
+        state = state @ T_defended
         
-    features = np.load(feat_file)
-    subgraph_nodes = np.load(nodes_file)
-    subgraph_edges = np.load(edges_file)
-    num_nodes = features.shape[0]
-    
-    if len(subgraph_nodes) == 0:
-        return "No valid attack paths found in subgraph."
+    return float(np.sum(state[target_nodes]))
 
-    # Identify sources and targets
-    in_degrees = np.bincount(subgraph_edges[1], minlength=num_nodes) if subgraph_edges.size > 0 else np.zeros(num_nodes)
-    out_degrees = np.bincount(subgraph_edges[0], minlength=num_nodes) if subgraph_edges.size > 0 else np.zeros(num_nodes)
+def process_and_save_dataset(jsonl_path, out_json_path):
+    print(f"[*] Processing {jsonl_path}...")
+    nodes_data, edges_data = load_jsonl(jsonl_path)
     
-    source_nodes = [n for n in subgraph_nodes if in_degrees[n] == 0]
-    target_nodes = [n for n in subgraph_nodes if out_degrees[n] == 0]
+    # 1. Construction du graphe global
+    G_full = nx.Graph()
+    for n in nodes_data:
+        node_id = str(n['id'])
+        G_full.add_node(node_id, labels=n.get('labels', []), **n.get('properties', {}))
+
+    for e in edges_data:
+        G_full.add_edge(str(e['start']['id']), str(e['end']['id']), type=e['label'], **e.get('properties', {}))
+
+    # 2. Identification Globale
+    full_nodes_list = list(G_full.nodes())
+    terminals_ids = [n for n in full_nodes_list if 'Domain' in G_full.nodes[n].get('labels', [])]
+    sources_ids = [n for n in full_nodes_list if G_full.nodes[n].get('owned') == True or 'Compromised' in G_full.nodes[n].get('labels', [])]
+        
+    # 3. Extraction du sous-graphe d'attaque pertinent
+    print("[*] Extraction du sous-graphe d'attaque...")
+    G = extract_attack_subgraph(G_full, sources_ids, terminals_ids, max_hops=8)
     
-    T = build_transition_matrix(subgraph_edges, num_nodes)
-    baseline_risk = evaluate_subgraph_risk(np.zeros(num_nodes), T, source_nodes, target_nodes)
+    nodes_list = list(G.nodes())
+    node_to_idx = {n: i for i, n in enumerate(nodes_list)}
+    num_nodes = len(nodes_list)
+
+    terminals = [node_to_idx[n] for n in terminals_ids if n in node_to_idx]
+    sources = [node_to_idx[n] for n in sources_ids if n in node_to_idx]
     
-    best_allocation = None
-    best_risk = float('inf')
+    # 4. Features & Classes
+    features = []
+    node_classes = []
+    for i, n in enumerate(nodes_list):
+        d = G.nodes[n]
+        lbls = d.get('labels', [])
+        node_classes.append(lbls) # Sauvegarde des classes de noeuds
+        is_computer = 1.0 if 'Computer' in lbls else 0.0
+        is_user = 1.0 if 'User' in lbls else 0.0
+        is_group = 1.0 if 'Group' in lbls else 0.0
+        is_compromised = 1.0 if d.get('Compromised') == True else 0.0
+        is_ou = 1.0 if d.get('OU') == True else 0.0
+        is_gpo = 1.0 if d.get('GPO') == True else 0.0
+        is_domain = 1.0 if d.get('Domain') == True else 0.0
+        features.append([is_computer, is_user, is_group, is_compromised, is_ou, is_gpo, is_domain])
+
+    edge_list = []
+    edge_classes = []
+    for u, v, data in G.edges(data=True):
+        edge_list.append([node_to_idx[u], node_to_idx[v]])
+        edge_classes.append(data.get('type', 'Unknown')) # Sauvegarde des classes d'arêtes
+
+    # 5. Simulation de Monte Carlo pour trouver y et J_star
+    target_budget = 5.0
+    mc_iterations = 1000
+    print(f"[*] Lancement Monte Carlo ({mc_iterations} itérations) pour l'allocation optimale...")
     
-    for i in range(1, iterations + 1):
-        current_alloc = generate_subgraph_allocation(subgraph_nodes, num_nodes, target_budget)
-        current_risk = evaluate_subgraph_risk(current_alloc, T, source_nodes, target_nodes)
+    T = build_transition_matrix(edge_list, num_nodes)
+    baseline_risk = evaluate_subgraph_risk(np.zeros(num_nodes), T, sources, terminals)
+    
+    best_allocation = np.zeros(num_nodes)
+    best_risk = baseline_risk
+    
+    for i in range(1, mc_iterations + 1):
+        current_alloc = generate_subgraph_allocation(num_nodes, target_budget)
+        current_risk = evaluate_subgraph_risk(current_alloc, T, sources, terminals)
         
         if current_risk < best_risk:
             best_risk = current_risk
             best_allocation = current_alloc
-            
-    result = f"Baseline Risk: {baseline_risk:.4f}\n"
-    result += f"Final Risk Score: {best_risk:.4f}\n\nTop Nodes to Harden:\n"
-    top_indices = np.argsort(best_allocation)[::-1][:10]
-    for rank, idx in enumerate(top_indices, 1):
-        if best_allocation[idx] > 0.01:
-            result += f"{rank}. Node {idx:03d} -> Allocate {best_allocation[idx]:.4f}\n"
-            
-    return result
+
+    print(f"[+] Risque initial : {baseline_risk:.4f} | Risque optimisé (J_star) : {best_risk:.4f}")
+
+    # 6. Construction de la structure JSON (avec ajout des classes)
+    instance = {
+      "topology_type": "adsimulator_graph",
+      "B": target_budget,
+      "H": 8,
+      "graph": {
+        "nodes": list(range(num_nodes)),
+        "edges": edge_list,
+        "node_classes": node_classes,
+        "edge_classes": edge_classes,
+        "is_directed": True
+      },
+      "x": features,
+      "y": best_allocation.tolist(),
+      "J_star": float(best_risk),
+      "terminals": terminals,
+      "repairable_nodes": [i for i in range(num_nodes) if i not in terminals],
+      "n_nodes": num_nodes,
+      "n_edges": len(edge_list)
+    }
+
+    dataset = {
+      "metadata": {
+        "generated_at": datetime.now().isoformat(),
+        "n_instances": 1,
+        "topology": "Active Directory"
+      },
+      "instances": [instance]
+    }
+
+    with open(out_json_path, 'w') as f:
+        json.dump(dataset, f, indent=2)
+    print(f"[+] Dataset JSON sauvegardé dans {out_json_path}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: python process_graph.py <input_jsonl> <output_prefix>")
         sys.exit(1)
         
-    input_json = sys.argv[1]
-    out_prefix = sys.argv[2]
+    input_jsonl = sys.argv[1]
+    output_prefix = sys.argv[2]
     
-    save_prefix = process_and_save(input_json, out_prefix)
+    out_json = f"{output_prefix}_structured.json"
     
-    print("\n--- Running Subgraph Monte Carlo Simulation ---")
-    res = run_monte_carlo(save_prefix, iterations=10000, target_budget=3.0)
-    print(res)
+    process_and_save_dataset(input_jsonl, out_json)
