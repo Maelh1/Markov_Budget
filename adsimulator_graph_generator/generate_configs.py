@@ -1,6 +1,7 @@
 import json
 import random
 import sys
+import os
 
 def generate_config(index):
     # Randomize core adsimulator properties for variet, keep it simple for the moment as i don't understand fully what are all the parameters and if they are usefull for us later on
@@ -30,6 +31,7 @@ def generate_config(index):
     config["ACLsProbability"]["AddMember"] += diff
 
     filename = f"./Dataset/config/adsimulator_config_{index}.json"
+    os.makedirs(f'./Dataset/config/', exist_ok=True)
     with open(filename, "w") as f:
         json.dump(config, f, indent=4)
         
