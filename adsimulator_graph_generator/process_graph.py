@@ -14,6 +14,63 @@ REMEDIATION_EFFORT = {
     'GenericAll': 8, 'AllExtendedRights': 8, 'MemberOf': 9, 'Trust': 10
 }
 
+
+def export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
+    node_classes, edge_classes, terminals, sources, 
+    best_allocation, best_risk, baseline_risk, target_budget, output_path
+):
+    """
+    Exports the subgraph topology, node-level attributes, and the 
+    Monte Carlo optimization results in a format for ML training.
+    """
+    num_nodes = len(nodes_list)
+    
+    unique_edge_types = sorted(list(set(edge_classes)))
+    edge_type_to_idx = {t: i for i, t in enumerate(unique_edge_types)}
+    edge_attr = [edge_type_to_idx[t] for t in edge_classes]
+
+    node_registry = {}
+    for i, node_id in enumerate(nodes_list):
+        full_data = G_full.nodes[node_id]
+        
+        node_registry[i] = {
+            "original_id": node_id,
+            "labels": node_classes[i],
+            "features_vector": features[i],
+            "is_terminal": i in terminals,
+            "is_source": i in sources,
+            "best_allocation_weight": float(best_allocation[i]),
+            "properties": {k: v for k, v in full_data.items() if k != 'labels'}
+        }
+
+    # 3. Create the JSON Object
+    export_data = {
+        "metadata": {
+            "nodes_count": num_nodes,
+            "edges_count": len(edge_list),
+            "budget_limit": float(target_budget),
+            "baseline_risk":baseline_risk,
+        },
+        "subgraph_topology": {
+            "edge_index": edge_list,
+            "edge_type_indices": edge_attr,
+            "edge_type_map": edge_type_to_idx,
+            "is_directed": True
+        },
+        "ml_targets": {
+            "y_best_alloc": best_allocation.tolist(),
+            "j_star_risk": float(best_risk),
+            "baseline_risk": float(baseline_risk)
+        },
+        "node_registry": node_registry
+    }
+
+    # 4. Save to file
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(export_data, f, indent=4, ensure_ascii=False)
+    
+    print(f"[+] Export complete: {output_path}")
+
 def load_jsonl(filepath):
     nodes, edges = [], []
     with open(filepath, 'r') as f:
@@ -178,39 +235,9 @@ def process_and_save_dataset(jsonl_path, out_json_path):
 
     print(f"[+] Risque initial : {baseline_risk:.4f} | Risque optimisé (J_star) : {best_risk:.4f}")
 
-    # 6. Construction de la structure JSON (avec ajout des classes)
-    instance = {
-      "topology_type": "adsimulator_graph",
-      "B": target_budget,
-      "H": 8,
-      "graph": {
-        "nodes": list(range(num_nodes)),
-        "edges": edge_list,
-        "node_classes": node_classes,
-        "edge_classes": edge_classes,
-        "is_directed": True
-      },
-      "x": features,
-      "y": best_allocation.tolist(),
-      "J_star": float(best_risk),
-      "terminals": terminals,
-      "repairable_nodes": [i for i in range(num_nodes) if i not in terminals],
-      "n_nodes": num_nodes,
-      "n_edges": len(edge_list)
-    }
-
-    dataset = {
-      "metadata": {
-        "generated_at": datetime.now().isoformat(),
-        "n_instances": 1,
-        "topology": "Active Directory"
-      },
-      "instances": [instance]
-    }
-
-    with open(out_json_path, 'w') as f:
-        json.dump(dataset, f, indent=2)
-    print(f"[+] Dataset JSON sauvegardé dans {out_json_path}")
+    export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
+        node_classes, edge_classes, terminals, sources, 
+        best_allocation, best_risk, baseline_risk, target_budget, out_json_path)
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
