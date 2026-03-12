@@ -238,15 +238,3 @@ def process_and_save_dataset(jsonl_path, out_json_path):
     export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
         node_classes, edge_classes, terminals, sources, 
         best_allocation, best_risk, baseline_risk, target_budget, out_json_path)
-
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python process_graph.py <input_jsonl> <output_prefix>")
-        sys.exit(1)
-        
-    input_jsonl = sys.argv[1]
-    output_prefix = sys.argv[2]
-    
-    out_json = f"{output_prefix}_structured.json"
-    
-    process_and_save_dataset(input_jsonl, out_json)

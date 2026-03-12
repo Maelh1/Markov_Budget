@@ -72,7 +72,7 @@ def run_pipeline(instance_id):
 
     full_graph_json = os.path.join(dataset_dir, f"graph_{instance_id}.json")
     if os.path.exists(full_graph_json):
-        process_and_save_dataset(full_graph_json, os.path.join(dataset_dir, f"graph_{instance_id}"))
+        process_and_save_dataset(full_graph_json, os.path.join(dataset_dir, f"graph_{instance_id}_structured.json"))
 
     print("[*] Arrêt de Neo4j...")
     subprocess.run(["./neo4j_local/bin/neo4j", "stop"], capture_output=True)
