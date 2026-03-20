@@ -1,11 +1,7 @@
 import json
 import networkx as nx
 import numpy as np
-import os
-import sys
-import random
 from random_best_alloc import *
-from datetime import datetime
 
 REMEDIATION_EFFORT = {
     'HasSession': 1, 'CanRDP': 3, 'CanPSRemote': 3, 'ExecuteDCOM': 3,

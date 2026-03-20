@@ -1,13 +1,9 @@
 # adsim_utils.py
 import os
-import json
-import random
 import time
 import socket
 import shutil
 import subprocess
-import networkx as nx
-import numpy as np
 from neo4j import GraphDatabase
 from generate_configs import generate_config
 from process_graph import *

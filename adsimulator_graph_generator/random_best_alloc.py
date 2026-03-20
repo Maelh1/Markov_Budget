@@ -1,8 +1,12 @@
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import json
+from matplotlib.patches import Patch
 
-def build_transition_matrix(edges, num_nodes):
+from typing import List, Tuple, Sequence
+
+def build_transition_matrix(edges : List[Tuple[int, int]], num_nodes: int) -> np.ndarray:
     """Builds the probabilistic transition matrix T."""
     T = np.zeros((num_nodes, num_nodes))
     if not edges: return T
@@ -16,13 +20,13 @@ def build_transition_matrix(edges, num_nodes):
     T[sources, targets] = 1.0 / out_degrees[sources]
     return T
 
-def generate_subgraph_allocation(num_nodes, target_budget):
+def generate_subgraph_allocation(num_nodes : int, target_budget: int): 
     """Generates a random allocation strictly respecting bounds and budget."""
     alpha = np.ones(num_nodes) * 0.5 
     raw_alloc = np.random.dirichlet(alpha) * target_budget
     return np.clip(raw_alloc, 0.0, 1.0)
 
-def mutate_allocation(alloc, target_budget, mutation_rate=0.1):
+def mutate_allocation(alloc : np.ndarray, target_budget : int, mutation_rate=0.1) -> np.ndarray:
     """
     Slightly mutates an existing allocation to search the local neighborhood.
     This behaves like a Hill Climbing / Simulated Annealing step.
@@ -38,7 +42,7 @@ def mutate_allocation(alloc, target_budget, mutation_rate=0.1):
         
     return np.clip(new_alloc, 0.0, 1.0)
 
-def evaluate_subgraph_risk(alloc, T, source_nodes, target_nodes, iterations=10):
+def evaluate_subgraph_risk(alloc : np.ndarray, T : np.ndarray, source_nodes : Sequence[int], target_nodes: Sequence[int], iterations=10):
     """Evaluates the probability of attackers reaching the target nodes."""
     state = np.zeros(len(alloc))
     state[source_nodes] = 1.0 / len(source_nodes) # Normalize initial state
@@ -55,7 +59,7 @@ def evaluate_subgraph_risk(alloc, T, source_nodes, target_nodes, iterations=10):
         
     return float(np.sum(state[target_nodes]))
 
-def find_best_alloc(num_nodes, baseline_risk, mc_iterations, target_budget, T, sources, terminals):
+def find_best_alloc(num_nodes : int, mc_iterations : int, target_budget : float, T, sources : List[int], terminals : List[int]):
     """
     Finds the best defensive allocation using an exploratory local search.
     Returns the best allocation, final risk, and the historical progression.
@@ -80,15 +84,6 @@ def find_best_alloc(num_nodes, baseline_risk, mc_iterations, target_budget, T, s
             
     return best_allocation, best_risk
 
-import json
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
-
-import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 
 def plot_single_attack_path(edges, num_nodes, source, target, allocation, node_registry=None, T=None):
     """
