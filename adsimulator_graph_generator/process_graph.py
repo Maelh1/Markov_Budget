@@ -2,6 +2,7 @@ import json
 import networkx as nx
 import numpy as np
 from random_best_alloc import *
+from typing import Union, Dict, Tuple
 
 REMEDIATION_EFFORT = {
     'HasSession': 1, 'CanRDP': 3, 'CanPSRemote': 3, 'ExecuteDCOM': 3,
@@ -11,10 +12,19 @@ REMEDIATION_EFFORT = {
 }
 
 
-def export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
-    node_classes, edge_classes, terminals, sources, 
-    best_allocation, best_risk, baseline_risk, target_budget, output_path
-):
+def export_complete_attack_instance(G_full : nx.DiGraph, 
+                                    nodes_list : Sequence[int], 
+                                    edge_list : Sequence[Tuple[int,int]],
+                                    features,
+                                    node_classes, 
+                                    edge_classes, 
+                                    terminals, 
+                                    sources, 
+                                    best_allocation, 
+                                    best_risk, 
+                                    baseline_risk, 
+                                    target_budget, 
+                                    output_path):
     """
     Exports the subgraph topology, node-level attributes, and the 
     Monte Carlo optimization results in a format for ML training.
@@ -67,7 +77,7 @@ def export_complete_attack_instance(G_full, nodes_list, edge_list, features,
     
     print(f"[+] Export complete: {output_path}")
 
-def load_jsonl(filepath):
+def load_jsonl(filepath : str) -> Union[Sequence[Dict], Sequence[Dict]]:
     nodes, edges = [], []
     with open(filepath, 'r') as f:
         for line in f:
@@ -79,7 +89,7 @@ def load_jsonl(filepath):
                 edges.append(data)
     return nodes, edges
 
-def find_viable_sources(G, terminals, max_hops=30):
+def find_viable_sources(G : nx.DiGraph, terminals: Sequence[int], max_hops : int = 30) -> Sequence[int]:
     """
     Identifie les nœuds (User/Computer) qui ont un chemin réel 
     vers les terminaux dans la limite de max_hops.
@@ -169,7 +179,7 @@ def build_graph(jsonl_path) -> nx.DiGraph:
             
     return G_full
 
-def get_domain_group(G):
+def get_domain_group(G : nx.DiGraph) -> Sequence[int]:
     full_nodes_list = list(G.nodes())
     terminals_ids = []
 
@@ -180,7 +190,13 @@ def get_domain_group(G):
             terminals_ids.append(n)
     return terminals_ids
 
-def process_and_save_dataset(jsonl_path, out_json_path):
+def process_and_save_dataset(jsonl_path : str, out_json_path: str):
+    """From the adsimulator Json Output it generated an instance of the problem in an appropriate format
+
+    Args:
+        jsonl_path (str): path of the jsonl file
+        out_json_path (str): path of the output structured file
+    """
     print(f"[*] Processing {jsonl_path}...")
     G_full = build_graph(jsonl_path)
     terminals_ids = get_domain_group(G_full)
