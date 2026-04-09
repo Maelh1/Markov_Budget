@@ -1,0 +1,4217 @@
+{
+    "metadata": {
+        "nodes_count": 75,
+        "edges_count": 330,
+        "budget_limit": 5.0,
+        "baseline_risk": 0.1530319817457916
+    },
+    "subgraph_topology": {
+        "edge_index": [
+            [
+                0,
+                24
+            ],
+            [
+                1,
+                24
+            ],
+            [
+                2,
+                3
+            ],
+            [
+                2,
+                25
+            ],
+            [
+                3,
+                21
+            ],
+            [
+                3,
+                69
+            ],
+            [
+                3,
+                57
+            ],
+            [
+                3,
+                59
+            ],
+            [
+                4,
+                24
+            ],
+            [
+                5,
+                32
+            ],
+            [
+                6,
+                61
+            ],
+            [
+                7,
+                24
+            ],
+            [
+                8,
+                29
+            ],
+            [
+                8,
+                39
+            ],
+            [
+                11,
+                57
+            ],
+            [
+                11,
+                30
+            ],
+            [
+                11,
+                59
+            ],
+            [
+                12,
+                55
+            ],
+            [
+                13,
+                18
+            ],
+            [
+                14,
+                65
+            ],
+            [
+                14,
+                43
+            ],
+            [
+                14,
+                35
+            ],
+            [
+                14,
+                10
+            ],
+            [
+                14,
+                20
+            ],
+            [
+                14,
+                36
+            ],
+            [
+                14,
+                47
+            ],
+            [
+                14,
+                24
+            ],
+            [
+                14,
+                9
+            ],
+            [
+                14,
+                54
+            ],
+            [
+                14,
+                46
+            ],
+            [
+                14,
+                19
+            ],
+            [
+                14,
+                53
+            ],
+            [
+                14,
+                73
+            ],
+            [
+                14,
+                38
+            ],
+            [
+                14,
+                12
+            ],
+            [
+                14,
+                66
+            ],
+            [
+                14,
+                71
+            ],
+            [
+                14,
+                67
+            ],
+            [
+                14,
+                45
+            ],
+            [
+                14,
+                64
+            ],
+            [
+                14,
+                23
+            ],
+            [
+                14,
+                17
+            ],
+            [
+                14,
+                68
+            ],
+            [
+                14,
+                42
+            ],
+            [
+                14,
+                72
+            ],
+            [
+                14,
+                41
+            ],
+            [
+                14,
+                13
+            ],
+            [
+                14,
+                52
+            ],
+            [
+                14,
+                49
+            ],
+            [
+                14,
+                28
+            ],
+            [
+                14,
+                70
+            ],
+            [
+                14,
+                8
+            ],
+            [
+                14,
+                61
+            ],
+            [
+                14,
+                69
+            ],
+            [
+                14,
+                30
+            ],
+            [
+                14,
+                21
+            ],
+            [
+                14,
+                57
+            ],
+            [
+                14,
+                15
+            ],
+            [
+                14,
+                59
+            ],
+            [
+                14,
+                34
+            ],
+            [
+                14,
+                31
+            ],
+            [
+                14,
+                1
+            ],
+            [
+                14,
+                51
+            ],
+            [
+                14,
+                44
+            ],
+            [
+                14,
+                40
+            ],
+            [
+                14,
+                33
+            ],
+            [
+                14,
+                0
+            ],
+            [
+                14,
+                7
+            ],
+            [
+                14,
+                48
+            ],
+            [
+                14,
+                4
+            ],
+            [
+                14,
+                58
+            ],
+            [
+                14,
+                5
+            ],
+            [
+                14,
+                25
+            ],
+            [
+                14,
+                37
+            ],
+            [
+                14,
+                22
+            ],
+            [
+                14,
+                63
+            ],
+            [
+                14,
+                32
+            ],
+            [
+                14,
+                60
+            ],
+            [
+                14,
+                3
+            ],
+            [
+                14,
+                2
+            ],
+            [
+                14,
+                27
+            ],
+            [
+                14,
+                6
+            ],
+            [
+                14,
+                55
+            ],
+            [
+                14,
+                11
+            ],
+            [
+                14,
+                26
+            ],
+            [
+                14,
+                29
+            ],
+            [
+                14,
+                56
+            ],
+            [
+                14,
+                62
+            ],
+            [
+                14,
+                39
+            ],
+            [
+                14,
+                18
+            ],
+            [
+                14,
+                74
+            ],
+            [
+                14,
+                16
+            ],
+            [
+                15,
+                73
+            ],
+            [
+                16,
+                34
+            ],
+            [
+                16,
+                31
+            ],
+            [
+                16,
+                1
+            ],
+            [
+                16,
+                51
+            ],
+            [
+                16,
+                44
+            ],
+            [
+                16,
+                40
+            ],
+            [
+                16,
+                33
+            ],
+            [
+                16,
+                0
+            ],
+            [
+                16,
+                7
+            ],
+            [
+                16,
+                48
+            ],
+            [
+                16,
+                4
+            ],
+            [
+                17,
+                55
+            ],
+            [
+                18,
+                5
+            ],
+            [
+                18,
+                53
+            ],
+            [
+                19,
+                47
+            ],
+            [
+                21,
+                58
+            ],
+            [
+                22,
+                5
+            ],
+            [
+                23,
+                55
+            ],
+            [
+                25,
+                57
+            ],
+            [
+                26,
+                21
+            ],
+            [
+                27,
+                21
+            ],
+            [
+                27,
+                15
+            ],
+            [
+                27,
+                61
+            ],
+            [
+                27,
+                57
+            ],
+            [
+                27,
+                69
+            ],
+            [
+                27,
+                59
+            ],
+            [
+                27,
+                30
+            ],
+            [
+                28,
+                55
+            ],
+            [
+                29,
+                69
+            ],
+            [
+                30,
+                53
+            ],
+            [
+                31,
+                24
+            ],
+            [
+                32,
+                21
+            ],
+            [
+                32,
+                59
+            ],
+            [
+                32,
+                69
+            ],
+            [
+                32,
+                15
+            ],
+            [
+                33,
+                24
+            ],
+            [
+                34,
+                24
+            ],
+            [
+                36,
+                9
+            ],
+            [
+                36,
+                61
+            ],
+            [
+                36,
+                69
+            ],
+            [
+                36,
+                30
+            ],
+            [
+                36,
+                21
+            ],
+            [
+                36,
+                57
+            ],
+            [
+                36,
+                15
+            ],
+            [
+                36,
+                59
+            ],
+            [
+                36,
+                58
+            ],
+            [
+                36,
+                5
+            ],
+            [
+                36,
+                25
+            ],
+            [
+                36,
+                37
+            ],
+            [
+                36,
+                22
+            ],
+            [
+                36,
+                63
+            ],
+            [
+                36,
+                32
+            ],
+            [
+                36,
+                60
+            ],
+            [
+                36,
+                3
+            ],
+            [
+                36,
+                2
+            ],
+            [
+                36,
+                27
+            ],
+            [
+                37,
+                59
+            ],
+            [
+                37,
+                61
+            ],
+            [
+                37,
+                15
+            ],
+            [
+                37,
+                30
+            ],
+            [
+                37,
+                69
+            ],
+            [
+                37,
+                57
+            ],
+            [
+                37,
+                21
+            ],
+            [
+                38,
+                47
+            ],
+            [
+                39,
+                46
+            ],
+            [
+                40,
+                24
+            ],
+            [
+                41,
+                56
+            ],
+            [
+                42,
+                39
+            ],
+            [
+                43,
+                65
+            ],
+            [
+                43,
+                35
+            ],
+            [
+                43,
+                10
+            ],
+            [
+                43,
+                20
+            ],
+            [
+                43,
+                36
+            ],
+            [
+                43,
+                14
+            ],
+            [
+                43,
+                47
+            ],
+            [
+                43,
+                24
+            ],
+            [
+                43,
+                9
+            ],
+            [
+                43,
+                54
+            ],
+            [
+                43,
+                46
+            ],
+            [
+                43,
+                19
+            ],
+            [
+                43,
+                58
+            ],
+            [
+                43,
+                53
+            ],
+            [
+                43,
+                73
+            ],
+            [
+                43,
+                38
+            ],
+            [
+                43,
+                5
+            ],
+            [
+                43,
+                61
+            ],
+            [
+                43,
+                69
+            ],
+            [
+                43,
+                30
+            ],
+            [
+                43,
+                21
+            ],
+            [
+                43,
+                57
+            ],
+            [
+                43,
+                15
+            ],
+            [
+                43,
+                59
+            ],
+            [
+                43,
+                25
+            ],
+            [
+                43,
+                37
+            ],
+            [
+                43,
+                22
+            ],
+            [
+                43,
+                63
+            ],
+            [
+                43,
+                32
+            ],
+            [
+                43,
+                60
+            ],
+            [
+                43,
+                3
+            ],
+            [
+                43,
+                2
+            ],
+            [
+                43,
+                27
+            ],
+            [
+                43,
+                6
+            ],
+            [
+                43,
+                55
+            ],
+            [
+                43,
+                11
+            ],
+            [
+                43,
+                26
+            ],
+            [
+                43,
+                29
+            ],
+            [
+                43,
+                56
+            ],
+            [
+                43,
+                62
+            ],
+            [
+                43,
+                39
+            ],
+            [
+                43,
+                18
+            ],
+            [
+                43,
+                74
+            ],
+            [
+                43,
+                16
+            ],
+            [
+                44,
+                24
+            ],
+            [
+                45,
+                74
+            ],
+            [
+                46,
+                47
+            ],
+            [
+                47,
+                65
+            ],
+            [
+                47,
+                34
+            ],
+            [
+                47,
+                31
+            ],
+            [
+                47,
+                1
+            ],
+            [
+                47,
+                51
+            ],
+            [
+                47,
+                44
+            ],
+            [
+                47,
+                40
+            ],
+            [
+                47,
+                33
+            ],
+            [
+                47,
+                0
+            ],
+            [
+                47,
+                7
+            ],
+            [
+                47,
+                48
+            ],
+            [
+                47,
+                4
+            ],
+            [
+                47,
+                61
+            ],
+            [
+                47,
+                69
+            ],
+            [
+                47,
+                30
+            ],
+            [
+                47,
+                21
+            ],
+            [
+                47,
+                57
+            ],
+            [
+                47,
+                15
+            ],
+            [
+                47,
+                59
+            ],
+            [
+                47,
+                43
+            ],
+            [
+                47,
+                35
+            ],
+            [
+                47,
+                10
+            ],
+            [
+                47,
+                20
+            ],
+            [
+                47,
+                36
+            ],
+            [
+                47,
+                14
+            ],
+            [
+                47,
+                24
+            ],
+            [
+                47,
+                9
+            ],
+            [
+                47,
+                54
+            ],
+            [
+                47,
+                46
+            ],
+            [
+                47,
+                19
+            ],
+            [
+                47,
+                53
+            ],
+            [
+                47,
+                73
+            ],
+            [
+                47,
+                38
+            ],
+            [
+                47,
+                12
+            ],
+            [
+                47,
+                66
+            ],
+            [
+                47,
+                71
+            ],
+            [
+                47,
+                67
+            ],
+            [
+                47,
+                45
+            ],
+            [
+                47,
+                64
+            ],
+            [
+                47,
+                23
+            ],
+            [
+                47,
+                17
+            ],
+            [
+                47,
+                68
+            ],
+            [
+                47,
+                42
+            ],
+            [
+                47,
+                72
+            ],
+            [
+                47,
+                41
+            ],
+            [
+                47,
+                13
+            ],
+            [
+                47,
+                52
+            ],
+            [
+                47,
+                49
+            ],
+            [
+                47,
+                28
+            ],
+            [
+                47,
+                70
+            ],
+            [
+                47,
+                8
+            ],
+            [
+                47,
+                58
+            ],
+            [
+                47,
+                5
+            ],
+            [
+                47,
+                25
+            ],
+            [
+                47,
+                37
+            ],
+            [
+                47,
+                22
+            ],
+            [
+                47,
+                63
+            ],
+            [
+                47,
+                32
+            ],
+            [
+                47,
+                60
+            ],
+            [
+                47,
+                3
+            ],
+            [
+                47,
+                2
+            ],
+            [
+                47,
+                27
+            ],
+            [
+                47,
+                6
+            ],
+            [
+                47,
+                55
+            ],
+            [
+                47,
+                11
+            ],
+            [
+                47,
+                26
+            ],
+            [
+                47,
+                29
+            ],
+            [
+                47,
+                56
+            ],
+            [
+                47,
+                62
+            ],
+            [
+                47,
+                39
+            ],
+            [
+                47,
+                18
+            ],
+            [
+                47,
+                74
+            ],
+            [
+                47,
+                16
+            ],
+            [
+                48,
+                24
+            ],
+            [
+                49,
+                39
+            ],
+            [
+                49,
+                56
+            ],
+            [
+                50,
+                65
+            ],
+            [
+                51,
+                24
+            ],
+            [
+                52,
+                18
+            ],
+            [
+                52,
+                39
+            ],
+            [
+                53,
+                47
+            ],
+            [
+                54,
+                43
+            ],
+            [
+                54,
+                14
+            ],
+            [
+                54,
+                47
+            ],
+            [
+                54,
+                9
+            ],
+            [
+                55,
+                15
+            ],
+            [
+                56,
+                58
+            ],
+            [
+                57,
+                5
+            ],
+            [
+                58,
+                3
+            ],
+            [
+                58,
+                63
+            ],
+            [
+                59,
+                19
+            ],
+            [
+                60,
+                19
+            ],
+            [
+                60,
+                41
+            ],
+            [
+                61,
+                46
+            ],
+            [
+                62,
+                38
+            ],
+            [
+                62,
+                73
+            ],
+            [
+                63,
+                22
+            ],
+            [
+                64,
+                56
+            ],
+            [
+                65,
+                16
+            ],
+            [
+                65,
+                54
+            ],
+            [
+                65,
+                6
+            ],
+            [
+                65,
+                55
+            ],
+            [
+                65,
+                11
+            ],
+            [
+                65,
+                26
+            ],
+            [
+                65,
+                29
+            ],
+            [
+                65,
+                56
+            ],
+            [
+                65,
+                62
+            ],
+            [
+                65,
+                39
+            ],
+            [
+                65,
+                18
+            ],
+            [
+                65,
+                74
+            ],
+            [
+                65,
+                50
+            ],
+            [
+                66,
+                55
+            ],
+            [
+                66,
+                18
+            ],
+            [
+                67,
+                55
+            ],
+            [
+                68,
+                6
+            ],
+            [
+                69,
+                38
+            ],
+            [
+                70,
+                18
+            ],
+            [
+                71,
+                74
+            ],
+            [
+                72,
+                6
+            ],
+            [
+                72,
+                18
+            ],
+            [
+                73,
+                47
+            ],
+            [
+                74,
+                19
+            ]
+        ],
+        "edge_type_indices": [
+            9,
+            9,
+            9,
+            0,
+            1,
+            1,
+            1,
+            1,
+            9,
+            9,
+            3,
+            9,
+            7,
+            7,
+            3,
+            3,
+            3,
+            7,
+            7,
+            5,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            5,
+            6,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            8,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            7,
+            3,
+            3,
+            9,
+            8,
+            4,
+            7,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            7,
+            3,
+            8,
+            9,
+            1,
+            1,
+            1,
+            1,
+            9,
+            9,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            9,
+            3,
+            9,
+            7,
+            7,
+            2,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            9,
+            7,
+            9,
+            2,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            5,
+            6,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            12,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            12,
+            9,
+            7,
+            7,
+            10,
+            9,
+            7,
+            7,
+            9,
+            9,
+            9,
+            9,
+            9,
+            3,
+            3,
+            8,
+            9,
+            9,
+            8,
+            11,
+            11,
+            8,
+            3,
+            3,
+            0,
+            7,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            7,
+            10,
+            7,
+            7,
+            7,
+            7,
+            8,
+            7,
+            7,
+            7,
+            7,
+            9,
+            3
+        ],
+        "edge_type_map": {
+            "AddMember": 0,
+            "AdminTo": 1,
+            "AllExtendedRights": 2,
+            "Contains": 3,
+            "ForceChangePassword": 4,
+            "GenericAll": 5,
+            "GenericWrite": 6,
+            "GpLink": 7,
+            "HasSession": 8,
+            "MemberOf": 9,
+            "TrustedBy": 10,
+            "WriteDacl": 11,
+            "WriteOwner": 12
+        },
+        "is_directed": true
+    },
+    "ml_targets": {
+        "y_best_alloc": [
+            0.18195996272826348,
+            0.0,
+            0.0,
+            0.0,
+            0.13132257271540942,
+            0.010368199656674335,
+            0.05729645168958001,
+            0.14085802548864076,
+            0.0,
+            0.29453206772454094,
+            0.0,
+            0.0,
+            0.0,
+            0.41778759164691676,
+            0.0,
+            0.0,
+            0.1282122253854967,
+            0.10314592632927727,
+            0.0,
+            0.0,
+            0.0,
+            0.13696673781148877,
+            0.18287342426449926,
+            0.010083458249145008,
+            0.0,
+            0.16682963966885575,
+            0.0,
+            0.0,
+            0.0,
+            0.025523796245195778,
+            0.0,
+            0.17185385244988538,
+            0.129734592178385,
+            0.06867357084971921,
+            0.09170428169731698,
+            0.04233014169301492,
+            0.058048289048318116,
+            0.1207449754369392,
+            0.0,
+            0.0,
+            0.0,
+            0.0435525024086234,
+            0.0,
+            0.0011679543683374473,
+            0.0,
+            0.0,
+            0.017473599593881357,
+            0.7398533841078071,
+            0.0,
+            0.0,
+            0.0,
+            0.11066902421218322,
+            0.0,
+            0.0,
+            0.21153425273307153,
+            0.0,
+            0.0,
+            0.0,
+            0.23554892224044163,
+            0.06952689803377264,
+            0.09637713886582891,
+            0.0,
+            0.038794517153504494,
+            0.04330696013403724,
+            0.0,
+            0.0,
+            0.06850081673320589,
+            0.26228624552730406,
+            0.0,
+            0.0,
+            0.0,
+            0.12140720368578653,
+            0.03058743865201537,
+            0.0,
+            0.23856335859263683
+        ],
+        "j_star_risk": 0.006591005874720158,
+        "baseline_risk": 0.1530319817457916
+    },
+    "node_registry": {
+        "0": {
+            "original_id": "165",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.18195996272826348,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2016 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 1770751405,
+                    "name": "SCLABDC.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/SCLABDC.INSTANCE425.LOCAL,ldap/SCLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/SCLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/SCLABDC.INSTANCE425.LOCAL,TERMSRV/SCLABDC.INSTANCE425.LOCAL,DNS/SCLABDC.INSTANCE425.LOCAL,GC/SCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/SCLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/SCLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/SCLABDC/INSTANCE425,HOST/SCLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/SCLABDC,HOST/SCLABDC.INSTANCE425.LOCAL,HOST/SCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/SCLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/SCLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/SCLABDC,ldap/SCLABDC.INSTANCE425.LOCAL,ldap/SCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=SCLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 1763550933,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1210"
+                }
+            }
+        },
+        "1": {
+            "original_id": "160",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2012 R2 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "AKLABDC.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/AKLABDC.INSTANCE425.LOCAL,ldap/AKLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/AKLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/AKLABDC.INSTANCE425.LOCAL,TERMSRV/AKLABDC.INSTANCE425.LOCAL,DNS/AKLABDC.INSTANCE425.LOCAL,GC/AKLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/AKLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/AKLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/AKLABDC/INSTANCE425,HOST/AKLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/AKLABDC,HOST/AKLABDC.INSTANCE425.LOCAL,HOST/AKLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/AKLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/AKLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/AKLABDC,ldap/AKLABDC.INSTANCE425.LOCAL,ldap/AKLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=AKLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1205"
+                }
+            }
+        },
+        "2": {
+            "original_id": "354",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00082@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00082,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1395"
+                }
+            }
+        },
+        "3": {
+            "original_id": "352",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00080@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00080,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1393"
+                }
+            }
+        },
+        "4": {
+            "original_id": "168",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.13132257271540942,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": true,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2012 R2 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "NDLABDC.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/NDLABDC.INSTANCE425.LOCAL,ldap/NDLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/NDLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/NDLABDC.INSTANCE425.LOCAL,TERMSRV/NDLABDC.INSTANCE425.LOCAL,DNS/NDLABDC.INSTANCE425.LOCAL,GC/NDLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/NDLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/NDLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/NDLABDC/INSTANCE425,HOST/NDLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/NDLABDC,HOST/NDLABDC.INSTANCE425.LOCAL,HOST/NDLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/NDLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/NDLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/NDLABDC,ldap/NDLABDC.INSTANCE425.LOCAL,ldap/NDLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=NDLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1213"
+                }
+            }
+        },
+        "5": {
+            "original_id": "246",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.010368199656674335,
+            "properties": {
+                "properties": {
+                    "savedcredentials": false,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": false,
+                    "enabled": true,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Shonda Handsome",
+                    "pwdlastset": -1,
+                    "lastlogon": 1761679161,
+                    "name": "SHANDSOME00074@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=SHANDSOME00074,OU=CT_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "serviceprincipalnames": "",
+                    "lastlogontimestamp": 1761679161,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1287",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "6": {
+            "original_id": "373",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.05729645168958001,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "AL_COMPUTERS@INSTANCE425.LOCAL",
+                    "description": "AL computers",
+                    "distinguishedname": "OU=AL_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "6E6AC672-5FDC-4A4B-8294-770AEE748A60"
+                }
+            }
+        },
+        "7": {
+            "original_id": "166",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.14085802548864076,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2016 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "COLABDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/COLABDC.INSTANCE425.LOCAL,ldap/COLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/COLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/COLABDC.INSTANCE425.LOCAL,TERMSRV/COLABDC.INSTANCE425.LOCAL,DNS/COLABDC.INSTANCE425.LOCAL,GC/COLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/COLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/COLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/COLABDC/INSTANCE425,HOST/COLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/COLABDC,HOST/COLABDC.INSTANCE425.LOCAL,HOST/COLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/COLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/COLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/COLABDC,ldap/COLABDC.INSTANCE425.LOCAL,ldap/COLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1211"
+                }
+            }
+        },
+        "8": {
+            "original_id": "412",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{6E18D7E3-4E36-453E-AEC0-F2C3B2CA0F8C}",
+                    "name": "GPO_20@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={6E18D7E3-4E36-453E-AEC0-F2C3B2CA0F8C},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "304BE6D7-31ED-41C0-94A8-74BF90BE72D4"
+                }
+            }
+        },
+        "9": {
+            "original_id": "40",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.29453206772454094,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "GROUP POLICY CREATOR OWNERS@INSTANCE425.LOCAL",
+                    "description": "Members in this group can modify group policy for the domain",
+                    "distinguishedname": "CN=Group Policy Creator Owners,CN=Users,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-520"
+                }
+            }
+        },
+        "10": {
+            "original_id": "5",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "BACKUP OPERATORS@INSTANCE425.LOCAL",
+                    "description": "Backup Operators can override security restrictions for the sole purpose of backing up or restoring files",
+                    "distinguishedname": "CN=Backup Operators,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "INSTANCE425.LOCAL-S-1-5-32-551"
+                }
+            }
+        },
+        "11": {
+            "original_id": "377",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "CA_COMPUTERS@INSTANCE425.LOCAL",
+                    "description": "CA computers",
+                    "distinguishedname": "OU=CA_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "DDE04D55-BACD-445D-A8B6-0CF8608F0B73"
+                }
+            }
+        },
+        "12": {
+            "original_id": "393",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{1BE6A673-2648-4889-891D-163D07EDBB40}",
+                    "name": "GPO_1@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={1BE6A673-2648-4889-891D-163D07EDBB40},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "445018DD-68CD-4CED-8933-EFF0F8898248"
+                }
+            }
+        },
+        "13": {
+            "original_id": "407",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.41778759164691676,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{4105757F-DB7E-4B59-8F14-B4B00FC0853F}",
+                    "name": "GPO_15@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={4105757F-DB7E-4B59-8F14-B4B00FC0853F},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "353AD8BE-67D9-460C-9F70-3F1D81C6A37D"
+                }
+            }
+        },
+        "14": {
+            "original_id": "30",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "ENTERPRISE ADMINS@INSTANCE425.LOCAL",
+                    "description": "Designated administrators of the enterprise",
+                    "distinguishedname": "CN=Enterprise Admins,CN=Users,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-519"
+                }
+            }
+        },
+        "15": {
+            "original_id": "139",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows 10 Enterprise",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "COMP00082.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00082.INSTANCE425.LOCAL,TERMSRV/COMP00082.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00082,HOST/COMP00082,RestrictedKrbHost/COMP00082.INSTANCE425.LOCAL,HOST/COMP00082.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00082,OU=AK_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 1765418729,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1184"
+                }
+            }
+        },
+        "16": {
+            "original_id": "57",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.1282122253854967,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "DOMAIN CONTROLLERS@INSTANCE425.LOCAL",
+                    "description": "Default container for domain controllers",
+                    "distinguishedname": "OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "055FE585-F945-4E75-91F5-D04B05E20E3A"
+                }
+            }
+        },
+        "17": {
+            "original_id": "402",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.10314592632927727,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{74CEA648-50A8-4108-9F11-AFE97EA2860C}",
+                    "name": "GPO_10@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={74CEA648-50A8-4108-9F11-AFE97EA2860C},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "CC504790-9E9E-44A9-9B54-0DE7B4ED1F38"
+                }
+            }
+        },
+        "18": {
+            "original_id": "391",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "CT_USERS@INSTANCE425.LOCAL",
+                    "description": "CT users",
+                    "distinguishedname": "OU=CT_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "9A0335B2-5622-476B-920D-BFD4AF1D6674"
+                }
+            }
+        },
+        "19": {
+            "original_id": "188",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "savedcredentials": false,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": false,
+                    "enabled": true,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Freeda Wickell",
+                    "pwdlastset": -1,
+                    "lastlogon": 1763128401,
+                    "name": "FWICKELL00016@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=FWICKELL00016,OU=ND_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "",
+                    "admincount": true,
+                    "lastlogontimestamp": 1763128401,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1229",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "20": {
+            "original_id": "24",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "SERVER OPERATORS@INSTANCE425.LOCAL",
+                    "description": "Members can administer domain servers",
+                    "distinguishedname": "CN=Server Operators,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "INSTANCE425.LOCAL-S-1-5-32-549"
+                }
+            }
+        },
+        "21": {
+            "original_id": "128",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.13696673781148877,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows 7 Enterprise Service Pack 1",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "COMP00071.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00071.INSTANCE425.LOCAL,TERMSRV/COMP00071.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00071,HOST/COMP00071,RestrictedKrbHost/COMP00071.INSTANCE425.LOCAL,HOST/COMP00071.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00071,OU=NC_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1173"
+                }
+            }
+        },
+        "22": {
+            "original_id": "322",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.18287342426449926,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00050@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00050,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1363"
+                }
+            }
+        },
+        "23": {
+            "original_id": "401",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.010083458249145008,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{AAD5E397-E9FE-480D-8E62-F52B7D1CB69F}",
+                    "name": "GPO_9@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={AAD5E397-E9FE-480D-8E62-F52B7D1CB69F},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "B2E310F2-0C73-4941-BD71-6A6D63EB0EC7"
+                }
+            }
+        },
+        "24": {
+            "original_id": "37",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "DOMAIN CONTROLLERS@INSTANCE425.LOCAL",
+                    "description": "All domain controllers in the domain",
+                    "distinguishedname": "CN=Domain Controllers,CN=Users,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-516"
+                }
+            }
+        },
+        "25": {
+            "original_id": "289",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.16682963966885575,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00017@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00017,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1330"
+                }
+            }
+        },
+        "26": {
+            "original_id": "378",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "NC_COMPUTERS@INSTANCE425.LOCAL",
+                    "description": "NC computers",
+                    "distinguishedname": "OU=NC_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "9C665E52-6509-4FCC-91AF-598A905F438B"
+                }
+            }
+        },
+        "27": {
+            "original_id": "357",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00085@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00085,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1398"
+                }
+            }
+        },
+        "28": {
+            "original_id": "410",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{56E9E840-A861-40B3-B4F9-1CD233069590}",
+                    "name": "GPO_18@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={56E9E840-A861-40B3-B4F9-1CD233069590},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "1BE9D0AF-BB9C-45B7-AF0C-ACD7F0E3BA5C"
+                }
+            }
+        },
+        "29": {
+            "original_id": "379",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.025523796245195778,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "SC_COMPUTERS@INSTANCE425.LOCAL",
+                    "description": "SC computers",
+                    "distinguishedname": "OU=SC_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "17E4D206-281B-415B-A5AE-A6F720F5CBC4"
+                }
+            }
+        },
+        "30": {
+            "original_id": "100",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows 10 Pro",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "COMP00043.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00043.INSTANCE425.LOCAL,TERMSRV/COMP00043.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00043,HOST/COMP00043,RestrictedKrbHost/COMP00043.INSTANCE425.LOCAL,HOST/COMP00043.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00043,OU=CA_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 1748204833,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1145"
+                }
+            }
+        },
+        "31": {
+            "original_id": "159",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.17185385244988538,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows Server 2008 R2 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 1750641784,
+                    "name": "ALLABDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=ALLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/ALLABDC.INSTANCE425.LOCAL,ldap/ALLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/ALLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/ALLABDC.INSTANCE425.LOCAL,TERMSRV/ALLABDC.INSTANCE425.LOCAL,DNS/ALLABDC.INSTANCE425.LOCAL,GC/ALLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/ALLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/ALLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/ALLABDC/INSTANCE425,HOST/ALLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/ALLABDC,HOST/ALLABDC.INSTANCE425.LOCAL,HOST/ALLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/ALLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/ALLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/ALLABDC,ldap/ALLABDC.INSTANCE425.LOCAL,ldap/ALLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1204"
+                }
+            }
+        },
+        "32": {
+            "original_id": "330",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.129734592178385,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00058@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00058,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1371"
+                }
+            }
+        },
+        "33": {
+            "original_id": "164",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.06867357084971921,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2016 Standard",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "NCLABDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=NCLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/NCLABDC.INSTANCE425.LOCAL,ldap/NCLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/NCLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/NCLABDC.INSTANCE425.LOCAL,TERMSRV/NCLABDC.INSTANCE425.LOCAL,DNS/NCLABDC.INSTANCE425.LOCAL,GC/NCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/NCLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/NCLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/NCLABDC/INSTANCE425,HOST/NCLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/NCLABDC,HOST/NCLABDC.INSTANCE425.LOCAL,HOST/NCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/NCLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/NCLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/NCLABDC,ldap/NCLABDC.INSTANCE425.LOCAL,ldap/NCLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1209"
+                }
+            }
+        },
+        "34": {
+            "original_id": "158",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.09170428169731698,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2016 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 1771200538,
+                    "name": "MAINDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=MAINDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/MAINDC.INSTANCE425.LOCAL,ldap/MAINDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/MAINDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/MAINDC.INSTANCE425.LOCAL,TERMSRV/MAINDC.INSTANCE425.LOCAL,DNS/MAINDC.INSTANCE425.LOCAL,GC/MAINDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/MAINDC.INSTANCE425.LOCAL,RestrictedKrbHost/MAINDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/MAINDC/INSTANCE425,HOST/MAINDC.INSTANCE425.LOCAL/INSTANCE425,HOST/MAINDC,HOST/MAINDC.INSTANCE425.LOCAL,HOST/MAINDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/MAINDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/MAINDC.INSTANCE425.LOCAL/INSTANCE425,ldap/MAINDC,ldap/MAINDC.INSTANCE425.LOCAL,ldap/MAINDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1203"
+                }
+            }
+        },
+        "35": {
+            "original_id": "3",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.04233014169301492,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "PRINT OPERATORS@INSTANCE425.LOCAL",
+                    "description": "Members can administer printers installed on domain controllers",
+                    "distinguishedname": "CN=Print Operators,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "INSTANCE425.LOCAL-S-1-5-32-550"
+                }
+            }
+        },
+        "36": {
+            "original_id": "25",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.058048289048318116,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "ACCOUNT OPERATORS@INSTANCE425.LOCAL",
+                    "description": "Members can administer domain user and group accounts",
+                    "distinguishedname": "CN=Account Operators,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "INSTANCE425.LOCAL-S-1-5-32-548"
+                }
+            }
+        },
+        "37": {
+            "original_id": "302",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.1207449754369392,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00030@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00030,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1343"
+                }
+            }
+        },
+        "38": {
+            "original_id": "240",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "savedcredentials": false,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": false,
+                    "enabled": true,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Pattie Deloe",
+                    "pwdlastset": 0,
+                    "lastlogon": 0,
+                    "name": "PDELOE00068@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=PDELOE00068,OU=AR_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "",
+                    "admincount": true,
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1281",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "39": {
+            "original_id": "389",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "SC_USERS@INSTANCE425.LOCAL",
+                    "description": "SC users",
+                    "distinguishedname": "OU=SC_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "D445FC63-500F-463D-B06D-50623D05C382"
+                }
+            }
+        },
+        "40": {
+            "original_id": "163",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows Server 2008 R2 Enterprise",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "CALABDC.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/CALABDC.INSTANCE425.LOCAL,ldap/CALABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/CALABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/CALABDC.INSTANCE425.LOCAL,TERMSRV/CALABDC.INSTANCE425.LOCAL,DNS/CALABDC.INSTANCE425.LOCAL,GC/CALABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/CALABDC.INSTANCE425.LOCAL,RestrictedKrbHost/CALABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/CALABDC/INSTANCE425,HOST/CALABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/CALABDC,HOST/CALABDC.INSTANCE425.LOCAL,HOST/CALABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/CALABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/CALABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/CALABDC,ldap/CALABDC.INSTANCE425.LOCAL,ldap/CALABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=CALABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 1747641378,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1208"
+                }
+            }
+        },
+        "41": {
+            "original_id": "406",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0435525024086234,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{AB7AE770-4603-4189-97D8-17BB8FE5D148}",
+                    "name": "GPO_14@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={AB7AE770-4603-4189-97D8-17BB8FE5D148},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "2F138BD5-1095-47FE-80E6-35D7001075FC"
+                }
+            }
+        },
+        "42": {
+            "original_id": "404",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{CB1AD9CE-F400-4D2E-A794-3EE5721C6337}",
+                    "name": "GPO_12@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={CB1AD9CE-F400-4D2E-A794-3EE5721C6337},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "178A740C-8647-4011-8FA4-CAF7D13EF071"
+                }
+            }
+        },
+        "43": {
+            "original_id": "1",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.0011679543683374473,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "ADMINISTRATORS@INSTANCE425.LOCAL",
+                    "description": "Administrators have complete and unrestricted access to the computer/domain",
+                    "distinguishedname": "CN=Administrators,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "INSTANCE425.LOCAL-S-1-5-32-544"
+                }
+            }
+        },
+        "44": {
+            "original_id": "162",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": true,
+                    "privesc": true,
+                    "operatingsystem": "Windows Server 2016 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "ARLABDC.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/ARLABDC.INSTANCE425.LOCAL,ldap/ARLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/ARLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/ARLABDC.INSTANCE425.LOCAL,TERMSRV/ARLABDC.INSTANCE425.LOCAL,DNS/ARLABDC.INSTANCE425.LOCAL,GC/ARLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/ARLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/ARLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/ARLABDC/INSTANCE425,HOST/ARLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/ARLABDC,HOST/ARLABDC.INSTANCE425.LOCAL,HOST/ARLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/ARLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/ARLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/ARLABDC,ldap/ARLABDC.INSTANCE425.LOCAL,ldap/ARLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=ARLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 1764261255,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1207"
+                }
+            }
+        },
+        "45": {
+            "original_id": "398",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{33C6CEE9-F537-4B46-B31C-81CEAF25C0E1}",
+                    "name": "GPO_6@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={33C6CEE9-F537-4B46-B31C-81CEAF25C0E1},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "611FC41C-C900-481E-AD09-46490543CDB1"
+                }
+            }
+        },
+        "46": {
+            "original_id": "180",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.017473599593881357,
+            "properties": {
+                "properties": {
+                    "savedcredentials": true,
+                    "highvalue": false,
+                    "sidhistory": "S-1-5-21-883822822-279636685-4182209497-1941",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": true,
+                    "enabled": true,
+                    "hasspn": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Nelly Garnick",
+                    "pwdlastset": 0,
+                    "lastlogon": 0,
+                    "name": "NGARNICK00008@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=NGARNICK00008,OU=SC_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "",
+                    "admincount": true,
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1221",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "47": {
+            "original_id": "31",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": true,
+            "is_source": false,
+            "best_allocation_weight": 0.7398533841078071,
+            "properties": {
+                "properties": {
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "DOMAIN ADMINS@INSTANCE425.LOCAL",
+                    "description": "Designated administrators of the domain",
+                    "distinguishedname": "CN=Domain Admins,CN=Users,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": true,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-512"
+                }
+            }
+        },
+        "48": {
+            "original_id": "167",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2016 Standard",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 1752302313,
+                    "name": "CTLABDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=CTLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/CTLABDC.INSTANCE425.LOCAL,ldap/CTLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/CTLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/CTLABDC.INSTANCE425.LOCAL,TERMSRV/CTLABDC.INSTANCE425.LOCAL,DNS/CTLABDC.INSTANCE425.LOCAL,GC/CTLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/CTLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/CTLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/CTLABDC/INSTANCE425,HOST/CTLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/CTLABDC,HOST/CTLABDC.INSTANCE425.LOCAL,HOST/CTLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/CTLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/CTLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/CTLABDC,ldap/CTLABDC.INSTANCE425.LOCAL,ldap/CTLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1212"
+                }
+            }
+        },
+        "49": {
+            "original_id": "409",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{D7983569-0E12-4CB8-B867-9723048638B5}",
+                    "name": "GPO_17@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={D7983569-0E12-4CB8-B867-9723048638B5},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "0137712B-896F-491F-BFDE-BA2B30F86019"
+                }
+            }
+        },
+        "50": {
+            "original_id": "415",
+            "labels": [
+                "Domain"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "name": "SATURE.INSTANCE425.LOCAL",
+                    "objectid": "S-1-5-21-164491350-813585610-9266373107"
+                }
+            }
+        },
+        "51": {
+            "original_id": "161",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.11066902421218322,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows Server 2008 R2 Datacenter",
+                    "unconstraineddelegation": true,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "AZLABDC.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=AZLABDC,OU=DOMAIN CONTROLLERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/AZLABDC.INSTANCE425.LOCAL,ldap/AZLABDC.INSTANCE425.LOCAL/ForestDnsZones.INSTANCE425.LOCAL,ldap/AZLABDC.INSTANCE425.LOCAL/DomainDnsZones.INSTANCE425.LOCAL,TERMSRV/AZLABDC.INSTANCE425.LOCAL,TERMSRV/AZLABDC.INSTANCE425.LOCAL,DNS/AZLABDC.INSTANCE425.LOCAL,GC/AZLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,RestrictedKrbHost/AZLABDC.INSTANCE425.LOCAL,RestrictedKrbHost/AZLABDC,RPC/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,HOST/AZLABDC/INSTANCE425,HOST/AZLABDC.INSTANCE425.LOCAL/INSTANCE425,HOST/AZLABDC,HOST/AZLABDC.INSTANCE425.LOCAL,HOST/AZLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL,E3514235-4B06-11D1-AB04-00C04FC2DCD2/794cea05-ab54-42e3-aa9e-f4b3d116117a/INSTANCE425.LOCAL,ldap/AZLABDC/INSTANCE425,ldap/794cea05-ab54-42e3-aa9e-f4b3d116117a._msdcs.INSTANCE425.LOCAL,ldap/AZLABDC.INSTANCE425.LOCAL/INSTANCE425,ldap/AZLABDC,ldap/AZLABDC.INSTANCE425.LOCAL,ldap/AZLABDC.INSTANCE425.LOCAL/INSTANCE425.LOCAL",
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1206"
+                }
+            }
+        },
+        "52": {
+            "original_id": "408",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{9B81DF0A-34BC-4AC8-8144-E24105DBE0B2}",
+                    "name": "GPO_16@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={9B81DF0A-34BC-4AC8-8144-E24105DBE0B2},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "04D1A0C2-1CBB-4A6B-AA1F-8A23BB36643D"
+                }
+            }
+        },
+        "53": {
+            "original_id": "216",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "savedcredentials": true,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": true,
+                    "enabled": true,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Carlotta Munster",
+                    "pwdlastset": -1,
+                    "lastlogon": 1762389174,
+                    "name": "CMUNSTER00044@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=CMUNSTER00044,OU=CT_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "",
+                    "admincount": true,
+                    "lastlogontimestamp": 1762389174,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1257",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "54": {
+            "original_id": "171",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.21153425273307153,
+            "properties": {
+                "properties": {
+                    "sidhistory": [],
+                    "description": "Built-in account for administering the computer/domain",
+                    "title": "null",
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": true,
+                    "enabled": true,
+                    "userpassword": "null",
+                    "hasspn": false,
+                    "homedirectory": "null",
+                    "serviceprincipalnames": [],
+                    "admincount": true,
+                    "email": "null",
+                    "lastlogontimestamp": 1600849229,
+                    "savedcredentials": true,
+                    "highvalue": false,
+                    "passwordnotreqd": false,
+                    "sensitive": false,
+                    "owned": false,
+                    "displayname": "null",
+                    "pwdlastset": 1588772520,
+                    "domain": "INSTANCE425.LOCAL",
+                    "lastlogon": 1601019126,
+                    "name": "ADMINISTRATOR@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=Administrator,CN=Users,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-500",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "55": {
+            "original_id": "374",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "AK_COMPUTERS@INSTANCE425.LOCAL",
+                    "description": "AK computers",
+                    "distinguishedname": "OU=AK_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "672BCEFE-FB31-462F-B394-0E893755BD80"
+                }
+            }
+        },
+        "56": {
+            "original_id": "385",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "AZ_USERS@INSTANCE425.LOCAL",
+                    "description": "AZ users",
+                    "distinguishedname": "OU=AZ_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "2121207D-654D-40E8-9D81-38B108CBB000"
+                }
+            }
+        },
+        "57": {
+            "original_id": "129",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows 10 Pro",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "COMP00072.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00072,OU=CA_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00072.INSTANCE425.LOCAL,TERMSRV/COMP00072.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00072,HOST/COMP00072,RestrictedKrbHost/COMP00072.INSTANCE425.LOCAL,HOST/COMP00072.INSTANCE425.LOCAL",
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1174"
+                }
+            }
+        },
+        "58": {
+            "original_id": "204",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.23554892224044163,
+            "properties": {
+                "properties": {
+                    "savedcredentials": true,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": true,
+                    "enabled": false,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Edra Rushen",
+                    "pwdlastset": -1,
+                    "lastlogon": -1,
+                    "name": "ERUSHEN00032@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=ERUSHEN00032,OU=AZ_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "serviceprincipalnames": "",
+                    "lastlogontimestamp": -1,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1245",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "59": {
+            "original_id": "144",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.06952689803377264,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": false,
+                    "operatingsystem": "Windows 10 Pro",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "COMP00087.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00087.INSTANCE425.LOCAL,TERMSRV/COMP00087.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00087,HOST/COMP00087,RestrictedKrbHost/COMP00087.INSTANCE425.LOCAL,HOST/COMP00087.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00087,OU=CA_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1189"
+                }
+            }
+        },
+        "60": {
+            "original_id": "348",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.09637713886582891,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00076@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00076,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1389"
+                }
+            }
+        },
+        "61": {
+            "original_id": "82",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": true,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows 7 Enterprise Service Pack 1",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": -1,
+                    "name": "COMP00025.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00025,OU=AL_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00025.INSTANCE425.LOCAL,TERMSRV/COMP00025.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00025,HOST/COMP00025,RestrictedKrbHost/COMP00025.INSTANCE425.LOCAL,HOST/COMP00025.INSTANCE425.LOCAL",
+                    "lastlogontimestamp": 1768730380,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1127"
+                }
+            }
+        },
+        "62": {
+            "original_id": "386",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.038794517153504494,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "AR_USERS@INSTANCE425.LOCAL",
+                    "description": "AR users",
+                    "distinguishedname": "OU=AR_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "AEA8EF51-0DA2-4E30-A4E5-B040491F719A"
+                }
+            }
+        },
+        "63": {
+            "original_id": "326",
+            "labels": [
+                "Base",
+                "Group"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.04330696013403724,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "IT00054@INSTANCE425.LOCAL",
+                    "description": "This is an IT group",
+                    "distinguishedname": "CN=IT00054,CN=Builtin,DC=INSTANCE425,DC=LOCAL",
+                    "admincount": false,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1367"
+                }
+            }
+        },
+        "64": {
+            "original_id": "400",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{89C6331F-191F-4F28-90C7-B10646B08D3B}",
+                    "name": "GPO_8@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={89C6331F-191F-4F28-90C7-B10646B08D3B},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "3E593806-1FA4-4BB1-8829-E216DBB36415"
+                }
+            }
+        },
+        "65": {
+            "original_id": "0",
+            "labels": [
+                "Base",
+                "Domain"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "functionallevel": "2016",
+                    "highvalue": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "INSTANCE425.LOCAL",
+                    "distinguishedname": "DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997"
+                }
+            }
+        },
+        "66": {
+            "original_id": "394",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.06850081673320589,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{A0B317A9-1B6F-47C6-BE4F-03E4A5AAA323}",
+                    "name": "GPO_2@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={A0B317A9-1B6F-47C6-BE4F-03E4A5AAA323},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "447F8B4B-8771-4C39-9AC7-BA31BEF33866"
+                }
+            }
+        },
+        "67": {
+            "original_id": "397",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.26228624552730406,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{E994116C-54C4-488C-AD61-947CB4FCCBBC}",
+                    "name": "GPO_5@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={E994116C-54C4-488C-AD61-947CB4FCCBBC},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "551DB5BC-A47E-4FA1-A00E-A2F77E1AC82F"
+                }
+            }
+        },
+        "68": {
+            "original_id": "403",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{F02539D7-AA6F-46D0-8C24-4F6EAC09ACAC}",
+                    "name": "GPO_11@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={F02539D7-AA6F-46D0-8C24-4F6EAC09ACAC},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "A8C18FF1-F038-41D5-BF3C-77A5CDF53160"
+                }
+            }
+        },
+        "69": {
+            "original_id": "93",
+            "labels": [
+                "Base",
+                "Computer"
+            ],
+            "features_vector": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "creddump": false,
+                    "haslaps": false,
+                    "privesc": true,
+                    "operatingsystem": "Windows 10 Pro",
+                    "unconstraineddelegation": false,
+                    "enabled": true,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "pwdlastset": 0,
+                    "name": "COMP00036.INSTANCE425.LOCAL",
+                    "serviceprincipalnames": "TERMSRV/COMP00036.INSTANCE425.LOCAL,TERMSRV/COMP00036.INSTANCE425.LOCAL,RestrictedKrbHost/COMP00036,HOST/COMP00036,RestrictedKrbHost/COMP00036.INSTANCE425.LOCAL,HOST/COMP00036.INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=COMP00036,OU=SC_COMPUTERS,DC=INSTANCE425,DC=LOCAL",
+                    "lastlogontimestamp": 0,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1138"
+                }
+            }
+        },
+        "70": {
+            "original_id": "411",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{30602420-501A-4CA7-AA8F-F6AB04D74101}",
+                    "name": "GPO_19@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={30602420-501A-4CA7-AA8F-F6AB04D74101},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "BB12A03C-9B3E-41D5-A9B9-D6DDC6881FBE"
+                }
+            }
+        },
+        "71": {
+            "original_id": "395",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.12140720368578653,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{E86555A3-FFD5-4E77-8F27-ADDDFCB2D404}",
+                    "name": "GPO_3@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={E86555A3-FFD5-4E77-8F27-ADDDFCB2D404},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "C687AA76-155E-4C94-A843-9CB1F8F5A8E6"
+                }
+            }
+        },
+        "72": {
+            "original_id": "405",
+            "labels": [
+                "Base",
+                "GPO"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.03058743865201537,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "exploitable": true,
+                    "domain": "INSTANCE425.LOCAL",
+                    "gpcpath": "\\\\INSTANCE425.LOCAL\\sysvol\\INSTANCE425.LOCAL\\Policies\\{E214E108-82FA-495B-A483-8899E7318E2B}",
+                    "name": "GPO_13@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN={E214E108-82FA-495B-A483-8899E7318E2B},CN=Policies,CN=System,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "DE7C64F9-FDB8-47AF-9CF0-16995595B317"
+                }
+            }
+        },
+        "73": {
+            "original_id": "234",
+            "labels": [
+                "Base",
+                "User"
+            ],
+            "features_vector": [
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": true,
+            "best_allocation_weight": 0.0,
+            "properties": {
+                "properties": {
+                    "savedcredentials": false,
+                    "highvalue": false,
+                    "sidhistory": "",
+                    "passwordnotreqd": false,
+                    "description": "null",
+                    "sensitive": false,
+                    "unconstraineddelegation": false,
+                    "pwdneverexpires": false,
+                    "enabled": true,
+                    "hasspn": false,
+                    "owned": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "displayname": "Henry Mcbrearty",
+                    "pwdlastset": -1,
+                    "lastlogon": 1754790414,
+                    "name": "HMCBREARTY00062@INSTANCE425.LOCAL",
+                    "distinguishedname": "CN=HMCBREARTY00062,OU=AR_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "serviceprincipalnames": "",
+                    "admincount": true,
+                    "lastlogontimestamp": 1754790414,
+                    "objectid": "S-1-5-21-883232822-274137685-4173207997-1275",
+                    "dontreqpreauth": false
+                }
+            }
+        },
+        "74": {
+            "original_id": "392",
+            "labels": [
+                "Base",
+                "OU"
+            ],
+            "features_vector": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "is_terminal": false,
+            "is_source": false,
+            "best_allocation_weight": 0.23856335859263683,
+            "properties": {
+                "properties": {
+                    "highvalue": false,
+                    "blocksInheritance": false,
+                    "domain": "INSTANCE425.LOCAL",
+                    "name": "ND_USERS@INSTANCE425.LOCAL",
+                    "description": "ND users",
+                    "distinguishedname": "OU=ND_USERS,DC=INSTANCE425,DC=LOCAL",
+                    "objectid": "4105A066-8092-4A5B-B8F4-7EDE73EC1F6A"
+                }
+            }
+        }
+    }
+}
