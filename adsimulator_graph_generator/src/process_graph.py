@@ -1,4 +1,5 @@
 import json
+import os
 import networkx as nx
 import numpy as np
 from src.random_best_alloc import *
@@ -108,11 +109,17 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
         "node_registry": node_registry
     }
 
-    # 4. Save to file
+    # 4. Save pretty JSON to file
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(export_data, f, indent=4, ensure_ascii=False)
-    
+
+    # 5. Save line-delimited JSONL for the same structured export
+    output_jsonl_path = os.path.splitext(output_path)[0] + '.jsonl'
+    with open(output_jsonl_path, 'w', encoding='utf-8') as f:
+        f.write(json.dumps(export_data, ensure_ascii=False) + '\n')
+
     print(f"[+] Export complete: {output_path}")
+    print(f"[+] JSONL export complete: {output_jsonl_path}")
 
 def load_jsonl(filepath : str) -> Union[Sequence[Dict], Sequence[Dict]]:
     nodes, edges = [], []
