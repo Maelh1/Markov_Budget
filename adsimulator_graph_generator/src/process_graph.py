@@ -2,7 +2,7 @@ import json
 import networkx as nx
 import numpy as np
 from src.random_best_alloc import *
-from typing import Union, Dict, Tuple
+from typing import Union, Dict, Tuple, Sequence
 
 REMEDIATION_EFFORT = {
     'HasSession': 1, 'CanRDP': 3, 'CanPSRemote': 3, 'ExecuteDCOM': 3,
@@ -81,7 +81,8 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
             "is_terminal": i in terminals,
             "is_source": i in sources,
             "best_allocation_weight": float(best_allocation[i]),
-            "properties": {k: v for k, v in full_data.items() if k != 'labels'}
+            "prob": float(full_data.get('prob', 1.0)),
+            "properties": {k: v for k, v in full_data.items() if k not in ['labels', 'prob']}
         }
 
     # 3. Create the JSON Object
@@ -192,12 +193,12 @@ def build_graph(jsonl_path) -> nx.DiGraph:
     for n in nodes_data:
         node_id = str(n['id'])
         labels = n.get('labels', [])
-        primary_label = labels[0] if labels else None
+        node_prob = next((NODE_PROB[label] for label in labels if label in NODE_PROB), 1.0)
         G_full.add_node(
             node_id, 
             labels=labels, 
             properties=n.get('properties', {}),
-            prob=NODE_PROB.get(primary_label, 1.0)
+            prob=node_prob
         )
 
     # 2. Ajout des arêtes filtrées
@@ -277,6 +278,9 @@ def process_and_save_dataset(jsonl_path : str, out_json_path: str):
         edge_list.append([node_to_idx[u], node_to_idx[v]])
         edge_classes.append(data.get('type', 'Unknown')) # Sauvegarde des classes d'arêtes
         edge_prob.append(data.get('prob', 1.0)) # Sauvegarde des probabilités d'arêtes
+
+    # Note : chaque position i dans edge_prob correspond à l'arête edge_index[i] et au type edge_type_indices[i]
+    #       donc la k-ème probabilité appartient à la k-ème arête listée dans edge_index.
 
     # 5. Simulation de Monte Carlo pour trouver y et J_star
     target_budget = 5.0
