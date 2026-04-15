@@ -52,6 +52,7 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
                                     features,
                                     node_classes, 
                                     edge_classes, 
+                                    edge_prob,
                                     terminals, 
                                     sources, 
                                     best_allocation, 
@@ -95,6 +96,7 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
             "edge_index": edge_list,
             "edge_type_indices": edge_attr,
             "edge_type_map": edge_type_to_idx,
+            "edge_prob": edge_prob,
             "is_directed": True
         },
         "ml_targets": {
@@ -270,9 +272,11 @@ def process_and_save_dataset(jsonl_path : str, out_json_path: str):
 
     edge_list = []
     edge_classes = []
+    edge_prob = []
     for u, v, data in G.edges(data=True):
         edge_list.append([node_to_idx[u], node_to_idx[v]])
         edge_classes.append(data.get('type', 'Unknown')) # Sauvegarde des classes d'arêtes
+        edge_prob.append(data.get('prob', 1.0)) # Sauvegarde des probabilités d'arêtes
 
     # 5. Simulation de Monte Carlo pour trouver y et J_star
     target_budget = 5.0
@@ -285,5 +289,5 @@ def process_and_save_dataset(jsonl_path : str, out_json_path: str):
     print(f"[+] Risque initial : {baseline_risk:.4f} | Risque optimisé (J_star) : {best_risk:.4f}")
 
     export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
-        node_classes, edge_classes, terminals, sources, 
+        node_classes, edge_classes, edge_prob, terminals, sources, 
         best_allocation, best_risk, baseline_risk, target_budget, out_json_path)
