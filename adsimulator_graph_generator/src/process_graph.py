@@ -11,6 +11,40 @@ REMEDIATION_EFFORT = {
     'GenericAll': 8, 'AllExtendedRights': 8, 'MemberOf': 9, 'Trust': 10
 }
 
+EDGE_PROB = {
+    "Contains": 1.0,
+    "TrustedBy": 0.6,
+    "MemberOf": 1.0,
+    "AddMember": 0.9,
+    "AdminTo": 0.95,
+    "CanPSRemote": 0.85,
+    "CanRDP": 0.8,
+    "ExecuteDCOM": 0.75,
+    "HasSession": 0.7,
+    "GenericAll": 1.0,
+    "WriteDacl": 0.95,
+    "WriteOwner": 0.9,
+    "Owns": 0.9,
+    "GenericWrite": 0.75,
+    "AllExtendedRights": 0.7,
+    "ForceChangePassword": 0.95,
+    "AddAllowedToAct": 0.9,
+    "AllowedToAct": 0.85,
+    "AllowedToDelegate": 0.8,
+    "GetChanges": 0.6,
+    "GetChangesAll": 0.9,
+    "GpLink": 0.7
+}
+
+NODE_PROB = {
+    "User": 1.0,
+    "Computer": 0.8,
+    "Group": 0.9,
+    "OU": 0.7,
+    "GPO": 0.6,
+    "Domain": 0.5
+}
+
 
 def export_complete_attack_instance(G_full : nx.DiGraph, 
                                     nodes_list : Sequence[str], 
@@ -155,10 +189,13 @@ def build_graph(jsonl_path) -> nx.DiGraph:
     # 1. Ajout des nœuds avec leurs métadonnées
     for n in nodes_data:
         node_id = str(n['id'])
+        labels = n.get('labels', [])
+        primary_label = labels[0] if labels else None
         G_full.add_node(
             node_id, 
-            labels=n.get('labels', []), 
-            properties=n.get('properties', {})
+            labels=labels, 
+            properties=n.get('properties', {}),
+            prob=NODE_PROB.get(primary_label, 1.0)
         )
 
     # 2. Ajout des arêtes filtrées
@@ -175,7 +212,7 @@ def build_graph(jsonl_path) -> nx.DiGraph:
             u = str(e['start']['id'])
             v = str(e['end']['id'])
             props = e.get('properties', {})
-            G_full.add_edge(u, v, type=rel_type, **props)
+            G_full.add_edge(u, v, type=rel_type, prob=EDGE_PROB.get(rel_type, 1.0), **props)
             
     return G_full
 
