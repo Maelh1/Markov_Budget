@@ -1,49 +1,14 @@
 import json
-import os
 import networkx as nx
 import numpy as np
 from src.random_best_alloc import *
-from typing import Union, Dict, Tuple, Sequence
+from typing import Union, Dict, Tuple
 
 REMEDIATION_EFFORT = {
     'HasSession': 1, 'CanRDP': 3, 'CanPSRemote': 3, 'ExecuteDCOM': 3,
     'AllowedToDelegate': 5, 'GenericWrite': 6, 'AddMember': 6, 
     'ForceChangePassword': 6, 'WriteDacl': 7, 'WriteOwner': 7, 
     'GenericAll': 8, 'AllExtendedRights': 8, 'MemberOf': 9, 'Trust': 10
-}
-
-EDGE_PROB = {
-    "Contains": 1.0,
-    "TrustedBy": 0.6,
-    "MemberOf": 1.0,
-    "AddMember": 0.9,
-    "AdminTo": 0.95,
-    "CanPSRemote": 0.85,
-    "CanRDP": 0.8,
-    "ExecuteDCOM": 0.75,
-    "HasSession": 0.7,
-    "GenericAll": 1.0,
-    "WriteDacl": 0.95,
-    "WriteOwner": 0.9,
-    "Owns": 0.9,
-    "GenericWrite": 0.75,
-    "AllExtendedRights": 0.7,
-    "ForceChangePassword": 0.95,
-    "AddAllowedToAct": 0.9,
-    "AllowedToAct": 0.85,
-    "AllowedToDelegate": 0.8,
-    "GetChanges": 0.6,
-    "GetChangesAll": 0.9,
-    "GpLink": 0.7
-}
-
-NODE_PROB = {
-    "User": 1.0,
-    "Computer": 0.8,
-    "Group": 0.9,
-    "OU": 0.7,
-    "GPO": 0.6,
-    "Domain": 0.5
 }
 
 
@@ -53,7 +18,6 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
                                     features,
                                     node_classes, 
                                     edge_classes, 
-                                    edge_prob,
                                     terminals, 
                                     sources, 
                                     best_allocation, 
@@ -82,8 +46,7 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
             "is_terminal": i in terminals,
             "is_source": i in sources,
             "best_allocation_weight": float(best_allocation[i]),
-            "prob": float(full_data.get('prob', 1.0)),
-            "properties": {k: v for k, v in full_data.items() if k not in ['labels', 'prob']}
+            "properties": {k: v for k, v in full_data.items() if k != 'labels'}
         }
 
     # 3. Create the JSON Object
@@ -98,7 +61,6 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
             "edge_index": edge_list,
             "edge_type_indices": edge_attr,
             "edge_type_map": edge_type_to_idx,
-            "edge_prob": edge_prob,
             "is_directed": True
         },
         "ml_targets": {
@@ -109,17 +71,11 @@ def export_complete_attack_instance(G_full : nx.DiGraph,
         "node_registry": node_registry
     }
 
-    # 4. Save pretty JSON to file
+    # 4. Save to file
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(export_data, f, indent=4, ensure_ascii=False)
-
-    # 5. Save line-delimited JSONL for the same structured export
-    output_jsonl_path = os.path.splitext(output_path)[0] + '.jsonl'
-    with open(output_jsonl_path, 'w', encoding='utf-8') as f:
-        f.write(json.dumps(export_data, ensure_ascii=False) + '\n')
-
+    
     print(f"[+] Export complete: {output_path}")
-    print(f"[+] JSONL export complete: {output_jsonl_path}")
 
 def load_jsonl(filepath : str) -> Union[Sequence[Dict], Sequence[Dict]]:
     nodes, edges = [], []
@@ -199,13 +155,10 @@ def build_graph(jsonl_path) -> nx.DiGraph:
     # 1. Ajout des nœuds avec leurs métadonnées
     for n in nodes_data:
         node_id = str(n['id'])
-        labels = n.get('labels', [])
-        node_prob = next((NODE_PROB[label] for label in labels if label in NODE_PROB), 1.0)
         G_full.add_node(
             node_id, 
-            labels=labels, 
-            properties=n.get('properties', {}),
-            prob=node_prob
+            labels=n.get('labels', []), 
+            properties=n.get('properties', {})
         )
 
     # 2. Ajout des arêtes filtrées
@@ -222,7 +175,7 @@ def build_graph(jsonl_path) -> nx.DiGraph:
             u = str(e['start']['id'])
             v = str(e['end']['id'])
             props = e.get('properties', {})
-            G_full.add_edge(u, v, type=rel_type, prob=EDGE_PROB.get(rel_type, 1.0), **props)
+            G_full.add_edge(u, v, type=rel_type, **props)
             
     return G_full
 
@@ -280,14 +233,9 @@ def process_and_save_dataset(jsonl_path : str, out_json_path: str):
 
     edge_list = []
     edge_classes = []
-    edge_prob = []
     for u, v, data in G.edges(data=True):
         edge_list.append([node_to_idx[u], node_to_idx[v]])
         edge_classes.append(data.get('type', 'Unknown')) # Sauvegarde des classes d'arêtes
-        edge_prob.append(data.get('prob', 1.0)) # Sauvegarde des probabilités d'arêtes
-
-    # Note : chaque position i dans edge_prob correspond à l'arête edge_index[i] et au type edge_type_indices[i]
-    #       donc la k-ème probabilité appartient à la k-ème arête listée dans edge_index.
 
     # 5. Simulation de Monte Carlo pour trouver y et J_star
     target_budget = 5.0
@@ -300,5 +248,5 @@ def process_and_save_dataset(jsonl_path : str, out_json_path: str):
     print(f"[+] Risque initial : {baseline_risk:.4f} | Risque optimisé (J_star) : {best_risk:.4f}")
 
     export_complete_attack_instance(G_full, nodes_list, edge_list, features, 
-        node_classes, edge_classes, edge_prob, terminals, sources, 
+        node_classes, edge_classes, terminals, sources, 
         best_allocation, best_risk, baseline_risk, target_budget, out_json_path)
