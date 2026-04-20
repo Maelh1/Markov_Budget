@@ -5,31 +5,6 @@ from matplotlib.patches import Patch
 
 from typing import List, Tuple, Sequence
 
-EDGE_PROB = {
-    "Contains": 1.0,
-    "TrustedBy": 0.6,
-    "MemberOf": 1.0,
-    "AddMember": 0.9,
-    "AdminTo": 0.95,
-    "CanPSRemote": 0.85,
-    "CanRDP": 0.8,
-    "ExecuteDCOM": 0.75,
-    "HasSession": 0.7,
-    "GenericAll": 1.0,
-    "WriteDacl": 0.95,
-    "WriteOwner": 0.9,
-    "Owns": 0.9,
-    "GenericWrite": 0.75,
-    "AllExtendedRights": 0.7,
-    "ForceChangePassword": 0.95,
-    "AddAllowedToAct": 0.9,
-    "AllowedToAct": 0.85,
-    "AllowedToDelegate": 0.8,
-    "GetChanges": 0.6,
-    "GetChangesAll": 0.9,
-    "GpLink": 0.7
-}
-
 def build_transition_matrix(edges : List[Tuple[str, str]], num_nodes: int) -> np.ndarray:
     """Builds the probabilistic transition matrix T."""
     T = np.zeros((num_nodes, num_nodes))
@@ -42,28 +17,6 @@ def build_transition_matrix(edges : List[Tuple[str, str]], num_nodes: int) -> np
     out_degrees[out_degrees == 0] = 1.0 
     
     T[sources, targets] = 1.0 / out_degrees[sources]
-    return T
-
-def build_weighted_transition_matrix(edges : List[List[int]], edge_types : List[str], num_nodes: int) -> np.ndarray:
-    """Builds the probabilistic transition matrix T with edge type weights."""
-    T = np.zeros((num_nodes, num_nodes))
-    if not edges: return T
-    
-    # Group edges by source node
-    from collections import defaultdict
-    source_to_edges = defaultdict(list)
-    for (u, v), et in zip(edges, edge_types):
-        prob = EDGE_PROB.get(et, 1.0)  # Default to 1.0 if edge type not found
-        source_to_edges[u].append((v, prob))
-    
-    # For each source node, compute normalized probabilities
-    for source in source_to_edges:
-        edges_from_source = source_to_edges[source]
-        total_weight = sum(prob for _, prob in edges_from_source)
-        if total_weight > 0:
-            for target, prob in edges_from_source:
-                T[source, target] = prob / total_weight
-    
     return T
 
 def generate_subgraph_allocation(num_nodes : int, target_budget: int): 
@@ -129,5 +82,4 @@ def find_best_alloc(num_nodes : int, mc_iterations : int, target_budget : float,
             best_allocation = current_alloc
             
     return best_allocation, best_risk
-
 
