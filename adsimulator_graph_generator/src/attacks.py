@@ -997,3 +997,158 @@ def run_kerberos_adjusted_attack(
         print("- graph trop petit")
         print("- on remarque qu'en fonction de la génération de l'architecture ADsimulator, les résultats peuvent être 0")
     return valid_paths
+
+
+# ======================================================================
+# Louise Attack Simulation (Random Walk)
+# ======================================================================
+def run_louise_attack(
+    jsonl_path: str,
+    min_success: int = 150,
+    min_nodes_for_long: int = 12,
+    max_attempts: int = 10000000,
+    max_steps: int = 100,
+    show_paths: bool = True,
+    show_long_paths: bool = True,
+) -> list:
+    """
+    Lance des random walks depuis des users jusqu'à des cibles intéressantes.
+    S'arrête après min_success chemins ou un chemin long trouvé.
+    Affiche un résumé et retourne la liste des chemins trouvés.
+    """
+    import random
+    import json
+    import networkx as nx
+    from collections import defaultdict
+
+    # 1. Charger le graphe
+    G = nx.DiGraph()
+    node_types = {}
+    edge_evidence = defaultdict(list)
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            data = json.loads(line)
+            if data.get("type") == "node":
+                name = data.get("properties", {}).get("name", str(data.get("id")))
+                labels = data.get("labels", [])
+                G.add_node(name)
+                node_types[name] = labels
+            elif data.get("type") == "relationship":
+                start = data.get("start", {}).get("properties", {}).get("name")
+                end = data.get("end", {}).get("properties", {}).get("name")
+                rel_type = (
+                    data.get("label")
+                    or data.get("properties", {}).get("type")
+                    or data.get("properties", {}).get("name")
+                    or "UNKNOWN_REL"
+                )
+                if start and end:
+                    G.add_edge(start, end)
+                    edge_evidence[(start, end)].append(rel_type)
+    print(f"[+] Nodes: {len(G.nodes())}")
+    print(f"[+] Edges: {len(G.edges())}")
+
+    # 2. Helpers
+    def is_user(node):
+        return "User" in node_types.get(node, [])
+    def is_interesting_target(node):
+        n = node.upper()
+        return (
+            "DOMAIN ADMINS" in n
+            or "ENTERPRISE ADMINS" in n
+            or "SCHEMA ADMINS" in n
+            or "ADMINISTRATORS" in n
+            or "ACCOUNT OPERATORS" in n
+            or "SERVER OPERATORS" in n
+            or "BACKUP OPERATORS" in n
+            or "PRINT OPERATORS" in n
+            or "STORAGE REPLICA ADMINISTRATORS" in n
+            or "HYPER-V ADMINISTRATORS" in n
+            or "ADMINISTRATOR@" in n
+            or "DC" in n
+            or "MAINDC" in n
+        )
+    def random_walk(G, source, max_steps=100):
+        current = source
+        path = [current]
+        for _ in range(max_steps):
+            neighbors = list(G.successors(current))
+            if not neighbors:
+                return path
+            nxt = random.choice(neighbors)
+            path.append(nxt)
+            current = nxt
+            if is_interesting_target(current):
+                return path
+        return path
+
+    # 3. Lancer jusqu'à min_success ou un long chemin
+    users = [n for n in G.nodes() if is_user(n)]
+    success_paths = []
+    attempts = 0
+    seen_paths = set()
+    found_long_path = False
+    while attempts < max_attempts:
+        attempts += 1
+        source = random.choice(users)
+        path = random_walk(G, source, max_steps=max_steps)
+        if not path:
+            continue
+        if not is_interesting_target(path[-1]):
+            continue
+        sig = tuple(path)
+        if sig in seen_paths:
+            continue
+        seen_paths.add(sig)
+        success_paths.append((source, path))
+        if len(path) >= min_nodes_for_long:
+            found_long_path = True
+        if len(success_paths) >= min_success or found_long_path:
+            break
+
+    # 4. Résumé
+    print("\n" + "=" * 100)
+    print(f"[+] RÉSULTATS (en {attempts} tentatives)")
+    print("=" * 100)
+    print(f"Nombre de chemins trouvés : {len(success_paths)}")
+    print(f"Au moins un chemin avec >= {min_nodes_for_long} noeuds : {found_long_path}")
+
+    # 5. Afficher tous les chemins trouvés
+    if show_paths:
+        for i, (source, path) in enumerate(success_paths, start=1):
+            print("-" * 100)
+            print(f"Cas #{i}")
+            print(f"Source   : {source}")
+            print(f"Cible    : {path[-1]}")
+            print(f"Noeuds   : {len(path)}")
+            print(f"Longueur : {len(path)-1}")
+            print("Chemin   :")
+            for j in range(len(path) - 1):
+                src = path[j]
+                dst = path[j + 1]
+                rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+                print(f"  {src} --{rels}--> {dst}")
+    # 6. Afficher explicitement les chemins longs
+    if show_long_paths:
+        long_paths = [(s, p) for (s, p) in success_paths if len(p) >= min_nodes_for_long]
+        print("\n" + "=" * 100)
+        print(f"[+] CHEMINS AVEC AU MOINS {min_nodes_for_long} NOEUDS")
+        print("=" * 100)
+        if not long_paths:
+            print(f"[-] Aucun chemin >= {min_nodes_for_long} noeuds trouvé dans cet échantillon.")
+        else:
+            for i, (source, path) in enumerate(long_paths, start=1):
+                print("-" * 100)
+                print(f"Long path #{i}")
+                print(f"Source   : {source}")
+                print(f"Cible    : {path[-1]}")
+                print(f"Noeuds   : {len(path)}")
+                print("Chemin   :")
+                for j in range(len(path) - 1):
+                    src = path[j]
+                    dst = path[j + 1]
+                    rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+                    print(f"  {src} --{rels}--> {dst}")
+    return success_paths
