@@ -513,134 +513,45 @@ def run_lateral_admin_movement(
 
     selected_cases = cases[:top_k_export]
 
-    # Export JSON léger pour visualisation
-    visu_export = []
-
+    # === Export JSON au format demandé ===
+    export_data = []
+    def get_type(node):
+        labs = node_types.get(node, [])
+        if "User" in labs:
+            return "User"
+        if "Group" in labs:
+            return "Group"
+        if "Computer" in labs:
+            return "Computer"
+        if "Domain" in labs:
+            return "Domain"
+        return "Other"
+    def get_id(node):
+        try:
+            return int(node)
+        except:
+            return node
     for idx, case in enumerate(selected_cases, start=1):
         path = case["path"]
-
-        nodes_out = []
-        edges_out = []
-
-        for node in path:
-            nodes_out.append({
-                "id": node,
-                "label": node,
-                "type": simple_node_type(node)
-            })
-
+        rels = []
         for i in range(len(path) - 1):
-            src = path[i]
-            dst = path[i + 1]
-            rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
-
-            edges_out.append({
-                "source": src,
-                "target": dst,
-                "relations": rels
-            })
-
-        visu_export.append({
-            "attack_id": f"lateral_admin_{idx}",
-            "attack_type": "LateralAdminChain",
-            "source": case["source"],
-            "target": case["target"],
-            "source_type": case["source_type"],
-            "length": case["length"],
-            "path": path,
-            "nodes": nodes_out,
-            "edges": edges_out
+            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+        export_data.append({
+            "attack": "lateraladmin",
+            "attack_id": f"lateraladmin_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path)
         })
-
-    with open("lateral_admin_visu.json", "w", encoding="utf-8") as f:
-        json.dump(visu_export, f, indent=2, ensure_ascii=False)
-
-    print("[+] Export créé : lateral_admin_visu.json")
-
-    # Export JSON détaillé
-    detailed_export = []
-
-    for idx, case in enumerate(selected_cases, start=1):
-        path = case["path"]
-
-        nodes_out = []
-        edges_out = []
-
-        for pos, node in enumerate(path):
-            nodes_out.append({
-                "id": node,
-                "name": node,
-                "position_in_path": pos,
-                "type": simple_node_type(node),
-                "labels": node_types.get(node, []),
-                "is_source": pos == 0,
-                "is_target": pos == len(path) - 1,
-                "is_interesting_target": is_interesting_target(node)
-            })
-
-        for i in range(len(path) - 1):
-            src = path[i]
-            dst = path[i + 1]
-            rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
-
-            edges_out.append({
-                "step": i + 1,
-                "source": src,
-                "target": dst,
-                "relations": rels,
-                "relation_count": len(rels),
-                "is_lateral_step": any(r in LATERAL_RELS for r in rels)
-            })
-
-        detailed_export.append({
-            "attack_id": f"lateral_admin_{idx}",
-            "attack_family": "LateralAdminChain",
-            "summary": {
-                "source": case["source"],
-                "source_type": case["source_type"],
-                "target": case["target"],
-                "target_is_interesting": is_interesting_target(case["target"]),
-                "length": case["length"]
-            },
-            "specification": {
-                "required_lateral_relations": sorted(list(LATERAL_RELS)),
-                "matched_relations_in_path": sorted(list(set(case["rels"]))),
-                "definition": (
-                    "Chemin partant d'un User ou Computer, finissant sur une cible intéressante, "
-                    "contenant au moins 2 relations latérales parmi AdminTo, HasSession, CanRDP, "
-                    "CanPSRemote, ExecuteDCOM, et au moins un noeud Computer dans le chemin."
-                )
-            },
-            "path_sequence": path,
-            "nodes": nodes_out,
-            "edges": edges_out
-        })
-
-    with open("lateral_admin_detailed.json", "w", encoding="utf-8") as f:
-        json.dump(detailed_export, f, indent=2, ensure_ascii=False)
-
-    print("[+] Export créé : lateral_admin_detailed.json")
-
-    # Export CSV résumé
-    with open("lateral_admin_summary.csv", "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "attack_id", "source", "source_type", "target",
-            "length", "path"
-        ])
-
-        for idx, case in enumerate(selected_cases, start=1):
-            writer.writerow([
-                f"lateral_admin_{idx}",
-                case["source"],
-                case["source_type"],
-                case["target"],
-                case["length"],
-                " -> ".join(case["path"])
-            ])
-
-    print("[+] Export créé : lateral_admin_summary.csv")
-
+    with open("lateraladmin_results.json", "w", encoding="utf-8") as f:
+        json.dump(export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON lateraladmin_results.json généré ({len(export_data)} chemins)")
     return cases
 
 
@@ -892,6 +803,56 @@ def run_shadow_admin_attack(
 
         visualize_cases(filtered_shadow_cases, max_cases=max_visualize)
 
+    # === Export JSON au format demandé ===
+    export_data = []
+    for idx, case in enumerate(filtered_shadow_cases, start=1):
+        path = case["path"]
+        rels = []
+        for i in range(len(path) - 1):
+            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+
+        # Récupère les types et noms des nœuds source/target
+        def get_type(node):
+            labs = node_types.get(node, [])
+            if "User" in labs:
+                return "User"
+            if "Group" in labs:
+                return "Group"
+            if "Computer" in labs:
+                return "Computer"
+            if "Domain" in labs:
+                return "Domain"
+            return "Other"
+
+        def get_id(node):
+            # Cherche l'ID numérique si possible, sinon le nom
+            for n, labs in node_types.items():
+                if n == node:
+                    # Si le nom est un int, retourne-le, sinon retourne le nom
+                    try:
+                        return int(n)
+                    except:
+                        return n
+            return node
+
+        export_data.append({
+            "attack": "shadowadmin",
+            "attack_id": f"shadowadmin_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path)
+        })
+
+    with open("shadowadmin_results.json", "w", encoding="utf-8") as f:
+        json.dump(export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON shadowadmin_results.json généré ({len(export_data)} chemins)")
+
     return filtered_shadow_cases
 
 
@@ -984,6 +945,45 @@ def run_kerberos_adjusted_attack(
                 continue
             valid_paths.append(path)
     print(f"[+] Valid paths found (4 steps): {len(valid_paths)}")
+
+    # === Export JSON au format demandé ===
+    export_data = []
+    def get_type(node):
+        labs = node_types.get(node, [])
+        if "User" in labs:
+            return "User"
+        if "Group" in labs:
+            return "Group"
+        if "Computer" in labs:
+            return "Computer"
+        if "Domain" in labs:
+            return "Domain"
+        return "Other"
+    def get_id(node):
+        try:
+            return int(node)
+        except:
+            return node
+    for idx, path in enumerate(valid_paths, start=1):
+        rels = []
+        for i in range(len(path) - 1):
+            rels.append(G[path[i]][path[i+1]].get("relation", "UNKNOWN_REL"))
+        export_data.append({
+            "attack": "kerberosadjusted",
+            "attack_id": f"kerberosadjusted_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path)
+        })
+    with open("kerberosadjusted_results.json", "w", encoding="utf-8") as f:
+        json.dump(export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON kerberosadjusted_results.json généré ({len(export_data)} chemins)")
 
     # 4. Visualisation
     def visualize_paths(paths, max_show=5):
@@ -1208,4 +1208,42 @@ def run_louise_attack(
                     rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                     print(f"  {src} --{rels}--> {dst}")
     # Retourne la liste des chemins trouvés
+    # === Export JSON au format demandé ===
+    export_data = []
+    def get_type(node):
+        labs = node_types.get(node, [])
+        if "User" in labs:
+            return "User"
+        if "Group" in labs:
+            return "Group"
+        if "Computer" in labs:
+            return "Computer"
+        if "Domain" in labs:
+            return "Domain"
+        return "Other"
+    def get_id(node):
+        try:
+            return int(node)
+        except:
+            return node
+    for idx, (source, path) in enumerate(success_paths, start=1):
+        rels = []
+        for i in range(len(path) - 1):
+            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+        export_data.append({
+            "attack": "louise",
+            "attack_id": f"louise_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path)
+        })
+    with open("louise_results.json", "w", encoding="utf-8") as f:
+        json.dump(export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON louise_results.json généré ({len(export_data)} chemins)")
     return success_paths
