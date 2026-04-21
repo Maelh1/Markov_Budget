@@ -11,46 +11,58 @@ import networkx as nx
 # ======================================================================
 # Phishing Attack Simulation
 # ======================================================================
+# Cette section simule une campagne de phishing sur un graphe d'utilisateurs.
+# Les fonctions principales sont :
+# - load_users_from_jsonl : charge les utilisateurs depuis un fichier JSONL.
+# - select_phishing_targets : sélectionne aléatoirement des cibles.
+# - simulate_phishing : simule la réussite de l'attaque sur chaque cible.
+# - plot_phishing_results : visualise les résultats.
+# - run_phishing_campaign : pipeline complet, retourne les résultats et affiche un résumé.
 
 def load_users_from_jsonl(jsonl_path: str, user_label: str = 'User', name_property: str = 'name') -> List[str]:
     """Read a JSONL graph file and return a list of user names."""
     users: List[str] = []
     seen = set()
 
+    # Ouvre le fichier JSONL et lit chaque ligne
     with open(jsonl_path, 'r', encoding='utf-8') as f:
         for line in f:
             if not line.strip():
-                continue
+                continue  # Ignore les lignes vides
 
             data = json.loads(line)
             if data.get('type') != 'node':
-                continue
+                continue  # Ignore les relations
 
             labels = data.get('labels', [])
             if user_label not in labels:
-                continue
+                continue  # Ignore les nœuds qui ne sont pas des utilisateurs
 
             name = data.get('properties', {}).get(name_property, 'Unknown')
             if name not in seen:
                 seen.add(name)
                 users.append(name)
 
+    # Retourne la liste des utilisateurs trouvés
     return users
 
 
 def select_phishing_targets(users: List[str], count: int = 10, seed: Optional[int] = None) -> List[str]:
     """Select a random sample of users for a phishing campaign."""
+    # Permet de fixer la graine pour la reproductibilité
     if seed is not None:
         rng = random.Random(seed)
     else:
         rng = random
 
     sample_count = min(count, len(users))
+    # Sélectionne un échantillon aléatoire d'utilisateurs
     return rng.sample(users, sample_count)
 
 
 def simulate_phishing(targets: List[str], prob_range: Tuple[float, float] = (0.0, 0.1), seed: Optional[int] = None) -> Tuple[List[str], Dict[str, float]]:
     """Simulate a phishing campaign and return compromised users plus probabilities."""
+    # Permet de fixer la graine pour la reproductibilité
     if seed is not None:
         rng = random.Random(seed)
     else:
@@ -59,14 +71,16 @@ def simulate_phishing(targets: List[str], prob_range: Tuple[float, float] = (0.0
     success_users: List[str] = []
     probabilities: Dict[str, float] = {}
 
+    # Pour chaque cible, tire une probabilité de succès et simule l'attaque
     for user in targets:
-        prob = rng.uniform(*prob_range)
-        success = rng.random() < prob
+        prob = rng.uniform(*prob_range)  # Probabilité de succès pour cet utilisateur
+        success = rng.random() < prob    # L'attaque réussit-elle ?
         probabilities[user] = prob
 
         if success:
             success_users.append(user)
 
+    # Retourne la liste des utilisateurs compromis et les probabilités associées
     return success_users, probabilities
 
 
@@ -75,11 +89,13 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
     G = nx.DiGraph()
     pos = {attacker_name: (-1, 0)}
 
+    # Place chaque utilisateur sur l'axe vertical
     for i, user in enumerate(targets):
         pos[user] = (1, i)
 
     plt.figure(figsize=figsize)
 
+    # Noeud de l'attaquant
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=[attacker_name],
@@ -88,6 +104,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         edgecolors='black',
     )
 
+    # Noeuds compromis
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=success_users,
@@ -95,6 +112,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         node_size=700,
     )
 
+    # Noeuds non compromis
     failed_users = [u for u in targets if u not in success_users]
     nx.draw_networkx_nodes(
         G, pos,
@@ -103,6 +121,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         node_size=500,
     )
 
+    # Arêtes vers les compromis
     success_edges = [(attacker_name, u) for u in success_users]
     nx.draw_networkx_edges(
         G, pos,
@@ -112,6 +131,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         arrowsize=20,
     )
 
+    # Arêtes vers les échecs
     fail_edges = [(attacker_name, u) for u in failed_users]
     nx.draw_networkx_edges(
         G, pos,
@@ -122,6 +142,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         arrowsize=15,
     )
 
+    # Affichage des labels
     labels = {attacker_name: attacker_name}
     labels.update({u: u for u in targets})
     nx.draw_networkx_labels(G, pos, labels, font_size=9, font_weight='bold')
@@ -141,9 +162,11 @@ def run_phishing_campaign(
     show_plot: bool = True,
 ) -> Dict[str, object]:
     """Run a complete phishing campaign from a JSONL dataset."""
+    # Charge tous les utilisateurs du graphe
     users = load_users_from_jsonl(jsonl_path, user_label=user_label, name_property=name_property)
     print(f"[+] Total users found: {len(users)}")
 
+    # Si aucun utilisateur trouvé, retourne un résultat vide
     if not users:
         return {
             'users': users,
@@ -153,14 +176,17 @@ def run_phishing_campaign(
             'probabilities': {},
         }
 
+    # Sélectionne les cibles de la campagne
     targets = select_phishing_targets(users, count=target_count, seed=seed)
     print("\nUsers targeted by phishing:")
     for u in targets:
         print(' -', u)
 
+    # Simule la campagne de phishing
     success_users, probabilities = simulate_phishing(targets, prob_range=prob_range, seed=seed)
     print("\nPhishing simulation:\n")
 
+    # Affiche le résultat pour chaque cible
     for user in targets:
         prob = probabilities[user]
         success = user in success_users
@@ -168,14 +194,17 @@ def run_phishing_campaign(
         print(f"   probability = {round(prob, 2)}")
         print(f"   RESULT = {'SUCCESS' if success else 'FAIL'}\n")
 
+    # Affiche la visualisation si demandé
     if show_plot:
         plot_phishing_results(targets, success_users)
 
+    # Liste des utilisateurs non compromis
     failed_users = [u for u in targets if u not in success_users]
     print('=================================')
     print(f"Users compromised: {len(success_users)}")
     print(success_users)
 
+    # Retourne un résumé de la campagne
     return {
         'users': users,
         'targets': targets,
@@ -188,6 +217,13 @@ def run_phishing_campaign(
 # ======================================================================
 # Lateral Admin Movement Attack Simulation
 # ======================================================================
+# Cette section recherche des chemins de mouvement latéral admin dans un graphe AD.
+# Les helpers permettent de classifier les nœuds (User, Group, Computer, Domain).
+# Critères :
+#   - Source = User ou Computer non privilégié
+#   - Cible = groupe/machine/compte admin
+#   - Chemin avec au moins 2 relations latérales et un Computer
+# La fonction run_lateral_admin_movement affiche un résumé, exporte les résultats, et retourne les cas trouvés.
 
 def run_lateral_admin_movement(
     jsonl_path: str,
@@ -611,6 +647,11 @@ def run_lateral_admin_movement(
 # ======================================================================
 # Shadow Admin Attack Simulation
 # ======================================================================
+# Cette section détecte les "shadow admins" (utilisateurs ayant des droits indirects sur des groupes privilégiés).
+# Critères :
+#   - Chemin contenant à la fois une relation ACL (GenericAll, WriteDacl, etc.) et une relation de groupe (MemberOf, AddMember)
+#   - Exclut les admins directs
+# La fonction run_shadow_admin_attack filtre les vrais shadow admins, affiche un résumé, visualise les cas, et retourne la liste filtrée.
 
 def run_shadow_admin_attack(
     jsonl_path: str,
@@ -857,6 +898,12 @@ def run_shadow_admin_attack(
 # ======================================================================
 # Kerberos Adjusted Attack Simulation
 # ======================================================================
+# Cette section recherche des chemins d'attaque Kerberos ajustés :
+#   - Chemin de 4 arêtes (5 nœuds)
+#   - Doit contenir un utilisateur avec SPN (sauf dernier)
+#   - Doit finir sur un admin
+# La fonction run_kerberos_adjusted_attack retourne et visualise les chemins valides.
+
 def run_kerberos_adjusted_attack(
     jsonl_path: str,
     max_paths: int = 5,
@@ -1002,6 +1049,11 @@ def run_kerberos_adjusted_attack(
 # ======================================================================
 # Louise Attack Simulation (Random Walk)
 # ======================================================================
+# Cette section lance des random walks depuis des users jusqu'à des cibles intéressantes.
+# S'arrête après min_success chemins ou un chemin long trouvé.
+# Affiche un résumé, tous les chemins trouvés, et ceux de longueur >= min_nodes_for_long.
+# La fonction run_louise_attack retourne la liste des chemins trouvés.
+
 def run_louise_attack(
     jsonl_path: str,
     min_success: int = 150,
@@ -1021,21 +1073,23 @@ def run_louise_attack(
     import networkx as nx
     from collections import defaultdict
 
-    # 1. Charger le graphe
+    # 1. Charger le graphe depuis le fichier JSONL
     G = nx.DiGraph()
     node_types = {}
     edge_evidence = defaultdict(list)
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
-                continue
+                continue  # Ignore les lignes vides
             data = json.loads(line)
             if data.get("type") == "node":
+                # Ajoute le nœud et ses labels
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
                 G.add_node(name)
                 node_types[name] = labels
             elif data.get("type") == "relationship":
+                # Ajoute l'arête et le type de relation
                 start = data.get("start", {}).get("properties", {}).get("name")
                 end = data.get("end", {}).get("properties", {}).get("name")
                 rel_type = (
@@ -1050,11 +1104,12 @@ def run_louise_attack(
     print(f"[+] Nodes: {len(G.nodes())}")
     print(f"[+] Edges: {len(G.edges())}")
 
-    # 2. Helpers
+    # 2. Fonctions utilitaires pour identifier les types de nœuds
     def is_user(node):
         return "User" in node_types.get(node, [])
     def is_interesting_target(node):
         n = node.upper()
+        # Définition des cibles intéressantes (groupes admins, DC, etc.)
         return (
             "DOMAIN ADMINS" in n
             or "ENTERPRISE ADMINS" in n
@@ -1071,20 +1126,21 @@ def run_louise_attack(
             or "MAINDC" in n
         )
     def random_walk(G, source, max_steps=100):
+        # Effectue un random walk depuis la source jusqu'à une cible intéressante ou max_steps
         current = source
         path = [current]
         for _ in range(max_steps):
             neighbors = list(G.successors(current))
             if not neighbors:
-                return path
+                return path  # Arrêt si plus de voisins
             nxt = random.choice(neighbors)
             path.append(nxt)
             current = nxt
             if is_interesting_target(current):
-                return path
+                return path  # Arrêt si cible atteinte
         return path
 
-    # 3. Lancer jusqu'à min_success ou un long chemin
+    # 3. Lancer des random walks jusqu'à min_success chemins ou un chemin long
     users = [n for n in G.nodes() if is_user(n)]
     success_paths = []
     attempts = 0
@@ -1097,10 +1153,10 @@ def run_louise_attack(
         if not path:
             continue
         if not is_interesting_target(path[-1]):
-            continue
+            continue  # Ignore si la cible n'est pas intéressante
         sig = tuple(path)
         if sig in seen_paths:
-            continue
+            continue  # Ignore les doublons
         seen_paths.add(sig)
         success_paths.append((source, path))
         if len(path) >= min_nodes_for_long:
@@ -1108,14 +1164,14 @@ def run_louise_attack(
         if len(success_paths) >= min_success or found_long_path:
             break
 
-    # 4. Résumé
+    # 4. Affiche un résumé des résultats
     print("\n" + "=" * 100)
     print(f"[+] RÉSULTATS (en {attempts} tentatives)")
     print("=" * 100)
     print(f"Nombre de chemins trouvés : {len(success_paths)}")
     print(f"Au moins un chemin avec >= {min_nodes_for_long} noeuds : {found_long_path}")
 
-    # 5. Afficher tous les chemins trouvés
+    # 5. Affiche tous les chemins trouvés
     if show_paths:
         for i, (source, path) in enumerate(success_paths, start=1):
             print("-" * 100)
@@ -1130,7 +1186,7 @@ def run_louise_attack(
                 dst = path[j + 1]
                 rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                 print(f"  {src} --{rels}--> {dst}")
-    # 6. Afficher explicitement les chemins longs
+    # 6. Affiche explicitement les chemins longs
     if show_long_paths:
         long_paths = [(s, p) for (s, p) in success_paths if len(p) >= min_nodes_for_long]
         print("\n" + "=" * 100)
@@ -1151,4 +1207,5 @@ def run_louise_attack(
                     dst = path[j + 1]
                     rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                     print(f"  {src} --{rels}--> {dst}")
+    # Retourne la liste des chemins trouvés
     return success_paths
