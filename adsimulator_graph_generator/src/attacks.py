@@ -606,3 +606,249 @@ def run_lateral_admin_movement(
     print("[+] Export créé : lateral_admin_summary.csv")
 
     return cases
+
+
+# ======================================================================
+# Shadow Admin Attack Simulation
+# ======================================================================
+
+def run_shadow_admin_attack(
+    jsonl_path: str,
+    max_cutoff: int = 7,
+    max_visualize: int = 5,
+    show_plots: bool = True,
+) -> List[Dict[str, object]]:
+    """Run shadow admin attack analysis on a JSONL graph dataset."""
+    
+    # ===========================================
+    # 1. Charger le graphe depuis le fichier JSONL
+    # ===========================================
+    G = nx.DiGraph()
+    node_types = {}
+    edge_evidence = defaultdict(list)
+
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+
+            data = json.loads(line)
+
+            if data.get("type") == "node":
+                name = data.get("properties", {}).get("name", str(data.get("id")))
+                labels = data.get("labels", [])
+                G.add_node(name)
+                node_types[name] = labels
+
+            elif data.get("type") == "relationship":
+                start = data.get("start", {}).get("properties", {}).get("name")
+                end = data.get("end", {}).get("properties", {}).get("name")
+
+                rel_type = (
+                    data.get("label")
+                    or data.get("properties", {}).get("type")
+                    or data.get("properties", {}).get("name")
+                    or "UNKNOWN_REL"
+                )
+
+                if start and end:
+                    G.add_edge(start, end)
+                    edge_evidence[(start, end)].append(rel_type)
+
+    print(f"[+] Nodes chargés : {len(G.nodes())}")
+    print(f"[+] Edges chargées : {len(G.edges())}")
+
+    # ===========================================
+    # 2. Fonctions auxiliaires
+    # ===========================================
+    def labels(node):
+        return set(node_types.get(node, []))
+
+    def is_user(node):
+        return "User" in labels(node)
+
+    def is_group(node):
+        return "Group" in labels(node)
+
+    def is_computer(node):
+        return "Computer" in labels(node)
+
+    def is_domain(node):
+        return "Domain" in labels(node)
+
+    def simple_node_type(node):
+        if is_user(node):
+            return "User"
+        if is_group(node):
+            return "Group"
+        if is_computer(node):
+            return "Computer"
+        if is_domain(node):
+            return "Domain"
+        return "Other"
+
+    def is_privileged_group(node):
+        n = node.upper()
+        return any(x in n for x in [
+            "DOMAIN ADMINS",
+            "ENTERPRISE ADMINS",
+            "SCHEMA ADMINS",
+            "ADMINISTRATORS",
+            "ACCOUNT OPERATORS",
+            "SERVER OPERATORS",
+            "BACKUP OPERATORS",
+            "PRINT OPERATORS"
+        ])
+
+    def path_rel_set(path):
+        rels = set()
+        for i in range(len(path) - 1):
+            rels.update(edge_evidence.get((path[i], path[i+1]), []))
+        return rels
+
+    # ===========================================
+    # 3. Définition des relations pour Shadow Admin
+    # ===========================================
+    ACL_RELS = {"GenericAll", "GenericWrite", "WriteDacl", "WriteOwner", "Owns", "AllExtendedRights"}
+    GROUP_RELS = {"MemberOf", "AddMember"}
+
+    def is_real_shadow(case):
+        path = case["path"]
+        rels = path_rel_set(path)
+
+        # Doit contenir au moins une relation ACL et une relation de groupe
+        if not (rels & ACL_RELS):
+            return False
+        if not (rels & GROUP_RELS):
+            return False
+
+        # Exclure si déjà admin direct (MemberOf vers groupe privilégié)
+        if len(path) >= 2:
+            first, second = path[0], path[1]
+            if "MemberOf" in edge_evidence.get((first, second), []):
+                if is_privileged_group(second):
+                    return False
+
+        return True
+
+    # ===========================================
+    # 4. Recherche des cas de Shadow Admin
+    # ===========================================
+    # Sources : Users ou Computers
+    sources = [n for n in G.nodes() if is_user(n) or is_computer(n)]
+    # Cibles : Groupes privilégiés
+    targets = [n for n in G.nodes() if is_group(n) and is_privileged_group(n)]
+
+    print(f"[+] Sources potentielles : {len(sources)}")
+    print(f"[+] Cibles privilégiées : {len(targets)}")
+
+    cases = []
+    seen = set()
+
+    for source in sources:
+        for target in targets:
+            if source == target:
+                continue
+
+            try:
+                for path in nx.all_simple_paths(G, source=source, target=target, cutoff=max_cutoff):
+                    sig = tuple(path)
+                    if sig in seen:
+                        continue
+                    seen.add(sig)
+
+                    cases.append({
+                        "source": source,
+                        "target": target,
+                        "path": path,
+                        "rels": list(path_rel_set(path)),
+                        "length": len(path) - 1,
+                        "source_type": "User" if is_user(source) else "Computer",
+                        "characterization": "ShadowAdmin"
+                    })
+            except nx.NetworkXNoPath:
+                continue
+
+    # ===========================================
+    # 5. Filtrage des vrais Shadow Admin
+    # ===========================================
+    filtered_shadow_cases = [c for c in cases if is_real_shadow(c)]
+
+    print(f"[+] Cas Shadow Admin totaux : {len(cases)}")
+    print(f"[+] Shadow admin réalistes : {len(filtered_shadow_cases)}")
+
+    # ===========================================
+    # 6. Visualisation (optionnelle)
+    # ===========================================
+    if show_plots and filtered_shadow_cases:
+        def visualize_cases(cases, max_cases=5):
+            n = min(max_cases, len(cases))
+
+            for i in range(n):
+                case = cases[i]
+                path = case["path"]
+
+                subG = nx.DiGraph()
+                edge_labels = {}
+
+                # Construction du sous-graphe
+                for j in range(len(path) - 1):
+                    src = path[j]
+                    dst = path[j + 1]
+                    subG.add_edge(src, dst)
+
+                    rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+                    edge_labels[(src, dst)] = "/".join(rels)
+
+                # Couleurs des nœuds
+                node_colors = []
+                for node in subG.nodes():
+                    if node == path[0]:
+                        node_colors.append("orange")      # point d'entrée
+                    elif node == path[-1]:
+                        node_colors.append("red")         # cible finale
+                    elif "User" in node_types.get(node, []):
+                        node_colors.append("lightgreen")
+                    elif "Group" in node_types.get(node, []):
+                        node_colors.append("skyblue")
+                    elif "Computer" in node_types.get(node, []):
+                        node_colors.append("gray")
+                    elif "Domain" in node_types.get(node, []):
+                        node_colors.append("violet")
+                    else:
+                        node_colors.append("lightgray")
+
+                # Position en quinconce (zig-zag)
+                pos = {}
+                for k, node in enumerate(path):
+                    x = k * 3
+                    y = (k % 2) * 2   # alterne entre 0 et 2
+                    pos[node] = (x, y)
+
+                # Plot
+                plt.figure(figsize=(20, 5))
+
+                nx.draw(
+                    subG,
+                    pos,
+                    with_labels=True,
+                    node_color=node_colors,
+                    node_size=2000,
+                    font_size=7,
+                    arrows=True
+                )
+
+                nx.draw_networkx_edge_labels(
+                    subG,
+                    pos,
+                    edge_labels=edge_labels,
+                    font_size=6
+                )
+
+                plt.title(f"Cas Shadow Admin #{i+1}")
+                plt.axis("off")
+                plt.show()
+
+        visualize_cases(filtered_shadow_cases, max_cases=max_visualize)
+
+    return filtered_shadow_cases
