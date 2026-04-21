@@ -198,11 +198,15 @@ def run_lateral_admin_movement(
 ) -> List[Dict[str, object]]:
     """Run lateral admin movement analysis on a JSONL graph dataset."""
     
-    # Load graph
+    # ===========================================
+    # 1. Charger le graphe depuis le fichier JSONL
+    # ===========================================
+    # Initialiser un graphe dirigé et des dictionnaires pour stocker les types de nœuds et les relations
     G = nx.DiGraph()
     node_types = {}
     edge_evidence = defaultdict(list)
 
+    # Lire le fichier JSONL ligne par ligne
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
@@ -210,12 +214,14 @@ def run_lateral_admin_movement(
 
             data = json.loads(line)
 
+            # Traiter les nœuds : extraire le nom et les labels
             if data.get("type") == "node":
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
                 G.add_node(name)
                 node_types[name] = labels
 
+            # Traiter les relations : extraire les nœuds de départ et d'arrivée, et le type de relation
             elif data.get("type") == "relationship":
                 start = data.get("start", {}).get("properties", {}).get("name")
                 end = data.get("end", {}).get("properties", {}).get("name")
@@ -234,7 +240,9 @@ def run_lateral_admin_movement(
     print(f"[+] Nodes chargés : {len(G.nodes())}")
     print(f"[+] Edges chargées : {len(G.edges())}")
 
-    # Helpers
+    # ===========================================
+    # 2. Fonctions auxiliaires pour classifier les nœuds
+    # ===========================================
     def labels(node):
         return set(node_types.get(node, []))
 
@@ -261,6 +269,7 @@ def run_lateral_admin_movement(
             return "Domain"
         return "Other"
 
+    # Vérifier si un nœud a un nom d'admin (pour exclure les sources privilégiées)
     def is_admin_like_name(node):
         n = node.upper()
         return any(k in n for k in [
@@ -276,6 +285,7 @@ def run_lateral_admin_movement(
             "KRBTGT"
         ])
 
+    # Définir les cibles intéressantes : groupes privilégiés, machines critiques, comptes admin
     def is_interesting_target(node):
         n = node.upper()
 
@@ -294,7 +304,7 @@ def run_lateral_admin_movement(
         ]):
             return True
 
-        # Machines critiques
+        # Machines critiques (comme les contrôleurs de domaine)
         if is_computer(node) and any(k in n for k in ["DC", "MAINDC"]):
             return True
 
@@ -304,38 +314,46 @@ def run_lateral_admin_movement(
 
         return False
 
+    # Extraire les relations d'un chemin
     def path_rels(path):
         rels = []
         for i in range(len(path) - 1):
             rels.extend(edge_evidence.get((path[i], path[i + 1]), []))
         return rels
 
-    # Lateral Admin Chain definition
+    # ===========================================
+    # 3. Définition des chaînes de mouvement latéral admin
+    # ===========================================
+    # Relations considérées comme latérales (mouvement horizontal dans le réseau)
     LATERAL_RELS = {"AdminTo", "CanRDP", "CanPSRemote", "ExecuteDCOM", "HasSession"}
 
     def classify_lateral_admin_chain(path):
         """
-        Critères :
-        - source = User ou Computer
-        - cible = target intéressante
-        - au moins 2 relations latérales
-        - au moins un noeud Computer dans le chemin
+        Classifie un chemin comme une chaîne de mouvement latéral admin selon les critères :
+        - Source : User ou Computer (non privilégié)
+        - Cible : Target intéressante (privilégiée)
+        - Au moins 2 relations latérales dans le chemin
+        - Au moins un nœud Computer dans le chemin
         """
         if len(path) < 2:
             return False
 
+        # Vérifier la source
         if not (is_user(path[0]) or is_computer(path[0])):
             return False
 
+        # Vérifier la cible
         if not is_interesting_target(path[-1]):
             return False
 
         rels = path_rels(path)
         rel_set = set(rels)
 
+        # Compter les relations latérales
         lateral_count = sum(1 for r in rels if r in LATERAL_RELS)
         has_computer = any(is_computer(n) for n in path)
 
+        # Critères minimaux
         if lateral_count < 2:
             return False
 
@@ -347,36 +365,45 @@ def run_lateral_admin_movement(
 
         return True
 
-    # Realistic sources and targets
+    # ===========================================
+    # 4. Identifier les sources et cibles réalistes
+    # ===========================================
+    # Sources : Users ou Computers non-admin (pour simuler un attaquant réaliste)
     realistic_sources = [
         n for n in G.nodes()
         if (is_user(n) or is_computer(n)) and not is_admin_like_name(n)
     ]
 
+    # Cibles : Nœuds intéressants (privilégiés)
     interesting_targets = [n for n in G.nodes() if is_interesting_target(n)]
 
     print(f"[+] Sources réalistes : {len(realistic_sources)}")
     print(f"[+] Targets intéressantes : {len(interesting_targets)}")
 
-    # Find cases
+    # ===========================================
+    # 5. Recherche des cas de mouvement latéral
+    # ===========================================
     cases = []
-    seen = set()
+    seen = set()  # Pour éviter les doublons
 
+    # Pour chaque paire source-cible, chercher tous les chemins simples
     for source in realistic_sources:
         for target in interesting_targets:
             if source == target:
                 continue
 
             try:
+                # Utiliser NetworkX pour trouver tous les chemins simples jusqu'à max_cutoff
                 for path in nx.all_simple_paths(G, source=source, target=target, cutoff=max_cutoff):
                     if not classify_lateral_admin_chain(path):
                         continue
 
-                    sig = tuple(path)
+                    sig = tuple(path)  # Signature du chemin pour éviter les doublons
                     if sig in seen:
                         continue
                     seen.add(sig)
 
+                    # Enregistrer le cas
                     cases.append({
                         "source": source,
                         "target": target,
@@ -387,14 +414,17 @@ def run_lateral_admin_movement(
                         "characterization": "LateralAdminChain"
                     })
             except nx.NetworkXNoPath:
-                continue
+                continue  # Aucun chemin trouvé
 
-    # Display summary
+    # ===========================================
+    # 6. Affichage du résumé
+    # ===========================================
     print("\n" + "=" * 100)
     print("[+] CAS LATERAL ADMIN CHAIN")
     print("=" * 100)
     print(f"Nombre total de cas : {len(cases)}")
 
+    # Afficher les top_k_print premiers cas
     for i, case in enumerate(cases[:top_k_print], start=1):
         print("-" * 100)
         print(f"Cas #{i}")
@@ -410,7 +440,9 @@ def run_lateral_admin_movement(
             rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
             print(f"  {src} --{rels}--> {dst}")
 
-    # Stats
+    # ===========================================
+    # 7. Statistiques
+    # ===========================================
     source_type_counter = Counter()
     target_counter = Counter()
     rel_counter = Counter()
@@ -437,13 +469,15 @@ def run_lateral_admin_movement(
     for tgt, count in target_counter.most_common(10):
         print(f"{tgt}: {count}")
 
+    # ===========================================
+    # 8. Exports des résultats (optionnel)
+    # ===========================================
     if not export_files:
         return cases
 
-    # Exports
     selected_cases = cases[:top_k_export]
 
-    # JSON léger pour la visu
+    # Export JSON léger pour visualisation
     visu_export = []
 
     for idx, case in enumerate(selected_cases, start=1):
@@ -487,7 +521,7 @@ def run_lateral_admin_movement(
 
     print("[+] Export créé : lateral_admin_visu.json")
 
-    # JSON détaillé
+    # Export JSON détaillé
     detailed_export = []
 
     for idx, case in enumerate(selected_cases, start=1):
@@ -551,7 +585,7 @@ def run_lateral_admin_movement(
 
     print("[+] Export créé : lateral_admin_detailed.json")
 
-    # CSV résumé
+    # Export CSV résumé
     with open("lateral_admin_summary.csv", "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
