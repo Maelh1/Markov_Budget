@@ -852,3 +852,148 @@ def run_shadow_admin_attack(
         visualize_cases(filtered_shadow_cases, max_cases=max_visualize)
 
     return filtered_shadow_cases
+
+
+# ======================================================================
+# Kerberos Adjusted Attack Simulation
+# ======================================================================
+def run_kerberos_adjusted_attack(
+    jsonl_path: str,
+    max_paths: int = 5,
+    show_plots: bool = True,
+) -> list:
+    """
+    Recherche des chemins d'attaque Kerberos ajustés dans un graphe JSONL.
+    - Chemin de 4 arêtes (5 nœuds)
+    - Doit contenir un utilisateur avec SPN (sauf dernier)
+    - Doit finir sur un admin
+    """
+    import matplotlib.pyplot as plt
+    import networkx as nx
+    import json
+
+    # 1. Charger le graphe
+    G = nx.DiGraph()
+    node_types = {}
+    node_props = {}
+
+    with open(jsonl_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if not line.strip():
+                continue
+            data = json.loads(line)
+            if data.get('type') == 'node':
+                name = data['properties']['name']
+                node_types[name] = data.get('labels', [])
+                node_props[name] = data.get('properties', {})
+                G.add_node(name)
+            elif data.get('type') == 'relationship':
+                start = data['start']['properties']['name']
+                end = data['end']['properties']['name']
+                rel = data.get('label', 'REL')
+                G.add_edge(start, end, relation=rel)
+
+    print(f"[+] Nodes: {len(G.nodes())}")
+    print(f"[+] Edges: {len(G.edges())}")
+
+    # 2. Identifier les nœuds
+    users = [n for n in G.nodes() if "User" in node_types.get(n, [])]
+    spn_users = [n for n in G.nodes() if node_props.get(n, {}).get("hasspn", 0) == 1]
+    if len(spn_users) == 0:
+        print("[!] Aucun SPN trouvé → fallback activé")
+        spn_users = users[:3]
+
+    PRIV_GROUPS = [
+        "DOMAIN ADMINS",
+        "ENTERPRISE ADMINS",
+        "ADMINISTRATORS",
+        "SCHEMA ADMINS"
+    ]
+    def is_admin(node):
+        name = node.upper()
+        if "Group" in node_types.get(node, []):
+            return any(p in name for p in PRIV_GROUPS)
+        if "User" in node_types.get(node, []):
+            return "ADMIN" in name
+        return False
+    admins = [n for n in G.nodes() if is_admin(n)]
+    print(f"[+] Users: {len(users)}")
+    print(f"[+] SPN Users: {len(spn_users)}")
+    print(f"[+] Admin nodes: {len(admins)}")
+
+    # 3. Trouver les chemins valides (4 arêtes)
+    valid_paths = []
+    for user in users:
+        try:
+            paths = nx.single_source_shortest_path(G, user, cutoff=4)
+        except Exception:
+            continue
+        for path in paths.values():
+            if len(path) != 5:
+                continue
+            if not any(n in spn_users for n in path[:-1]):
+                continue
+            if not is_admin(path[-1]):
+                continue
+            valid_paths.append(path)
+    print(f"[+] Valid paths found (4 steps): {len(valid_paths)}")
+
+    # 4. Visualisation
+    def visualize_paths(paths, max_show=5):
+        for idx, path in enumerate(paths[:max_show]):
+            subG = nx.DiGraph()
+            edge_labels = {}
+            for i in range(len(path)-1):
+                u = path[i]
+                v = path[i+1]
+                subG.add_edge(u, v)
+                edge_labels[(u, v)] = G[u][v].get("relation", "UNK")
+            colors = []
+            for n in path:
+                if n == path[0]:
+                    colors.append("orange")
+                elif n in spn_users:
+                    colors.append("purple")
+                elif is_admin(n):
+                    colors.append("red")
+                elif "User" in node_types.get(n, []):
+                    colors.append("lightgreen")
+                elif "Group" in node_types.get(n, []):
+                    colors.append("skyblue")
+                elif "Computer" in node_types.get(n, []):
+                    colors.append("gray")
+                else:
+                    colors.append("lightgray")
+            pos = {}
+            for k, node in enumerate(path):
+                y = 1 if k % 2 == 0 else -1
+                pos[node] = (k * 3, y)
+            plt.figure(figsize=(18, 4))
+            nx.draw(
+                subG,
+                pos,
+                with_labels=True,
+                node_color=colors,
+                node_size=2600,
+                font_size=8,
+                arrows=True
+            )
+            nx.draw_networkx_edge_labels(
+                subG,
+                pos,
+                edge_labels=edge_labels,
+                font_size=7
+            )
+            plt.title(f"Attack Path Kerberos Adjusted #{idx+1}")
+            plt.axis("off")
+            plt.show()
+    if show_plots and valid_paths:
+        visualize_paths(valid_paths, max_show=max_paths)
+    elif not valid_paths:
+        print("\n[-] Aucun chemin trouvé avec ces contraintes")
+        print("La Cause probable :")
+        print("- pas assez de SPN")
+        print("- pas de lien vers admin")
+        print("- graph trop petit")
+        print("- on remarque qu'en fonction de la génération de l'architecture ADsimulator, les résultats peuvent être 0")
+    return valid_paths
