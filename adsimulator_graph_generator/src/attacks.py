@@ -1,6 +1,8 @@
 import json
 import random
+from collections import defaultdict, Counter
 from typing import Dict, List, Optional, Tuple
+import csv
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -181,3 +183,392 @@ def run_phishing_campaign(
         'failed_users': failed_users,
         'probabilities': probabilities,
     }
+
+
+# ======================================================================
+# Lateral Admin Movement Attack Simulation
+# ======================================================================
+
+def run_lateral_admin_movement(
+    jsonl_path: str,
+    max_cutoff: int = 7,
+    export_files: bool = True,
+    top_k_print: int = 10,
+    top_k_export: int = 50,
+) -> List[Dict[str, object]]:
+    """Run lateral admin movement analysis on a JSONL graph dataset."""
+    
+    # Load graph
+    G = nx.DiGraph()
+    node_types = {}
+    edge_evidence = defaultdict(list)
+
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+
+            data = json.loads(line)
+
+            if data.get("type") == "node":
+                name = data.get("properties", {}).get("name", str(data.get("id")))
+                labels = data.get("labels", [])
+                G.add_node(name)
+                node_types[name] = labels
+
+            elif data.get("type") == "relationship":
+                start = data.get("start", {}).get("properties", {}).get("name")
+                end = data.get("end", {}).get("properties", {}).get("name")
+
+                rel_type = (
+                    data.get("label")
+                    or data.get("properties", {}).get("type")
+                    or data.get("properties", {}).get("name")
+                    or "UNKNOWN_REL"
+                )
+
+                if start and end:
+                    G.add_edge(start, end)
+                    edge_evidence[(start, end)].append(rel_type)
+
+    print(f"[+] Nodes chargés : {len(G.nodes())}")
+    print(f"[+] Edges chargées : {len(G.edges())}")
+
+    # Helpers
+    def labels(node):
+        return set(node_types.get(node, []))
+
+    def is_user(node):
+        return "User" in labels(node)
+
+    def is_group(node):
+        return "Group" in labels(node)
+
+    def is_computer(node):
+        return "Computer" in labels(node)
+
+    def is_domain(node):
+        return "Domain" in labels(node)
+
+    def simple_node_type(node):
+        if is_user(node):
+            return "User"
+        if is_group(node):
+            return "Group"
+        if is_computer(node):
+            return "Computer"
+        if is_domain(node):
+            return "Domain"
+        return "Other"
+
+    def is_admin_like_name(node):
+        n = node.upper()
+        return any(k in n for k in [
+            "DOMAIN ADMINS",
+            "ENTERPRISE ADMINS",
+            "SCHEMA ADMINS",
+            "ADMINISTRATORS",
+            "ACCOUNT OPERATORS",
+            "SERVER OPERATORS",
+            "BACKUP OPERATORS",
+            "PRINT OPERATORS",
+            "ADMINISTRATOR",
+            "KRBTGT"
+        ])
+
+    def is_interesting_target(node):
+        n = node.upper()
+
+        # Groupes privilégiés
+        if is_group(node) and any(k in n for k in [
+            "DOMAIN ADMINS",
+            "ENTERPRISE ADMINS",
+            "SCHEMA ADMINS",
+            "ADMINISTRATORS",
+            "ACCOUNT OPERATORS",
+            "SERVER OPERATORS",
+            "BACKUP OPERATORS",
+            "PRINT OPERATORS",
+            "STORAGE REPLICA ADMINISTRATORS",
+            "HYPER-V ADMINISTRATORS"
+        ]):
+            return True
+
+        # Machines critiques
+        if is_computer(node) and any(k in n for k in ["DC", "MAINDC"]):
+            return True
+
+        # Compte admin natif
+        if is_user(node) and "ADMINISTRATOR" in n:
+            return True
+
+        return False
+
+    def path_rels(path):
+        rels = []
+        for i in range(len(path) - 1):
+            rels.extend(edge_evidence.get((path[i], path[i + 1]), []))
+        return rels
+
+    # Lateral Admin Chain definition
+    LATERAL_RELS = {"AdminTo", "CanRDP", "CanPSRemote", "ExecuteDCOM", "HasSession"}
+
+    def classify_lateral_admin_chain(path):
+        """
+        Critères :
+        - source = User ou Computer
+        - cible = target intéressante
+        - au moins 2 relations latérales
+        - au moins un noeud Computer dans le chemin
+        """
+        if len(path) < 2:
+            return False
+
+        if not (is_user(path[0]) or is_computer(path[0])):
+            return False
+
+        if not is_interesting_target(path[-1]):
+            return False
+
+        rels = path_rels(path)
+        rel_set = set(rels)
+
+        lateral_count = sum(1 for r in rels if r in LATERAL_RELS)
+        has_computer = any(is_computer(n) for n in path)
+
+        if lateral_count < 2:
+            return False
+
+        if not (rel_set & LATERAL_RELS):
+            return False
+
+        if not has_computer:
+            return False
+
+        return True
+
+    # Realistic sources and targets
+    realistic_sources = [
+        n for n in G.nodes()
+        if (is_user(n) or is_computer(n)) and not is_admin_like_name(n)
+    ]
+
+    interesting_targets = [n for n in G.nodes() if is_interesting_target(n)]
+
+    print(f"[+] Sources réalistes : {len(realistic_sources)}")
+    print(f"[+] Targets intéressantes : {len(interesting_targets)}")
+
+    # Find cases
+    cases = []
+    seen = set()
+
+    for source in realistic_sources:
+        for target in interesting_targets:
+            if source == target:
+                continue
+
+            try:
+                for path in nx.all_simple_paths(G, source=source, target=target, cutoff=max_cutoff):
+                    if not classify_lateral_admin_chain(path):
+                        continue
+
+                    sig = tuple(path)
+                    if sig in seen:
+                        continue
+                    seen.add(sig)
+
+                    cases.append({
+                        "source": source,
+                        "target": target,
+                        "path": path,
+                        "rels": path_rels(path),
+                        "length": len(path) - 1,
+                        "source_type": "User" if is_user(source) else "Computer",
+                        "characterization": "LateralAdminChain"
+                    })
+            except nx.NetworkXNoPath:
+                continue
+
+    # Display summary
+    print("\n" + "=" * 100)
+    print("[+] CAS LATERAL ADMIN CHAIN")
+    print("=" * 100)
+    print(f"Nombre total de cas : {len(cases)}")
+
+    for i, case in enumerate(cases[:top_k_print], start=1):
+        print("-" * 100)
+        print(f"Cas #{i}")
+        print(f"Source      : {case['source']} ({case['source_type']})")
+        print(f"Cible       : {case['target']}")
+        print(f"Longueur    : {case['length']}")
+        print("Chemin      :")
+
+        p = case["path"]
+        for j in range(len(p) - 1):
+            src = p[j]
+            dst = p[j + 1]
+            rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+            print(f"  {src} --{rels}--> {dst}")
+
+    # Stats
+    source_type_counter = Counter()
+    target_counter = Counter()
+    rel_counter = Counter()
+
+    for case in cases:
+        source_type_counter[case["source_type"]] += 1
+        target_counter[case["target"]] += 1
+        for r in set(case["rels"]):
+            rel_counter[r] += 1
+
+    print("\n" + "=" * 100)
+    print("[+] RÉSUMÉ")
+    print("=" * 100)
+
+    print("\n[+] Répartition des sources :")
+    for k, v in source_type_counter.items():
+        print(f"{k}: {v}")
+
+    print("\n[+] Relations les plus fréquentes :")
+    for rel, count in rel_counter.most_common(10):
+        print(f"{rel}: {count}")
+
+    print("\n[+] Cibles les plus atteintes :")
+    for tgt, count in target_counter.most_common(10):
+        print(f"{tgt}: {count}")
+
+    if not export_files:
+        return cases
+
+    # Exports
+    selected_cases = cases[:top_k_export]
+
+    # JSON léger pour la visu
+    visu_export = []
+
+    for idx, case in enumerate(selected_cases, start=1):
+        path = case["path"]
+
+        nodes_out = []
+        edges_out = []
+
+        for node in path:
+            nodes_out.append({
+                "id": node,
+                "label": node,
+                "type": simple_node_type(node)
+            })
+
+        for i in range(len(path) - 1):
+            src = path[i]
+            dst = path[i + 1]
+            rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+
+            edges_out.append({
+                "source": src,
+                "target": dst,
+                "relations": rels
+            })
+
+        visu_export.append({
+            "attack_id": f"lateral_admin_{idx}",
+            "attack_type": "LateralAdminChain",
+            "source": case["source"],
+            "target": case["target"],
+            "source_type": case["source_type"],
+            "length": case["length"],
+            "path": path,
+            "nodes": nodes_out,
+            "edges": edges_out
+        })
+
+    with open("lateral_admin_visu.json", "w", encoding="utf-8") as f:
+        json.dump(visu_export, f, indent=2, ensure_ascii=False)
+
+    print("[+] Export créé : lateral_admin_visu.json")
+
+    # JSON détaillé
+    detailed_export = []
+
+    for idx, case in enumerate(selected_cases, start=1):
+        path = case["path"]
+
+        nodes_out = []
+        edges_out = []
+
+        for pos, node in enumerate(path):
+            nodes_out.append({
+                "id": node,
+                "name": node,
+                "position_in_path": pos,
+                "type": simple_node_type(node),
+                "labels": node_types.get(node, []),
+                "is_source": pos == 0,
+                "is_target": pos == len(path) - 1,
+                "is_interesting_target": is_interesting_target(node)
+            })
+
+        for i in range(len(path) - 1):
+            src = path[i]
+            dst = path[i + 1]
+            rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
+
+            edges_out.append({
+                "step": i + 1,
+                "source": src,
+                "target": dst,
+                "relations": rels,
+                "relation_count": len(rels),
+                "is_lateral_step": any(r in LATERAL_RELS for r in rels)
+            })
+
+        detailed_export.append({
+            "attack_id": f"lateral_admin_{idx}",
+            "attack_family": "LateralAdminChain",
+            "summary": {
+                "source": case["source"],
+                "source_type": case["source_type"],
+                "target": case["target"],
+                "target_is_interesting": is_interesting_target(case["target"]),
+                "length": case["length"]
+            },
+            "specification": {
+                "required_lateral_relations": sorted(list(LATERAL_RELS)),
+                "matched_relations_in_path": sorted(list(set(case["rels"]))),
+                "definition": (
+                    "Chemin partant d'un User ou Computer, finissant sur une cible intéressante, "
+                    "contenant au moins 2 relations latérales parmi AdminTo, HasSession, CanRDP, "
+                    "CanPSRemote, ExecuteDCOM, et au moins un noeud Computer dans le chemin."
+                )
+            },
+            "path_sequence": path,
+            "nodes": nodes_out,
+            "edges": edges_out
+        })
+
+    with open("lateral_admin_detailed.json", "w", encoding="utf-8") as f:
+        json.dump(detailed_export, f, indent=2, ensure_ascii=False)
+
+    print("[+] Export créé : lateral_admin_detailed.json")
+
+    # CSV résumé
+    with open("lateral_admin_summary.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "attack_id", "source", "source_type", "target",
+            "length", "path"
+        ])
+
+        for idx, case in enumerate(selected_cases, start=1):
+            writer.writerow([
+                f"lateral_admin_{idx}",
+                case["source"],
+                case["source_type"],
+                case["target"],
+                case["length"],
+                " -> ".join(case["path"])
+            ])
+
+    print("[+] Export créé : lateral_admin_summary.csv")
+
+    return cases
