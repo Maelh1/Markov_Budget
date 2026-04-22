@@ -1,9 +1,8 @@
+import os
 import json
 import random
 from collections import defaultdict, Counter
 from typing import Dict, List, Optional, Tuple
-import csv
-
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -240,6 +239,7 @@ def run_lateral_admin_movement(
     # Initialiser un graphe dirigé et des dictionnaires pour stocker les types de nœuds et les relations
     G = nx.DiGraph()
     node_types = {}
+    node_ids = {}
     edge_evidence = defaultdict(list)
 
     # Lire le fichier JSONL ligne par ligne
@@ -254,8 +254,10 @@ def run_lateral_admin_movement(
             if data.get("type") == "node":
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
+                node_id = data.get("id", name)
                 G.add_node(name)
                 node_types[name] = labels
+                node_ids[name] = node_id
 
             # Traiter les relations : extraire les nœuds de départ et d'arrivée, et le type de relation
             elif data.get("type") == "relationship":
@@ -527,11 +529,11 @@ def run_lateral_admin_movement(
             return "Domain"
         return "Other"
     def get_id(node):
-        try:
-            return int(node)
-        except:
-            return node
-    import os
+        # Prend l'id du noeud si dispo, sinon le nom
+        return node_ids.get(node, node)
+    def get_label_type(node):
+        labs = node_types.get(node, [])
+        return labs[1] if len(labs) > 1 else (labs[0] if labs else "Unknown")
     graph_name = os.path.basename(jsonl_path)
     for idx, case in enumerate(selected_cases, start=1):
         path = case["path"]
@@ -552,7 +554,11 @@ def run_lateral_admin_movement(
             "target_name": path[-1],
             "relationships": rels,
             "length": len(path),
-            "graph": graph_name
+            "graph": graph_name,
+            "source_id": get_id(path[0]),
+            "target_id": get_id(path[-1]),
+            "path_id": [get_id(n) for n in path],
+            "path_type": [get_label_type(n) for n in path]
         })
     with open("lateraladmin_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
@@ -582,6 +588,7 @@ def run_shadow_admin_attack(
     # ===========================================
     G = nx.DiGraph()
     node_types = {}
+    node_ids = {}
     edge_evidence = defaultdict(list)
 
     with open(jsonl_path, "r", encoding="utf-8") as f:
@@ -594,8 +601,10 @@ def run_shadow_admin_attack(
             if data.get("type") == "node":
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
+                node_id = data.get("id", name)
                 G.add_node(name)
                 node_types[name] = labels
+                node_ids[name] = node_id
 
             elif data.get("type") == "relationship":
                 start = data.get("start", {}).get("properties", {}).get("name")
@@ -810,7 +819,6 @@ def run_shadow_admin_attack(
 
     # === Export JSON au format demandé ===
     export_data = []
-    import os
     graph_name = os.path.basename(jsonl_path)
     for idx, case in enumerate(filtered_shadow_cases, start=1):
         path = case["path"]
@@ -832,13 +840,11 @@ def run_shadow_admin_attack(
             return "Other"
 
         def get_id(node):
-            for n, labs in node_types.items():
-                if n == node:
-                    try:
-                        return int(n)
-                    except:
-                        return n
-            return node
+            return node_ids.get(node, node)
+
+        def get_label_type(node):
+            labs = node_types.get(node, [])
+            return labs[1] if len(labs) > 1 else (labs[0] if labs else "Unknown")
 
         export_data.append({
             "attack": "shadowadmin",
@@ -852,7 +858,11 @@ def run_shadow_admin_attack(
             "target_name": path[-1],
             "relationships": rels,
             "length": len(path),
-            "graph": graph_name
+            "graph": graph_name,
+            "source_id": get_id(path[0]),
+            "target_id": get_id(path[-1]),
+            "path_id": [get_id(n) for n in path],
+            "path_type": [get_label_type(n) for n in path]
         })
 
     with open("shadowadmin_results.json", "w", encoding="utf-8") as f:
@@ -882,14 +892,13 @@ def run_kerberos_adjusted_attack(
     - Doit contenir un utilisateur avec SPN (sauf dernier)
     - Doit finir sur un admin
     """
-    import matplotlib.pyplot as plt
-    import networkx as nx
-    import json
+
 
     # 1. Charger le graphe
     G = nx.DiGraph()
     node_types = {}
     node_props = {}
+    node_ids = {}
 
     with open(jsonl_path, 'r', encoding='utf-8') as f:
         for line in f:
@@ -900,6 +909,8 @@ def run_kerberos_adjusted_attack(
                 name = data['properties']['name']
                 node_types[name] = data.get('labels', [])
                 node_props[name] = data.get('properties', {})
+                node_id = data.get('id', name)
+                node_ids[name] = node_id
                 G.add_node(name)
             elif data.get('type') == 'relationship':
                 start = data['start']['properties']['name']
@@ -966,11 +977,11 @@ def run_kerberos_adjusted_attack(
             return "Domain"
         return "Other"
     def get_id(node):
-        try:
-            return int(node)
-        except:
-            return node
-    import os
+        return node_ids.get(node, node)
+    def get_label_type(node):
+        labs = node_types.get(node, [])
+        return labs[1] if len(labs) > 1 else (labs[0] if labs else "Unknown")
+
     graph_name = os.path.basename(jsonl_path)
     for idx, path in enumerate(valid_paths, start=1):
         rels = []
@@ -988,7 +999,11 @@ def run_kerberos_adjusted_attack(
             "target_name": path[-1],
             "relationships": rels,
             "length": len(path),
-            "graph": graph_name
+            "graph": graph_name,
+            "source_id": get_id(path[0]),
+            "target_id": get_id(path[-1]),
+            "path_id": [get_id(n) for n in path],
+            "path_type": [get_label_type(n) for n in path]
         })
     with open("kerberosadjusted_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
@@ -1077,14 +1092,11 @@ def run_louise_attack(
     S'arrête après min_success chemins ou un chemin long trouvé.
     Affiche un résumé et retourne la liste des chemins trouvés.
     """
-    import random
-    import json
-    import networkx as nx
-    from collections import defaultdict
 
     # 1. Charger le graphe depuis le fichier JSONL
     G = nx.DiGraph()
     node_types = {}
+    node_ids = {}
     edge_evidence = defaultdict(list)
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -1095,8 +1107,10 @@ def run_louise_attack(
                 # Ajoute le nœud et ses labels
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
+                node_id = data.get("id", name)
                 G.add_node(name)
                 node_types[name] = labels
+                node_ids[name] = node_id
             elif data.get("type") == "relationship":
                 # Ajoute l'arête et le type de relation
                 start = data.get("start", {}).get("properties", {}).get("name")
@@ -1231,11 +1245,11 @@ def run_louise_attack(
             return "Domain"
         return "Other"
     def get_id(node):
-        try:
-            return int(node)
-        except:
-            return node
-    import os
+        return node_ids.get(node, node)
+    def get_label_type(node):
+        labs = node_types.get(node, [])
+        return labs[1] if len(labs) > 1 else (labs[0] if labs else "Unknown")
+
     graph_name = os.path.basename(jsonl_path)
     for idx, (source, path) in enumerate(success_paths, start=1):
         rels = []
@@ -1254,7 +1268,11 @@ def run_louise_attack(
             "target_name": path[-1],
             "relationships": rels,
             "length": len(path),
-            "graph": graph_name
+            "graph": graph_name,
+            "source_id": get_id(path[0]),
+            "target_id": get_id(path[-1]),
+            "path_id": [get_id(n) for n in path],
+            "path_type": [get_label_type(n) for n in path]
         })
     with open("louise_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
