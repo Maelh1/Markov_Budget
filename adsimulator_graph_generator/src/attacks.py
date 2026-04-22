@@ -1278,3 +1278,89 @@ def run_louise_attack(
         json.dump(export_data, f, indent=2, ensure_ascii=False)
     print(f"[+] Export JSON louise_results.json généré ({len(export_data)} chemins)")
     return success_paths
+
+# ======================================================================
+# Shortest Path Attack Simulation
+# ======================================================================
+def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
+    """
+    Calcule le plus court chemin entre deux noeuds (par ID) dans un graph AD au format JSONL.
+    Retourne un dictionnaire au même format que les autres attaques.
+    """
+
+    # 1. Charger le graphe au format NetworkX
+    G = nx.DiGraph()
+    node_types = {}
+    node_labels = {}
+    node_names = {}
+    node_ids = {}
+    with open(graph, 'r', encoding='utf-8') as f:
+        for line in f:
+            if not line.strip():
+                continue
+            data = json.loads(line)
+            if data['type'] == 'node':
+                node_id = str(data['id'])
+                labels = data.get('labels', [])
+                props = data.get('properties', {})
+                name = props.get('name', node_id)
+                G.add_node(node_id, **props, labels=labels)
+                node_types[node_id] = labels
+                node_labels[node_id] = labels
+                node_names[node_id] = name
+                node_ids[node_id] = node_id
+            elif data['type'] == 'relationship':
+                u = str(data['start']['id'])
+                v = str(data['end']['id'])
+                rel_type = data.get('label', 'UNKNOWN_REL')
+                G.add_edge(u, v, label=rel_type)
+
+    # 2. Calcul du plus court chemin
+    try:
+        path = nx.shortest_path(G, source=source, target=target)
+    except nx.NetworkXNoPath:
+        return {"error": "Aucun chemin n'existe entre ces deux nœuds."}
+    except nx.NodeNotFound as e:
+        return {"error": str(e)}
+
+    # 3. Construction du résultat au format attaque
+    def get_type(node_id):
+        labs = node_types.get(node_id, [])
+        if "User" in labs:
+            return "User"
+        if "Group" in labs:
+            return "Group"
+        if "Computer" in labs:
+            return "Computer"
+        if "Domain" in labs:
+            return "Domain"
+        return "Other"
+    def get_label_type(node_id):
+        labs = node_labels.get(node_id, [])
+        return labs[1] if len(labs) > 1 else (labs[0] if labs else "Unknown")
+
+    rels = []
+    for i in range(len(path) - 1):
+        edge = G.get_edge_data(path[i], path[i+1], default={})
+        rels.append(edge.get('label', 'UNKNOWN_REL'))
+
+    graph_name = os.path.basename(graph)
+    result = {
+        "attack": "shortestpath",
+        "attack_id": f"shortestpath_{source}_{target}",
+        "source": source,
+        "target": target,
+        "path": path,
+        "source_type": get_type(path[0]),
+        "source_name": node_names.get(path[0], path[0]),
+        "target_type": get_type(path[-1]),
+        "target_name": node_names.get(path[-1], path[-1]),
+        "relationships": rels,
+        "length": len(path),
+        "graph": graph_name,
+        "source_id": source,
+        "target_id": target,
+        "path_id": path,
+        "path_type": [get_label_type(n) for n in path]
+    }
+    return result
