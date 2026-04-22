@@ -531,11 +531,15 @@ def run_lateral_admin_movement(
             return int(node)
         except:
             return node
+    import os
+    graph_name = os.path.basename(jsonl_path)
     for idx, case in enumerate(selected_cases, start=1):
         path = case["path"]
         rels = []
         for i in range(len(path) - 1):
-            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+            rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+            # On prend le premier label si plusieurs, sinon UNKNOWN_REL
+            rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
         export_data.append({
             "attack": "lateraladmin",
             "attack_id": f"lateraladmin_{idx}",
@@ -547,7 +551,8 @@ def run_lateral_admin_movement(
             "target_type": get_type(path[-1]),
             "target_name": path[-1],
             "relationships": rels,
-            "length": len(path)
+            "length": len(path),
+            "graph": graph_name
         })
     with open("lateraladmin_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
@@ -805,13 +810,15 @@ def run_shadow_admin_attack(
 
     # === Export JSON au format demandé ===
     export_data = []
+    import os
+    graph_name = os.path.basename(jsonl_path)
     for idx, case in enumerate(filtered_shadow_cases, start=1):
         path = case["path"]
         rels = []
         for i in range(len(path) - 1):
-            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+            rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+            rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
 
-        # Récupère les types et noms des nœuds source/target
         def get_type(node):
             labs = node_types.get(node, [])
             if "User" in labs:
@@ -825,10 +832,8 @@ def run_shadow_admin_attack(
             return "Other"
 
         def get_id(node):
-            # Cherche l'ID numérique si possible, sinon le nom
             for n, labs in node_types.items():
                 if n == node:
-                    # Si le nom est un int, retourne-le, sinon retourne le nom
                     try:
                         return int(n)
                     except:
@@ -846,7 +851,8 @@ def run_shadow_admin_attack(
             "target_type": get_type(path[-1]),
             "target_name": path[-1],
             "relationships": rels,
-            "length": len(path)
+            "length": len(path),
+            "graph": graph_name
         })
 
     with open("shadowadmin_results.json", "w", encoding="utf-8") as f:
@@ -964,6 +970,8 @@ def run_kerberos_adjusted_attack(
             return int(node)
         except:
             return node
+    import os
+    graph_name = os.path.basename(jsonl_path)
     for idx, path in enumerate(valid_paths, start=1):
         rels = []
         for i in range(len(path) - 1):
@@ -979,7 +987,8 @@ def run_kerberos_adjusted_attack(
             "target_type": get_type(path[-1]),
             "target_name": path[-1],
             "relationships": rels,
-            "length": len(path)
+            "length": len(path),
+            "graph": graph_name
         })
     with open("kerberosadjusted_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
@@ -1226,10 +1235,13 @@ def run_louise_attack(
             return int(node)
         except:
             return node
+    import os
+    graph_name = os.path.basename(jsonl_path)
     for idx, (source, path) in enumerate(success_paths, start=1):
         rels = []
         for i in range(len(path) - 1):
-            rels.extend(edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"]))
+            rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+            rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
         export_data.append({
             "attack": "louise",
             "attack_id": f"louise_{idx}",
@@ -1241,7 +1253,8 @@ def run_louise_attack(
             "target_type": get_type(path[-1]),
             "target_name": path[-1],
             "relationships": rels,
-            "length": len(path)
+            "length": len(path),
+            "graph": graph_name
         })
     with open("louise_results.json", "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
