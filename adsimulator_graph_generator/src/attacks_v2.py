@@ -12,6 +12,7 @@ Modules:
   - louise         : Random-walk attack (Louise)
   - shortest_path  : Shortest path between two nodes
 """
+from __future__ import annotations
 
 
 import networkx as nx
@@ -99,7 +100,6 @@ def build_export_json(
 
 
 
-# from __future__ import annotations
 
 import json
 import os
