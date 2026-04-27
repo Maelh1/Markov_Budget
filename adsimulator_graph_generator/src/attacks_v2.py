@@ -95,4 +95,14 @@ def shortest_path(json_graph_path, source, target, attack_name="shortestpath", a
 	# Les ids doivent être des str dans le graphe
 	source_id = str(source)
 	target_id = str(target)
-	return shortest_path_attack_json(G, source_id, target_id, attack_name=attack_name, attack_id=attack_id, graph_name=json_graph_path)
+	result = shortest_path_attack_json(G, source_id, target_id, attack_name=attack_name, attack_id=attack_id, graph_name=json_graph_path)
+	if result is not None:
+		print(f"Chemin trouvé entre {source_id} et {target_id} : {result['path']}")
+		# Écriture automatique dans un fichier JSON
+		output_filename = f"shortest_path_{source_id}_{target_id}.json"
+		with open(output_filename, 'w', encoding='utf-8') as f_out:
+			json.dump(result, f_out, ensure_ascii=False, indent=2)
+		print(f"Résultat sauvegardé dans {output_filename}")
+	else:
+		print(f"Aucun chemin trouvé entre {source_id} et {target_id}.")
+	return result
