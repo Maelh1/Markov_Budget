@@ -1,3 +1,5 @@
+import json
+import networkx as nx
 def parse_json_graph(json_lines):
 	"""
 	Prend une liste de lignes JSON (ou un fichier ouvert) au format node/relationship et retourne un DiGraph NetworkX.
@@ -32,8 +34,7 @@ def parse_json_graph(json_lines):
 			edge_attrs['type'] = data.get('label', 'edge')
 			G.add_edge(start_id, end_id, **edge_attrs)
 	return G
-import json
-import networkx as nx
+
 
 def shortest_path_attack_json(G, source, target, attack_name="shortestpath", attack_id="shortestpath_1", graph_name="graph_0_probs.json"):
 	"""
