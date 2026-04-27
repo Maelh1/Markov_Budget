@@ -1528,297 +1528,149 @@ def load_graph_0(path):
 
 class ADAttackGenerator:
     def __init__(self, graph_json_path):
-        self.graph_json_path = graph_json_path
         self.G = load_graph_0(graph_json_path)
 
+    # -----------------------------
+    # Utils
+    # -----------------------------
     def node_name(self, n):
-        return self.G.nodes[n].get("name", str(n))
+        return self.G.nodes[n].get("name", n)
 
     def node_type(self, n):
         return self.G.nodes[n].get("type", "Other")
 
     def edge_relation(self, u, v):
-        return self.G[u][v].get("relation", "UNKNOWN_REL")
+        return self.G.edges[u, v].get("relation", "UNKNOWN")
+
+    # -----------------------------
+    # Debug / info
+    # -----------------------------
+    def print_graph_summary(self):
+        types = Counter(nx.get_node_attributes(self.G, "type").values())
+        print("Graph summary")
+        print("=" * 40)
+        print(f"Nodes : {self.G.number_of_nodes()}")
+        print(f"Edges : {self.G.number_of_edges()}")
+        print()
+        for t, c in types.items():
+            print(f"{t:<15} : {c}")
+        print()
+
+    # -----------------------------
+    # Path formatting
+    # -----------------------------
+    def format_path(self, path):
+        return " -> ".join(path)
 
     def path_relations(self, path):
-        return [
-            self.edge_relation(path[i], path[i + 1])
-            for i in range(len(path) - 1)
-        ]
+        return [self.edge_relation(path[i], path[i+1]) for i in range(len(path)-1)]
 
     def path_node_types(self, path):
         return [self.node_type(n) for n in path]
 
-    def format_path(self, path):
-        parts = []
+    # -----------------------------
+    # Core attack generation
+    # -----------------------------
+    def random_walk(self, start, max_depth):
+        path = [start]
+        current = start
 
-        for i, n in enumerate(path):
-            parts.append(f"{self.node_name(n)} [{self.node_type(n)}]")
+        for _ in range(max_depth):
+            neighbors = list(self.G.successors(current))
+            if not neighbors:
+                break
 
-            if i < len(path) - 1:
-                parts.append(f" --{self.edge_relation(path[i], path[i + 1])}--> ")
+            nxt = random.choice(neighbors)
+            path.append(nxt)
+            current = nxt
 
-        return "".join(parts)
+        return path
 
-    def respects_constraints(
+    def is_valid_path(
         self,
         path,
-        required_relations=None,
-        required_node_types=None,
-        excluded_relations=None,
-        excluded_node_types=None,
-        required_nb_nodes=None,
-        target_node=None
+        required_relations,
+        required_node_types,
+        excluded_relations,
+        excluded_node_types,
+        target_node
     ):
-        required_relations = required_relations or []
-        required_node_types = required_node_types or []
-        excluded_relations = excluded_relations or []
-        excluded_node_types = excluded_node_types or []
-
-        rels = set(self.path_relations(path))
-        types_in_path = set(self.path_node_types(path))
-
-        if required_nb_nodes is not None and required_nb_nodes > 0:
-            if len(path) != required_nb_nodes:
-                return False
-
-        if not all(r in rels for r in required_relations):
-            return False
-
-        if not all(t in types_in_path for t in required_node_types):
-            return False
-
-        if any(r in rels for r in excluded_relations):
-            return False
-
-        if any(t in types_in_path for t in excluded_node_types):
-            return False
+        rels = self.path_relations(path)
+        types = self.path_node_types(path)
 
         if target_node and path[-1] != target_node:
             return False
 
+        if any(r in excluded_relations for r in rels):
+            return False
+
+        if any(t in excluded_node_types for t in types):
+            return False
+
+        if required_relations and not any(r in rels for r in required_relations):
+            return False
+
+        if required_node_types and not any(t in types for t in required_node_types):
+            return False
+
         return True
-
-    def random_attack_path(
-        self,
-        start_node,
-        required_relations=None,
-        required_node_types=None,
-        excluded_relations=None,
-        excluded_node_types=None,
-        required_nb_nodes=None,
-        max_depth=10,
-        max_attempts=3000,
-        target_node=None
-    ):
-        required_relations = required_relations or []
-        required_node_types = required_node_types or []
-        excluded_relations = excluded_relations or []
-        excluded_node_types = excluded_node_types or []
-
-        if self.node_type(start_node) in excluded_node_types:
-            return None
-
-        best_path = None
-        best_score = -10**9
-
-        for _ in range(max_attempts):
-            current = start_node
-            path = [current]
-            visited = {current}
-
-            target_len = required_nb_nodes if required_nb_nodes and required_nb_nodes > 0 else max_depth
-
-            while len(path) < target_len:
-                neighbors = []
-
-                for nxt in self.G.successors(current):
-                    if nxt in visited:
-                        continue
-
-                    rel = self.edge_relation(current, nxt)
-                    nxt_type = self.node_type(nxt)
-
-                    if rel in excluded_relations:
-                        continue
-
-                    if nxt_type in excluded_node_types:
-                        continue
-
-                    neighbors.append(nxt)
-
-                if not neighbors:
-                    break
-
-                weighted = []
-
-                for nxt in neighbors:
-                    rel = self.edge_relation(current, nxt)
-                    nxt_type = self.node_type(nxt)
-
-                    score = 1.0
-
-                    if rel in required_relations:
-                        score += 5.0
-
-                    if nxt_type in required_node_types:
-                        score += 7.0
-
-                    if target_node and nxt == target_node:
-                        score += 15.0
-
-                    if nxt_type in ["Group", "Computer", "User"]:
-                        score += 0.5
-
-                    weighted.append((nxt, score))
-
-                total = sum(score for _, score in weighted)
-                r = random.uniform(0, total)
-                acc = 0
-                chosen = weighted[-1][0]
-
-                for nxt, score in weighted:
-                    acc += score
-
-                    if r <= acc:
-                        chosen = nxt
-                        break
-
-                path.append(chosen)
-                visited.add(chosen)
-                current = chosen
-
-                if not required_nb_nodes and len(path) >= 2:
-                    if self.respects_constraints(
-                        path,
-                        required_relations=required_relations,
-                        required_node_types=required_node_types,
-                        excluded_relations=excluded_relations,
-                        excluded_node_types=excluded_node_types,
-                        required_nb_nodes=None,
-                        target_node=target_node
-                    ):
-                        return path
-
-            if len(path) >= 2 and self.respects_constraints(
-                path,
-                required_relations=required_relations,
-                required_node_types=required_node_types,
-                excluded_relations=excluded_relations,
-                excluded_node_types=excluded_node_types,
-                required_nb_nodes=required_nb_nodes,
-                target_node=target_node
-            ):
-                return path
-
-            rels = set(self.path_relations(path))
-            types_in_path = set(self.path_node_types(path))
-
-            score = 0
-            score += sum(1 for r in required_relations if r in rels) * 10
-            score += sum(1 for t in required_node_types if t in types_in_path) * 12
-            score -= sum(1 for r in excluded_relations if r in rels) * 20
-            score -= sum(1 for t in excluded_node_types if t in types_in_path) * 20
-
-            if target_node and path[-1] == target_node:
-                score += 25
-
-            if required_nb_nodes:
-                score -= abs(len(path) - required_nb_nodes) * 3
-
-            if score > best_score:
-                best_score = score
-                best_path = path
-
-        return best_path
 
     def generate_multiple_attacks(
         self,
         start_node,
-        required_relations=None,
-        required_node_types=None,
-        excluded_relations=None,
-        excluded_node_types=None,
-        required_nb_nodes=None,
-        nb_attacks=5,
-        max_depth=10,
-        target_node=None
+        required_relations,
+        required_node_types,
+        excluded_relations,
+        excluded_node_types,
+        required_nb_nodes,
+        nb_attacks,
+        max_depth,
+        target_node
     ):
-        attacks = []
-        seen = set()
+        results = []
 
-        for _ in range(nb_attacks * 40):
-            path = self.random_attack_path(
-                start_node=start_node,
-                required_relations=required_relations,
-                required_node_types=required_node_types,
-                excluded_relations=excluded_relations,
-                excluded_node_types=excluded_node_types,
-                required_nb_nodes=required_nb_nodes,
-                max_depth=max_depth,
-                max_attempts=2000,
-                target_node=target_node
-            )
+        attempts = 0
+        while len(results) < nb_attacks and attempts < nb_attacks * 50:
+            path = self.random_walk(start_node, max_depth)
 
-            if path and len(path) >= 2:
-                key = tuple(path)
+            if required_nb_nodes and len(path) != required_nb_nodes:
+                attempts += 1
+                continue
 
-                if key not in seen:
-                    seen.add(key)
-                    attacks.append(path)
+            if self.is_valid_path(
+                path,
+                required_relations,
+                required_node_types,
+                excluded_relations,
+                excluded_node_types,
+                target_node
+            ):
+                results.append(path)
 
-            if len(attacks) >= nb_attacks:
-                break
+            attempts += 1
 
-        return attacks
+        return results
 
     def generate_attacks_from_any_source(
         self,
         start_nodes,
-        required_relations=None,
-        required_node_types=None,
-        excluded_relations=None,
-        excluded_node_types=None,
-        required_nb_nodes=None,
-        nb_attacks=5,
-        max_depth=10,
-        target_node=None
+        **kwargs
     ):
-        attacks = []
-        seen = set()
+        results = []
 
-        shuffled_sources = list(start_nodes)
-        random.shuffle(shuffled_sources)
+        for s in start_nodes:
+            paths = self.generate_multiple_attacks(start_node=s, **kwargs)
+            results.extend(paths)
 
-        for src in shuffled_sources:
-            path = self.random_attack_path(
-                start_node=src,
-                required_relations=required_relations,
-                required_node_types=required_node_types,
-                excluded_relations=excluded_relations,
-                excluded_node_types=excluded_node_types,
-                required_nb_nodes=required_nb_nodes,
-                max_depth=max_depth,
-                max_attempts=1200,
-                target_node=target_node
-            )
+        return results
 
-            if path and len(path) >= 2:
-                key = tuple(path)
-
-                if key not in seen:
-                    seen.add(key)
-                    attacks.append(path)
-
-            if len(attacks) >= nb_attacks:
-                break
-
-        return attacks
-
-    def build_export_records(self, paths, attack_name):
+    # -----------------------------
+    # Export
+    # -----------------------------
+    def build_export_records(self, attacks, attack_name):
         records = []
 
-        for i, path in enumerate(paths, start=1):
+        for i, path in enumerate(attacks, 1):
             records.append({
                 "attack": attack_name,
                 "attack_id": f"{attack_name}_{i}",
