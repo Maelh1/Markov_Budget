@@ -13,6 +13,92 @@ Modules:
   - shortest_path  : Shortest path between two nodes
 """
 
+
+import networkx as nx
+
+
+def compute_shortest_path(G, source, target):
+    """
+    Calcule le plus court chemin entre deux noeuds.
+    """
+    try:
+        path = nx.shortest_path(G, source=source, target=target)
+        return path
+    except nx.NetworkXNoPath:
+        return None
+    except nx.NodeNotFound as e:
+        raise ValueError(f"Node not found: {e}")
+
+
+def build_export_json(
+    G,
+    source,
+    target,
+    edge_evidence,
+    get_id,
+    get_type,
+    get_label_type,
+    graph_name="default_graph"
+):
+    """
+    Génère le JSON formaté pour Ad Simulator à partir du shortest path.
+    """
+
+    path = compute_shortest_path(G, source, target)
+
+    if not path:
+        return []
+
+    rels = []
+    for i in range(len(path) - 1):
+        rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+        rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
+
+    export_data = [{
+        "attack": "shortestpath",
+        "attack_id": "shortestpath_1",
+        "source": get_id(path[0]),
+        "target": get_id(path[-1]),
+        "path": [get_id(n) for n in path],
+        "source_type": get_type(path[0]),
+        "source_name": path[0],
+        "target_type": get_type(path[-1]),
+        "target_name": path[-1],
+        "relationships": rels,
+        "length": len(path),
+        "graph": graph_name,
+        "source_id": get_id(path[0]),
+        "target_id": get_id(path[-1]),
+        "path_id": [get_id(n) for n in path],
+        "path_type": [get_label_type(n) for n in path]
+    }]
+
+    return export_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from __future__ import annotations
 
 import json
