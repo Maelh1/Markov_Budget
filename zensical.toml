@@ -22,19 +22,19 @@ site_description = "Ce site a pour but de documenter le projet étudiant suivant
 # The site_author attribute. This is used in the HTML head element.
 #
 # Read more: https://zensical.org/docs/setup/basics/#site_author
-site_author = "Edouard BOUTOILLE, Julien PICOT, Pierre LENOIR, Mael HUSSANT, Tristan BLANC"
+site_author = "Edouard BOUTOILLE, Julien PICOT, Pierre LENOIR, Maël HUSSANT, Tristan BLANC"
 
 # The site_url is the canonical URL for your site. When building online
 # documentation you should set this.
 # Read more: https://zensical.org/docs/setup/basics/#site_url
-site_url = "https://edouardbout.github.io/projet_cyber_brest/"
+site_url = "https://maelh1.github.io/cyber_project_adas/"
 
 # The copyright notice appears in the page footer and can contain an HTML
 # fragment.
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
 #copyright = """
-#Copyright &copy; 2026 — <a href="https://github.com/edouardbout/projet_cyber_brest">Projet cyber S6B2 IMTA</a>
+#Copyright &copy; 2026 — <a href="https://github.com/maelh1/cyber_project_adas">Projet cyber S6B2 IMTA</a>
 #"""
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
