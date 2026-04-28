@@ -1,0 +1,8 @@
+# Fichiers système Mac
+.DS_Store
+
+# Fichiers système Windows
+Thumbs.db
+
+# Dossiers de build (si besoin)
+site/
