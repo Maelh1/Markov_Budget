@@ -1,11 +1,11 @@
-# Configuration and Generation of an Active Directory Graph
+# Configuration and generation of an Active Directory graph
 
 ## Objective
-On this page, we will focus on explaining how our graph_0.json file was designed and implemented, detailing the steps and choices made to build a simulated Active Directory environment.
+On this page, we will focus on explaining how our graph_0.json file is designed and implemented, detailing the steps and choices made to build a simulated Active Directory environment.
 
 ---
 
-# Step 1 — Environment Setup
+# Step 1 : Environment Setup
  Installing Neo4j
 
 Neo4j is used to generate and manipulate the graph.
