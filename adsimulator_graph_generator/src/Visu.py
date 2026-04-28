@@ -331,7 +331,6 @@ def show_attack_concentric_graph(
 ########
 # Visualisation of multipath in the graph
 ########
-%%writefile graph_visualizer.py
 
 import json
 from pyvis.network import Network
