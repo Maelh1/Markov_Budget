@@ -1367,7 +1367,6 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
 
     # 4. Écriture dans un fichier JSON (append si existe, sinon crée)
     out_file = "shortestpath_results.json"
-    import os
     if os.path.exists(out_file):
         try:
             with open(out_file, "r", encoding="utf-8") as f:
