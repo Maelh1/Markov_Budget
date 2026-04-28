@@ -2,3 +2,12 @@
 !/adsimulator_graph_generator/Dataset/dataset_1
 *.pyc
 neo4j_local
+
+# Fichiers système Mac
+.DS_Store
+
+# Fichiers système Windows
+Thumbs.db
+
+# Dossiers de build (si besoin)
+site/
