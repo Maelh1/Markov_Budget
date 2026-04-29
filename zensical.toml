@@ -79,7 +79,7 @@ nav = [
   ] },
 
   { "Create your own attack" = [
-    { "Step 1 : generate the graph" = "create-your-own-attack/generate-graph.md" },
+    { "Tutorial" = "create-your-own-attack/attackgen.md" },
   ] },
 
 
