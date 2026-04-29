@@ -561,9 +561,36 @@ def run_lateral_admin_movement(
             "path_id": [get_id(n) for n in path],
             "path_type": [get_label_type(n) for n in path]
         })
-    with open("lateraladmin_results.json", "w", encoding="utf-8") as f:
-        json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON lateraladmin_results.json généré ({len(export_data)} chemins)")
+    output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "lateraladmin_results.json")
+    # Format export_data to match requested format
+    formatted_export_data = []
+    for idx, case in enumerate(selected_cases, start=1):
+        path = case["path"]
+        rels = []
+        for i in range(len(path) - 1):
+            rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+            rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
+        formatted_export_data.append({
+            "attack": "lateraladmin",
+            "attack_id": f"lateraladmin_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path),
+            "graph": graph_name,
+            "path_name": [n for n in path],
+            "path_type": [get_label_type(n) for n in path]
+        })
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(formatted_export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON {output_path} généré ({len(formatted_export_data)} chemins)")
     return cases
 
 
@@ -866,10 +893,36 @@ def run_shadow_admin_attack(
             "path_type": [get_label_type(n) for n in path]
         })
 
-    with open("shadowadmin_results.json", "w", encoding="utf-8") as f:
-        json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON shadowadmin_results.json généré ({len(export_data)} chemins)")
-
+    output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "shadowadmin_results.json")
+    # Format export_data to match requested format
+    formatted_export_data = []
+    for idx, case in enumerate(filtered_shadow_cases, start=1):
+        path = case["path"]
+        rels = []
+        for i in range(len(path) - 1):
+            rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
+            rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
+        formatted_export_data.append({
+            "attack": "shadowadmin",
+            "attack_id": f"shadowadmin_{idx}",
+            "source": get_id(path[0]),
+            "target": get_id(path[-1]),
+            "path": [get_id(n) for n in path],
+            "source_type": get_type(path[0]),
+            "source_name": path[0],
+            "target_type": get_type(path[-1]),
+            "target_name": path[-1],
+            "relationships": rels,
+            "length": len(path),
+            "graph": graph_name,
+            "path_name": [n for n in path],
+            "path_type": [get_label_type(n) for n in path]
+        })
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(formatted_export_data, f, indent=2, ensure_ascii=False)
+    print(f"[+] Export JSON {output_path} généré ({len(formatted_export_data)} chemins)")
     return filtered_shadow_cases
 
 
@@ -1006,9 +1059,12 @@ def run_kerberos_adjusted_attack(
             "path_id": [get_id(n) for n in path],
             "path_type": [get_label_type(n) for n in path]
         })
-    with open("kerberosadjusted_results.json", "w", encoding="utf-8") as f:
+    output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "kerberosadjusted_results.json")
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON kerberosadjusted_results.json généré ({len(export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} généré ({len(export_data)} chemins)")
 
     # 4. Visualisation
     def visualize_paths(paths, max_show=5):
@@ -1275,9 +1331,12 @@ def run_louise_attack(
             "path_id": [get_id(n) for n in path],
             "path_type": [get_label_type(n) for n in path]
         })
-    with open("louise_results.json", "w", encoding="utf-8") as f:
+    output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "louise_results.json")
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON louise_results.json généré ({len(export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} généré ({len(export_data)} chemins)")
     return success_paths
 
 # ======================================================================
@@ -1366,7 +1425,9 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
     }
 
     # 4. Écriture dans un fichier JSON (append si existe, sinon crée)
-    out_file = "shortestpath_results.json"
+    output_dir = os.path.join(os.path.dirname(graph), "..", "attack_datasets")
+    os.makedirs(output_dir, exist_ok=True)
+    out_file = os.path.join(output_dir, "shortestpath_results.json")
     if os.path.exists(out_file):
         try:
             with open(out_file, "r", encoding="utf-8") as f:
@@ -1666,19 +1727,37 @@ class ADAttackGenerator:
     # -----------------------------
     # Export
     # -----------------------------
-    def build_export_records(self, attacks, attack_name):
+    def build_export_records(self, attacks, attack_name, graph_name=None):
         records = []
-
         for i, path in enumerate(attacks, 1):
+            rels = self.path_relations(path)
             records.append({
                 "attack": attack_name,
                 "attack_id": f"{attack_name}_{i}",
                 "source": path[0],
                 "target": path[-1],
-                "path": path
+                "path": path,
+                "source_type": self.node_type(path[0]),
+                "source_name": self.node_name(path[0]),
+                "target_type": self.node_type(path[-1]),
+                "target_name": self.node_name(path[-1]),
+                "relationships": rels,
+                "length": len(path),
+                "graph": graph_name if graph_name else "",
+                "path_name": [self.node_name(n) for n in path],
+                "path_type": [self.node_type(n) for n in path]
             })
-
         return records
+
+    def export_attacks(self, attacks, attack_name, graph_path):
+        graph_name = os.path.basename(graph_path)
+        records = self.build_export_records(attacks, attack_name, graph_name=graph_name)
+        output_dir = os.path.join(os.path.dirname(graph_path), "..", "attack_datasets")
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, f"{attack_name}_results.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(records, f, indent=2, ensure_ascii=False)
+        print(f"[+] Export JSON {output_path} généré ({len(records)} chemins)")
 
     def print_graph_summary(self):
         node_counter = Counter(self.node_type(n) for n in self.G.nodes)
