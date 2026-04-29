@@ -1607,3 +1607,439 @@ def play_defense_on_generated_attacks(graph_data, attacks_dict,
         "total_open": total_open,
         "total_blocked": total_blocked,
     }
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 5 — CONTROLLER: interactive ipywidgets panel (Jupyter only)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def launch_controller(gd0, graph_data, attacks_dict):
+    """Launch the full interactive Attack Path Controller (v25 reproduction).
+
+    Two mutually exclusive groups:
+      - ANALYSIS (filtered graph gd0): single, overlay, all_to_target, defense
+      - BROWSE & PLAY (full graph graph_data): browse, play
+
+    Args:
+        gd0:          result of load_structured_graph(...)
+        graph_data:   result of load_global_graph(...)
+        attacks_dict: dict mapping family name -> list of attack dicts
+
+    Note: requires ipywidgets and a Jupyter kernel.
+    """
+    import ipywidgets as widgets
+    from IPython.display import display, clear_output
+
+    # ══════════════════════════════════════════════════════════════════
+    # analysis + browse + play
+    #
+    # [Analysis] modes on filtered graph gd0 (no attacker profile):
+    #   - single / overlay / all_to_target / defense
+    #
+    # [Browse] mode on full graph graph_data:
+    #   - concentric overlay of attacks
+    #
+    # [Play] mode on full graph graph_data:
+    #   - defense game on generated attacks (pick nodes, see blocked %)
+    # ══════════════════════════════════════════════════════════════════
+
+    source_options = [(f"{get_node_name(gd0['node_registry'].get(str(s),{})).split('@')[0]} (ID:{s})", s) for s in gd0['sources']]
+    target_options = [(f"{get_node_name(gd0['node_registry'].get(str(t),{})).split('@')[0]} (ID:{t})", t) for t in gd0['targets']]
+
+    title_html = widgets.HTML(
+        "<h2 style='margin:0 0 4px 0;font-family:monospace'>Attack Path Controller</h2>"
+        "<p style='color:#666;margin:0 0 12px 0;font-size:12px'>"
+        "Analysis modes: rigorous calculations on the filtered graph. "
+        "Browse: visual overlay. Play: defense game on real attacks."
+        "</p>"
+    )
+
+    # ── Mode picker split into two groups ──
+    # Group A: ANALYSIS on filtered graph gd0 (rigorous Markov_Budget)
+    # Group B: BROWSE & PLAY on full graph_data (visual + interactive gameplay)
+
+    analysis_mode_widget = widgets.RadioButtons(
+        options=[("Inspect one attack path", "single"),
+                 ("Compare multiple attack routes", "overlay"),
+                 ("Show all attackers reaching one target", "all_to_target"),
+                 ("Defense simulator (block & test)", "defense")],
+        value="single", description="", layout=widgets.Layout(width="460px"))
+
+    browse_play_mode_widget = widgets.RadioButtons(
+        options=[("Browse generated attacks on concentric view", "browse"),
+                 ("Play defense game on generated attacks", "play")],
+        value=None, description="", layout=widgets.Layout(width="460px"))
+
+    analysis_group_label = widgets.HTML(
+        "<div style='background:#1e3a8a;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;"
+        "font-family:monospace;font-size:13px;font-weight:bold'>"
+        "ANALYSIS & DEFENSE SIMULATOR : filtered graph (shortest path)"
+        "</div>"
+        "<div style='background:#1e293b;color:#94a3b8;padding:4px 12px;font-family:monospace;font-size:10px'>"
+        "Markov_Budget calculations on extracted attack subgraph."
+        "</div>"
+    )
+
+    browse_play_group_label = widgets.HTML(
+        "<div style='background:#7c2d12;color:#fff;padding:8px 12px;border-radius:6px 6px 0 0;"
+        "font-family:monospace;font-size:13px;font-weight:bold;margin-top:12px'>"
+        "BROWSE & PLAY : full graph (generated attacks)"
+        "</div>"
+        "<div style='background:#1e293b;color:#94a3b8;padding:4px 12px;font-family:monospace;font-size:10px'>"
+        "Visualization and defense game on the complete AD graph."
+        "</div>"
+    )
+
+    # Coordinator: track which group is active and provide unified mode value
+    class _ModeCoordinator:
+        def __init__(self):
+            self.current = "single"
+        def get(self):
+            return self.current
+
+    _mode_coord = _ModeCoordinator()
+
+    def _on_analysis_change(change):
+        if change["new"] is not None:
+            _mode_coord.current = change["new"]
+            browse_play_mode_widget.unobserve(_on_browse_play_change, names="value")
+            browse_play_mode_widget.value = None
+            browse_play_mode_widget.observe(_on_browse_play_change, names="value")
+            _update_visibility(change["new"])
+
+    def _on_browse_play_change(change):
+        if change["new"] is not None:
+            _mode_coord.current = change["new"]
+            analysis_mode_widget.unobserve(_on_analysis_change, names="value")
+            analysis_mode_widget.value = None
+            analysis_mode_widget.observe(_on_analysis_change, names="value")
+            _update_visibility(change["new"])
+
+    analysis_mode_widget.observe(_on_analysis_change, names="value")
+    browse_play_mode_widget.observe(_on_browse_play_change, names="value")
+
+    # ── Source / Target / K / path_idx / context ──
+    source_widget = widgets.Dropdown(options=source_options, value=source_options[0][1],
+        description="", layout=widgets.Layout(width="400px"))
+    source_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Attacker (source)</b>")
+
+    target_widget = widgets.Dropdown(options=target_options, value=target_options[0][1],
+        description="", layout=widgets.Layout(width="400px"))
+    target_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Target (objective)</b>")
+
+    k_widget = widgets.IntSlider(value=5, min=1, max=10, step=1,
+        description="", layout=widgets.Layout(width="400px"))
+    k_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Paths to compute</b>")
+
+    path_idx_widget = widgets.IntSlider(value=0, min=0, max=9, step=1,
+        description="", layout=widgets.Layout(width="400px"))
+    path_idx_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Which path to inspect (0 = shortest)</b>")
+
+    context_widget = widgets.Checkbox(value=True, description="Show AD context",
+        style={"description_width": "initial"}, layout=widgets.Layout(width="400px"))
+
+    # ── Defense widgets (analysis defense mode) ──
+    defense_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Select nodes to defend (Ctrl+click)</b>")
+    defense_nodes_widget = widgets.SelectMultiple(options=[], description="",
+        layout=widgets.Layout(width="400px", height="150px"))
+    defense_suggestion = widgets.HTML("")
+    analyze_btn = widgets.Button(description="  Analyze chokepoints  ", button_style="info",
+        layout=widgets.Layout(width="250px", height="35px"))
+
+    # ── Browse widgets ──
+    attacks_dict = attacks_dict
+
+    browse_families_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Families to browse (Ctrl+click)</b>")
+    browse_families_widget = widgets.SelectMultiple(
+        options=[(f"{fam} ({len(atks)} attacks)", fam) for fam, atks in attacks_dict.items()],
+        value=tuple(attacks_dict.keys())[:1] if attacks_dict else (),
+        description="", layout=widgets.Layout(width="400px", height="120px"))
+
+    browse_mode_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Display mode</b>")
+    browse_mode_widget = widgets.RadioButtons(
+        options=[("All attacks from selected families", "all"),
+                 ("One specific attack", "single")],
+        value="all", description="", layout=widgets.Layout(width="400px"))
+
+    browse_attack_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Pick attack (single mode only)</b>")
+    browse_attack_widget = widgets.Dropdown(options=[], description="",
+        layout=widgets.Layout(width="400px"))
+
+    browse_max_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Max attacks per family (All mode)</b>")
+    browse_max_widget = widgets.IntSlider(value=10, min=1, max=50, step=1,
+        description="", layout=widgets.Layout(width="400px"))
+
+    def update_browse_attack_options(*args):
+        fams = list(browse_families_widget.value)
+        if not fams:
+            browse_attack_widget.options = []
+            return
+        opts = []
+        for fam in fams:
+            for i, a in enumerate(attacks_dict.get(fam, [])):
+                aid = a.get("attack_id", f"attack_{i}")
+                length = a.get("length", a.get("summary", {}).get("length", "?"))
+                opts.append((f"[{fam}] {aid} | length={length}", (fam, i)))
+        browse_attack_widget.options = opts
+        if opts: browse_attack_widget.value = opts[0][1]
+
+    browse_families_widget.observe(update_browse_attack_options, names="value")
+    update_browse_attack_options()
+
+    # ── Play widgets (defense game on generated attacks) ──
+    play_families_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Families to include in game (Ctrl+click)</b>")
+    play_families_widget = widgets.SelectMultiple(
+        options=[(f"{fam} ({len(atks)} attacks)", fam) for fam, atks in attacks_dict.items()],
+        value=tuple(attacks_dict.keys()) if attacks_dict else (),
+        description="", layout=widgets.Layout(width="400px", height="120px"))
+
+    play_max_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Max attacks per family</b>")
+    play_max_widget = widgets.IntSlider(value=20, min=1, max=100, step=1,
+        description="", layout=widgets.Layout(width="400px"))
+
+    play_defense_label = widgets.HTML("<b style='font-family:monospace;font-size:12px'>Select nodes to defend (Ctrl+click)</b>")
+    play_defense_widget = widgets.SelectMultiple(options=[], description="",
+        layout=widgets.Layout(width="400px", height="180px"))
+
+    play_suggest_btn = widgets.Button(description="  Suggest top chokepoints  ", button_style="info",
+        layout=widgets.Layout(width="250px", height="35px"))
+    play_suggestion = widgets.HTML("")
+
+    def populate_play_defense_options(*args):
+        """Collect all intermediate nodes from selected families' attacks and sort by frequency.
+        Normalizes ANY identifier (int index, raw id, node name) to the node NAME string.
+        This way the same node is counted only once, even if different families use different formats.
+        """
+        fams = list(play_families_widget.value)
+        if not fams:
+            play_defense_widget.options = []
+            return
+        max_per = play_max_widget.value
+        from collections import Counter
+        node_counter = Counter()  # key = node name (str)
+        node_types = {}
+
+        for fam in fams:
+            attacks = attacks_dict.get(fam, [])[:max_per]
+            for atk in attacks:
+                path = atk.get("path", atk.get("path_sequence", []))
+                if len(path) < 3: continue
+                for raw in path[1:-1]:
+                    # Normalize to node name
+                    try:
+                        idx = resolve_node_id(raw, graph_data)
+                    except Exception:
+                        continue
+                    node = graph_data["nodes"][idx]
+                    nm = node.get("properties", {}).get("name", str(raw))
+                    node_counter[nm] += 1
+                    # Capture type once
+                    if nm not in node_types:
+                        labels = node.get("labels", [])
+                        for l in labels:
+                            if l in ["User", "Computer", "Group", "OU", "GPO", "Domain", "Container"]:
+                                node_types[nm] = l; break
+                        if nm not in node_types: node_types[nm] = "?"
+
+        opts = []
+        for nm, cnt in node_counter.most_common(200):
+            nt = node_types.get(nm, "?")
+            short = nm.split("@")[0]
+            if len(short) > 24: short = short[:22] + ".."
+            opts.append((f"{short} [{nt}] — in {cnt} attacks", nm))
+        play_defense_widget.options = opts
+
+    def on_play_suggest(b):
+        populate_play_defense_options()
+        # Show top 3 suggestion
+        opts = list(play_defense_widget.options)
+        if not opts:
+            play_suggestion.value = "<i>No attacks loaded.</i>"
+            return
+        top3 = opts[:3]
+        sug = ("<div style='background:#1a1a2e;padding:8px;border-radius:6px;margin:4px 0;"
+               "font-family:monospace;font-size:11px'>"
+               "<b style='color:#fbbf24'>Top chokepoints (most traversed nodes):</b><br>")
+        for label, _ in top3:
+            sug += f"<span style='color:#34d399'>{label}</span><br>"
+        sug += "</div>"
+        play_suggestion.value = sug
+
+    play_suggest_btn.on_click(on_play_suggest)
+    play_families_widget.observe(populate_play_defense_options, names="value")
+    play_max_widget.observe(populate_play_defense_options, names="value")
+    populate_play_defense_options()
+
+    # ── Main buttons ──
+    run_button = widgets.Button(description="  Visualize  ", button_style="danger",
+        layout=widgets.Layout(width="280px", height="50px"),
+        style={"font_weight": "bold", "font_size": "16px"})
+
+    output_area = widgets.Output()
+
+    def update_defense_options(*args):
+        if _mode_coord.get() != "defense": return
+        src, tgt, k = source_widget.value, target_widget.value, k_widget.value
+        ranked, paths = analyze_chokepoints(gd0, src, tgt, k)
+        if not ranked:
+            defense_nodes_widget.options = []
+            defense_suggestion.value = "<i style='color:#999'>No intermediate nodes found.</i>"
+            return
+        opts = [(f"{nm} [{nt}] - blocks {bl}/{tot} paths", nid) for nid, nm, nt, bl, tot in ranked]
+        defense_nodes_widget.options = opts
+        top3 = ranked[:3]
+        sug = ("<div style='background:#1a1a2e;padding:8px;border-radius:6px;margin:4px 0;"
+               "font-family:monospace;font-size:11px'>"
+               "<b style='color:#fbbf24'>Recommended defense priority:</b><br>")
+        for nid, nm, nt, bl, tot in top3:
+            pct = bl / tot * 100 if tot > 0 else 0
+            sug += f"<span style='color:#34d399'>{nm}</span> [{nt}] - blocks <b>{bl}/{tot}</b> paths ({pct:.0f}%)<br>"
+        sug += "</div>"
+        defense_suggestion.value = sug
+
+    def on_analyze(b): update_defense_options()
+    analyze_btn.on_click(on_analyze)
+
+    def _all_widgets_groups():
+        return {
+            "analysis_basic": [source_label, source_widget, target_label, target_widget,
+                                k_label, k_widget],
+            "single_only": [path_idx_label, path_idx_widget],
+            "overlay_context": [context_widget],
+            "defense": [defense_label, defense_nodes_widget, defense_suggestion, analyze_btn],
+            "browse": [browse_families_label, browse_families_widget,
+                       browse_mode_label, browse_mode_widget,
+                       browse_attack_label, browse_attack_widget,
+                       browse_max_label, browse_max_widget],
+            "play": [play_families_label, play_families_widget,
+                     play_max_label, play_max_widget,
+                     play_suggest_btn, play_suggestion,
+                     play_defense_label, play_defense_widget],
+        }
+
+    def _hide_all():
+        for group in _all_widgets_groups().values():
+            for w in group:
+                w.layout.display = "none"
+
+    def _show(group_name):
+        for w in _all_widgets_groups()[group_name]:
+            w.layout.display = "flex"
+
+    def _update_visibility(m):
+        _hide_all()
+        if m == "single":
+            _show("analysis_basic"); _show("single_only")
+        elif m == "overlay":
+            _show("analysis_basic"); _show("overlay_context")
+        elif m == "all_to_target":
+            _show("analysis_basic"); _show("overlay_context")
+            for w in [source_label, source_widget]: w.layout.display = "none"
+        elif m == "defense":
+            _show("analysis_basic"); _show("defense")
+            update_defense_options()
+        elif m == "browse":
+            _show("browse")
+        elif m == "play":
+            _show("play")
+
+    _update_visibility("single")
+
+    def on_run(b):
+        output_area.clear_output()
+        with output_area:
+            m = _mode_coord.get()
+            src, tgt = source_widget.value, target_widget.value
+            k, pidx = k_widget.value, path_idx_widget.value
+
+            # ── Analysis modes (filtered graph gd0) ──
+            if m == "single":
+                plot_attack_path(gd0, source=src, target=tgt, path_index=pidx, k=k)
+            elif m == "overlay":
+                plot_all_attack_paths(gd0, source=src, target=tgt, k=k, show_context=context_widget.value)
+            elif m == "all_to_target":
+                plot_all_paths_to_target(gd0, target=tgt, k_per_source=k,
+                                          show_context=context_widget.value)
+            elif m == "defense":
+                defended = set(defense_nodes_widget.value)
+                plot_defense_simulator(gd0, source=src, target=tgt, k=k, defended_nodes=defended,
+                                        attack_datasets=attacks_dict)
+
+            # ── Browse mode ──
+            elif m == "browse":
+                fams = list(browse_families_widget.value)
+                if not fams:
+                    print("[!] No family selected.")
+                    return
+                sub_mode = browse_mode_widget.value
+                if sub_mode == "single":
+                    pick = browse_attack_widget.value
+                    if not pick:
+                        print("[!] No attack picked.")
+                        return
+                    fam, idx = pick
+                    attack = attacks_dict[fam][idx]
+                    print(f"Displaying single attack: {attack.get('attack_id', '?')} from {fam}")
+                    show_attack_in_graph(attack, graph_data,
+                                          output_html=f"attack_{attack.get('attack_id', 'x')}.html")
+                else:
+                    max_per = browse_max_widget.value
+                    attacks_dict = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
+                    if not attacks_dict:
+                        print("[!] None of the selected families have attacks loaded.")
+                        return
+                    total = sum(min(len(a), max_per) for a in attacks_dict.values())
+                    print(f"Rendering concentric overlay: {len(attacks_dict)} families, {total} attacks total...")
+                    show_concentric_with_attacks(graph_data, attacks_dict,
+                                                  max_per_family=max_per,
+                                                  output_html="multi_family_concentric.html")
+
+            # ── Play mode ──
+            elif m == "play":
+                fams = list(play_families_widget.value)
+                if not fams:
+                    print("[!] No family selected for play.")
+                    return
+                defended = set(play_defense_widget.value)
+                max_per = play_max_widget.value
+                attacks_dict = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
+                if not attacks_dict:
+                    print("[!] No attacks loaded.")
+                    return
+                play_defense_on_generated_attacks(graph_data, attacks_dict, defended,
+                                                    max_per_family=max_per,
+                                                    output_html="play_result.html")
+
+    run_button.on_click(on_run)
+
+    panel = widgets.VBox([
+        title_html,
+        widgets.HBox([
+            widgets.VBox([analysis_group_label, analysis_mode_widget,
+                           browse_play_group_label, browse_play_mode_widget],
+                          layout=widgets.Layout(margin="0 40px 0 0", width="500px")),
+            widgets.VBox([
+                source_label, source_widget,
+                target_label, target_widget,
+                k_label, k_widget,
+                path_idx_label, path_idx_widget,
+                context_widget,
+                defense_label, analyze_btn, defense_suggestion, defense_nodes_widget,
+                browse_families_label, browse_families_widget,
+                browse_mode_label, browse_mode_widget,
+                browse_attack_label, browse_attack_widget,
+                browse_max_label, browse_max_widget,
+                play_families_label, play_families_widget,
+                play_max_label, play_max_widget,
+                play_suggest_btn, play_suggestion,
+                play_defense_label, play_defense_widget,
+            ])
+        ]),
+        run_button
+    ], layout=widgets.Layout(padding="20px", border="2px solid #ddd", border_radius="12px", margin="12px 0"))
+
+    display(panel, output_area)
+
+
+
+
