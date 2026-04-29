@@ -66,7 +66,12 @@ The function returns:
 
 - The shortest valid path between source and target  
 - Intermediate nodes and relationships used  
-- A minimal-step attack chain representation  
+- A minimal-step attack chain representation
+
+### Example of output
+![Example graph of a shortest path attack](../images/attacks-examples/shortest_path/shortest_path_graph.png)
+![Example legend of a shortest path attack](../images/attacks-examples/shortest_path/shortest_path_legend.png)
+
 
 ## Technical Reference
 
