@@ -80,12 +80,6 @@ For more details on the implementation, you can click on this link:
 
 [** attacks creation python module **](https://github.com/Maelh1/Markov_Budget/blob/main/adsimulator_graph_generator/src/attacks.py)
 
-## Security Insight
-Shadow Admin paths are critical because they:
-- Are not visible through group membership alone
-- Exploit hidden ACL-based control
-- Enable silent privilege escalation
-- Represent real attack paths in Active Directory environments
 
 ---
 

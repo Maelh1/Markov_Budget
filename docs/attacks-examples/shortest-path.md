@@ -74,16 +74,7 @@ For more details on the implementation, you can click on this link:
 
 [** attacks creation python module **](https://github.com/Maelh1/Markov_Budget/blob/main/adsimulator_graph_generator/src/attacks.py)
 
-## Security Insight
 
-Shortest paths are important because they:
-
-- Reveal the fastest privilege escalation routes  
-- Highlight weakly protected or highly connected nodes  
-- Identify critical exposure points in the graph  
-- Help assess attack efficiency in Active Directory environments  
-
-A target reachable in only a few steps is considered high risk.
 
 ## Summary
 

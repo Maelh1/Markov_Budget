@@ -88,15 +88,7 @@ The function returns:
 For more details on the implementation, you can click on this link:
 
 [** attacks creation python module **](https://github.com/Maelh1/Markov_Budget/blob/main/adsimulator_graph_generator/src/attacks.py)
-
-## Security Insight
-
-Lateral movement is critical because it:
-
-- Reflects real attacker behavior post-compromise  
-- Exploits existing sessions and permissions  
-- Enables gradual escalation toward admin access  
-- Reveals hidden attack chains across machines  
+ 
 
 ## Summary
 

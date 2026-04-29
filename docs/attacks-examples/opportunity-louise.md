@@ -87,15 +87,7 @@ The function returns:
 For more details on the implementation, you can click on this link:
 
 [** attacks creation python module **](https://github.com/Maelh1/Markov_Budget/blob/main/adsimulator_graph_generator/src/attacks.py)
-
-## Security Insight
-
-Opportunity attacks highlight that:
-
-- Attackers do not always follow optimal strategies  
-- Random exploration can still lead to critical compromise  
-- Large graphs increase the probability of unexpected paths  
-- Hidden attack chains may exist without obvious structure  
+  
 
 ## Summary
 
