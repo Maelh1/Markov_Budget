@@ -82,14 +82,6 @@ For more details on the implementation, you can click on this link:
 
 [** attacks creation python module **](https://github.com/Maelh1/Markov_Budget/blob/main/adsimulator_graph_generator/src/attacks.py)
 
-## Security Insight
-
-Kerberos Adjusted paths are important because they:
-
-- Model realistic multi-step attack chains  
-- Highlight SPN-based escalation risks  
-- Focus on structured and reproducible paths  
-- Reveal constrained but effective privilege escalation routes  
 
 ## Summary
 
