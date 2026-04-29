@@ -66,7 +66,7 @@ pip install networkx ipywidgets
 In the notebook, import the generator with:
 
 ```python
-from ad_attack_generator import ADAttackGenerator, launch_attack_generator_ui
+from attack import ADAttackGenerator, launch_attack_generator_ui
 ```
 
 ---
@@ -195,35 +195,7 @@ The path stops when the maximum depth is reached or when no valid neighbor is av
 
 ---
 
-## 9 — Scoring System
-
-Each candidate starts with a base score:
-
-```python
-score = 1.0
-```
-
-The score increases when the candidate matches the user constraints:
-
-```python
-if rel in required_relations:
-    score += 5.0
-
-if nxt_type in required_node_types:
-    score += 5.0
-
-if target_mode == "specific" and nxt == target_node:
-    score += 20.0
-
-if target_mode == "important" and nxt in important_targets:
-    score += 20.0
-```
-
-This means the generation is random, but guided toward the requested attack shape.
-
----
-
-## 10 — Path Validation
+## 9 — Path Validation
 
 After a path is generated, it is validated.
 
@@ -242,62 +214,7 @@ The validation checks that:
 
 Only valid and unique paths are kept.
 
----
-
-## 11 — Generate Multiple Attacks
-
-Example of programmatic generation:
-
-```python
-attacks = generator.generate_multiple_attacks(
-    start_node="USER01@DOMAIN.LOCAL",
-    required_relations=["AdminTo"],
-    required_node_types=["Group"],
-    excluded_relations=[],
-    excluded_node_types=[],
-    required_nb_nodes=None,
-    nb_attacks=5,
-    max_depth=10,
-    target_mode="important",
-    target_node=None,
-    important_targets=important_targets
-)
-```
-
-This generates up to five different attack paths starting from the selected source.
-
----
-
-## 12 — Generate From Any Valid Source
-
-The generator can also try several possible sources automatically.
-
-```python
-attacks = generator.generate_attacks_from_any_source(
-    start_nodes=start_nodes,
-    required_relations=["AdminTo"],
-    required_node_types=["Group"],
-    excluded_relations=[],
-    excluded_node_types=[],
-    required_nb_nodes=None,
-    nb_attacks=5,
-    max_depth=10,
-    target_mode="important",
-    target_node=None,
-    important_targets=important_targets
-)
-```
-
-Valid sources are nodes of type:
-
-- `User`
-- `Computer`
-
-with at least one outgoing edge.
-
----
-
-## 13 — Interface Features
+## 10 — Interface Features
 
 The interactive interface allows the user to configure attack generation without writing code.
 
@@ -379,7 +296,7 @@ Controls randomness and makes generation reproducible.
 
 ---
 
-## 14 — Displayed Output
+## 11— Displayed Output
 
 Each generated attack is displayed in a readable format.
 
@@ -400,7 +317,7 @@ Length   : ...
 
 ---
 
-## 15 — JSON Export Format
+## 12 — JSON Export Format
 
 Generated attacks are exported as JSON.
 
@@ -437,51 +354,7 @@ Example:
 
 ---
 
-## 16 — Export Location
-
-The generated file is saved in:
-
-```text
-./attack_datasets/
-```
-
-The filename follows this format:
-
-```text
-<attack_name>_generated_attacks_graph0.json
-```
-
-Example:
-
-```text
-custom_attack_generated_attacks_graph0.json
-```
-
----
-
-## 17 — Role in the Full Pipeline
-
-The full workflow is:
-
-```text
-Simulated Active Directory Environment
-↓
-Neo4j Graph Generation
-↓
-Raw Graph: graph_0.json
-↓
-Custom Attack Path Generator
-↓
-Generated Attack Dataset
-↓
-Visualization / Analysis / Machine Learning
-```
-
-The generator transforms a static graph into configurable attack scenarios.
-
----
-
-## 18 — Use Cases
+## 13— Use Cases
 
 The generator can be used to:
 
@@ -493,33 +366,3 @@ The generator can be used to:
 - compare different graph configurations
 - analyze dangerous relationships
 
----
-
-## 19 — Limitations
-
-The generator does not guarantee:
-
-- real-world exploitability
-- exhaustive path discovery
-- shortest paths
-- optimal attack paths
-- perfect Active Directory modeling
-- perfect node type classification
-
-It should be understood as a simulation and exploration tool.
-
----
-
-## Conclusion
-
-The Custom Attack Path Generator transforms `graph_0.json` into reusable attack scenarios.
-
-It provides:
-
-- an interactive notebook interface
-- programmatic generation functions
-- constraint-based attack creation
-- reproducible random generation
-- JSON export for later analysis
-
-This makes it useful for documentation, visualization, dataset generation, and security research.
