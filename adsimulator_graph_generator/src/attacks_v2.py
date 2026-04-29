@@ -682,10 +682,3 @@ def launch_attack_generator_ui(
     display(ui)
 
     return generator, ui
-
-
-generator, ui = launch_attack_generator_ui(
-    graph_json_path="./Dataset/graph_0.json",
-    default_attack_name="shadowadmin",
-    export_dir="."
-)
