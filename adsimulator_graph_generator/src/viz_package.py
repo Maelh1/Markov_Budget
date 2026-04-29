@@ -1984,13 +1984,13 @@ def launch_controller(gd0, graph_data, attacks_dict):
                                           output_html=f"attack_{attack.get('attack_id', 'x')}.html")
                 else:
                     max_per = browse_max_widget.value
-                    attacks_dict = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
-                    if not attacks_dict:
+                    subset = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
+                    if not subset:
                         print("[!] None of the selected families have attacks loaded.")
                         return
-                    total = sum(min(len(a), max_per) for a in attacks_dict.values())
-                    print(f"Rendering concentric overlay: {len(attacks_dict)} families, {total} attacks total...")
-                    show_concentric_with_attacks(graph_data, attacks_dict,
+                    total = sum(min(len(a), max_per) for a in subset.values())
+                    print(f"Rendering concentric overlay: {len(subset)} families, {total} attacks total...")
+                    show_concentric_with_attacks(graph_data, subset,
                                                   max_per_family=max_per,
                                                   output_html="multi_family_concentric.html")
 
@@ -2002,11 +2002,11 @@ def launch_controller(gd0, graph_data, attacks_dict):
                     return
                 defended = set(play_defense_widget.value)
                 max_per = play_max_widget.value
-                attacks_dict = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
-                if not attacks_dict:
+                subset = {fam: attacks_dict[fam] for fam in fams if fam in attacks_dict}
+                if not subset:
                     print("[!] No attacks loaded.")
                     return
-                play_defense_on_generated_attacks(graph_data, attacks_dict, defended,
+                play_defense_on_generated_attacks(graph_data, subset, defended,
                                                     max_per_family=max_per,
                                                     output_html="play_result.html")
 
