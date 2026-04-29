@@ -1,4 +1,4 @@
-# Step 6 — Custom Attack Path Generator
+# Custom Attack Path Generator
 
 ## Objective
 
@@ -20,7 +20,7 @@ The generator uses a guided random walk and exports the generated attacks as JSO
 
 ---
 
-## 1 — Required Files
+## 1 : Required Files
 
 The project must contain:
 
@@ -46,7 +46,7 @@ The Python module contains the logic used to:
 
 ---
 
-## 2 — Required Libraries
+## 2 : Required Libraries
 
 The generator uses:
 
@@ -61,23 +61,25 @@ pip install networkx ipywidgets
 
 ---
 
-## 3 — Importing the Generator
+## 3 : Importing the Generator
 
 In the notebook, import the generator with:
 
 ```python
-from attack import ADAttackGenerator, launch_attack_generator_ui
+from src import attacks
 ```
 
 ---
 
-## 4 — Launching the Interface
+## 4 : Launching the Interface
 
 The simplest way to use the generator is:
 
 ```python
-generator, ui = launch_attack_generator_ui(
-    graph_json_path="./Dataset/graph_0.json"
+generator, ui = creation.launch_attack_generator_ui(
+    graph_json_path="./Dataset/graph_0.json", # Graph of the AD
+    default_attack_name="my_attack",          # Name of the attack
+    export_dir="./Dataset"                    #Folder for the output json
 )
 ```
 
@@ -91,7 +93,7 @@ This command:
 
 ---
 
-## 5 — Loading the Graph Programmatically
+## 5 : Loading the Graph Programmatically
 
 The generator can also be used without the interface:
 
@@ -114,7 +116,7 @@ This displays:
 
 ---
 
-## 6 — Node Type Detection
+## 6 : Node Type Detection
 
 The generator supports the following node types:
 
@@ -152,7 +154,7 @@ This makes the loader more robust when the exported graph is incomplete or incon
 
 ---
 
-## 7 — Important Targets
+## 7 : Important Targets
 
 The generator can automatically detect important targets.
 
@@ -177,7 +179,7 @@ Important target
 
 ---
 
-## 8 — Attack Generation Logic
+## 8 : Attack Generation Logic
 
 The core algorithm is a guided random walk.
 
@@ -195,7 +197,7 @@ The path stops when the maximum depth is reached or when no valid neighbor is av
 
 ---
 
-## 9 — Path Validation
+## 9 : Path Validation
 
 After a path is generated, it is validated.
 
@@ -214,7 +216,7 @@ The validation checks that:
 
 Only valid and unique paths are kept.
 
-## 10 — Interface Features
+## 10 : Interface Features
 
 The interactive interface allows the user to configure attack generation without writing code.
 
@@ -296,7 +298,7 @@ Controls randomness and makes generation reproducible.
 
 ---
 
-## 11— Displayed Output
+## 11: Displayed Output
 
 Each generated attack is displayed in a readable format.
 
@@ -317,7 +319,7 @@ Length   : ...
 
 ---
 
-## 12 — JSON Export Format
+## 12 : JSON Export Format
 
 Generated attacks are exported as JSON.
 
@@ -354,7 +356,7 @@ Example:
 
 ---
 
-## 13— Use Cases
+## 13  : Use Cases
 
 The generator can be used to:
 
