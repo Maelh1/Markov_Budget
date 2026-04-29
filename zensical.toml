@@ -60,9 +60,9 @@ nav = [
   ] },
 
   { "Attacks examples" = [
-    { "The Phishing attack" = "attacks-examples/phising.md" },
+    { "The Phishing attack" = "attacks-examples/phishing.md" },
     { "The Shortest Path attack" = "attacks-examples/shortest-path.md" },
-    { "The Kerberosting attack" = "attacks-examples/kerberosting.md" },
+    { "The Kerberoasting attack" = "attacks-examples/kerberoasting.md" },
     { "The Lateral Admin Movement attack" = "attacks-examples/lateral-admin-movement.md" },
     { "The Shadow Admin attack" = "attacks-examples/shadow-admin.md" },
     { "The Opportunity Louise attack" = "attacks-examples/opportunity-louise.md" },
@@ -76,6 +76,10 @@ nav = [
 
   { "Create your own attack" = [
     { "Tutorial" = "create-your-own-attack/attackgen.md" },
+  ] },
+
+  { "Attacks dataset" = [
+    { "Attacks dataset format" = "attacks-dataset/attacks-dataset-format.md" },
   ] },
 
 
