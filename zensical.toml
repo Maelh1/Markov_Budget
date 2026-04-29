@@ -56,11 +56,6 @@ nav = [
 
   { "Set up & Graph Generation" = [
     { "Environment initialization" = "setup-graph-generation/open-notebook-colab.md" },
-    { "Salles de Visio" = "divers/multimedia.md" },
-    { "Zimbra" = "divers/zimbra.md" },
-    { "Téléphonie ToIP" = "divers/ToIP.md" },
-    { "Outils collaboratifs" = "divers/outils-collaboratifs.md" },
-    { "Tablette ReMarkable 2" = "divers/remarkable.md" },
   ] },
 
   { "Attacks examples" = [
