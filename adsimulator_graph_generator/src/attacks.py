@@ -1,3 +1,17 @@
+"""
+The aim of this module is to simulate various attack scenarios on an Active Directory graph dataset.
+
+Attacks implemented in this module include:
+- Phishing Attack
+- Lateral Admin Movement Attack
+- Shadow Admin Attack
+- Kerberoasting Attack (adjusted for AD graphs)
+- Louise Attack 
+- A function to create an attack based on the choice of nodes or paths in the graph (for manual attack creation)
+
+"""
+
+
 import os
 import json
 import random
@@ -7,10 +21,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import ipywidgets as widgets
 from IPython.display import display, clear_output
-
-# ======================================================================
-# Create your own attack
-# ======================================================================
 
 # ======================================================================
 # Phishing Attack Simulation
@@ -939,7 +949,7 @@ def run_shadow_admin_attack(
 #   - Doit finir sur un admin
 # La fonction run_kerberos_adjusted_attack retourne et visualise les chemins valides.
 
-def run_kerberos_adjusted_attack(
+def run_kerberoast_attack(
     jsonl_path: str,
     max_paths: int = 5,
     show_plots: bool = True,
