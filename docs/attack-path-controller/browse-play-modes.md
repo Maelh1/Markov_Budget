@@ -6,7 +6,7 @@
 
 Browse and Play visualizations use a **concentric layout**: the Domain node sits at the centre, surrounded by OUs, then Groups, then leaf entities (Computers, Users, Containers). This layout matches the structural hierarchy of AD and is the appropriate view when the operator's question is "where in my organization are the attacks happening", as opposed to "what is the path from A to B".
 
-> *[Screenshot 9 — any Browse-mode visualization showing the concentric layout. Caption: "Concentric layout: Domain at the centre, OUs in the inner ring, Groups outside, leaf entities at the periphery."]*
+![Visualisation 9](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.46.42.png)
 
 ### Mode 5 — Browse a single generated attack
 
@@ -21,7 +21,7 @@ Inspect one specific attack from one specific family on the complete graph. Usef
 
 The chosen attack's path is overlaid on the concentric layout: the source node is enlarged red, the target is enlarged green, intermediates are highlighted, and edges along the path are coloured and labelled with their AD relation type. All other nodes remain visible but dimmed.
 
-> *[Screenshot 10 — a Mode-5 rendering with one attack overlaid on the concentric view. Caption: "Mode `browse_single`: one generated attack on the full AD graph."]*
+![Visualisation 10](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.47.53.png)
 
 ### Mode 6 — Browse multiple attacks overlaid
 
@@ -39,7 +39,7 @@ Each family's attacks are rendered in that family's colour (`LateralAdminChain` 
 #### What to observe
 Nodes that lie on attack paths from multiple families are higher-value defense candidates than nodes that lie only on paths from a single family. The legend at the bottom-left shows the count per family rendered.
 
-> *[Screenshot 11 — a Mode-6 rendering with attacks from at least two families visible, plus the bottom-left legend. Caption: "Mode `browse_all`: multi-family attack overlay on the complete graph. The legend lists the families and their counts."]*
+![Visualisation 11](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.49.02.png)
 
 ### Mode 7 — Defense game
 
@@ -61,7 +61,8 @@ The visualization renders the concentric view with:
 - A printed summary per family: `<family>: N/M blocked (XX.X%)` and an overall total.
 - A legend in the bottom-left with the open/blocked counts and the global defense efficiency.
 
-> *[Screenshot 12 — a Mode-7 rendering showing both green open paths and red dashed blocked paths, with the bottom legend visible. Caption: "Mode `play`: chosen defenses scored against the generated attacks. Open paths in green, blocked in red dashed."]*
+![Visualisation 12](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.49.37.png)
+![Visualisation 12 bis](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.50.59.png)
 
 #### Why two defense modes?
 

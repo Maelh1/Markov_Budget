@@ -6,7 +6,7 @@
 
 Analysis visualizations use a **column layout**, not a concentric layout. Source nodes appear in the leftmost column, target nodes in the rightmost column, intermediate nodes in columns sorted by their distance from the source. This convention makes the direction of attack progression explicit (left-to-right) and makes path comparisons visually unambiguous.
 
-> *[Screenshot 5 — any Analysis-mode visualization showing the column layout with source on the left and target on the right.]*
+![Visualisation 5](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.35.15.png)
 
 ### Mode 1 : Inspect one attack path
 
@@ -29,7 +29,7 @@ The path is drawn in colour (one colour from the path palette); all other nodes 
 #### What to observe
 The relation type on each edge tells you the privilege required at each hop. A path consisting mostly of `MemberOf` edges is low-privilege traversal (group membership chain); a path containing `GenericAll` or `WriteDacl` hops is high-privilege exploitation. The path's overall feasibility is the product of edge probabilities — paths with many `HasSession` or `AllowedToDelegate` edges are less reliable for the attacker.
 
-> *[Screenshot 6 — a Mode-1 rendering with one path coloured and the rest of the subgraph dimmed. Caption: "Mode `single`: one shortest path on the filtered subgraph."]*
+![Visualisation 6](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.36.32.png)
 
 ### Mode 2 : Compare multiple attack routes
 
@@ -45,7 +45,7 @@ Visualize the *k* shortest paths between a chosen attacker and a chosen target s
 #### What to observe
 Look for nodes through which multiple coloured paths pass — these are candidate chokepoints. A single defended node breaking many coloured paths simultaneously is what the Defense simulator (Mode 4) will rank highly. This mode is the visual prerequisite for understanding why a chokepoint matters.
 
-> *[Screenshot 7 — a Mode-2 rendering with 5 paths in distinct colours. Caption: "Mode `overlay`: k shortest paths shown together. Visual chokepoints are nodes traversed by several paths."]*
+![Visualisation 7](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.37.25.png)
 
 ### Mode 3 : Show all attackers reaching one target
 
@@ -83,7 +83,8 @@ Test arbitrary defense allocations under the framework's random-walk model. Choo
 #### What to observe
 Defended nodes are marked with a coloured ring; paths that pass through them are reported as blocked. The bottom of the visualization summarizes, per family: `<family>: N/M paths blocked (XX.X%)`. The percentage is the proportion of generated attacks of that family that traverse at least one of the defended nodes.
 
-> *[Screenshot 8 — a Mode-4 rendering with three defended nodes ringed and the per-family blocked/total report visible at the bottom. Caption: "Mode `defense`: chosen nodes are tested as a defense allocation. The framework's chokepoint ranking populates the suggestion list automatically."]*
+![Visualisation 8](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.38.35.png)
+![Visualisation 8bis](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.40.01.png)
 
 #### Connection to the Markov-Budget output
 The chokepoint ranking surfaced by "Analyze chokepoints" is **structural**: it counts path intersections among the *k* shortest paths, ignoring the probability-weighted random-walk model. The Markov-Budget optimization, by contrast, returns a real-valued `J_star` allocation under the probabilistic model. The two rankings often agree on the top nodes but can diverge on lower-ranked candidates. The Defense simulator lets the operator inspect both the chokepoint count is shown directly in the suggestion list; the Monte Carlo defense weight is shown in each node's tooltip.
