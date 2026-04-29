@@ -76,8 +76,8 @@ nav = [
     { "The Opportunity Louise attack" = "attacks-examples/opportunity-louise.md" },
   ] },
 
-  { "Game tutorial" = [
-    { "Visualisation tutorial" = "game-tutorial/tutorial-v1.md" },
+  { "Attack Path Controller" = [
+    { "Concepts and prerequisites" = "attack-path-controller/concepts.md" },
     { "How create your own attacks?" = "game-tutorial/own-attack-creation.md" },
   ] },
 
