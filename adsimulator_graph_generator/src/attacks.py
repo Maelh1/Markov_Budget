@@ -1079,7 +1079,7 @@ def run_kerberoast_attack(
         })
     output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, "kerberosadjusted_results.json")
+    output_path = os.path.join(output_dir, "kerberoast_results.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
     print(f"[+] Export JSON {output_path} generated ({len(export_data)} paths)")
