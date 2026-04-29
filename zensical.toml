@@ -56,6 +56,7 @@ nav = [
 
   { "Set up & Graph Generation" = [
     { "Environment initialization" = "setup-graph-generation/open-notebook-colab.md" },
+    { "Graph generation" = "setup-graph-generation/graph-generation.md" },
   ] },
 
   { "Attacks examples" = [
