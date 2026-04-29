@@ -14,7 +14,7 @@ All other dependencies (`networkx`, `neo4j`, `numpy`, etc.) will be installed au
 
 ---
 
-## Phase 2 — Local Neo4j Instance with APOC
+## Phase 2 : Local Neo4j Instance with APOC
 
 ### Why Neo4j?
 
@@ -63,7 +63,7 @@ echo "[+] Neo4j environment ready!"
 
 ---
 
-## Phase 3 — Cloning the Project Repository
+## Phase 3 : Cloning the Project Repository
 
 This cell downloads the **`cyber_project_adas`** repository, which contains all of the project source code.
 
@@ -95,7 +95,7 @@ ls -la cyber_project_adas
 
 ---
 
-## Phase 4 — Installing ADSimulator
+## Phase 4 : Installing ADSimulator
 
 ADSimulator is the **generation engine** of the Active Directory graph. It is distributed as a standard Python package, embedded inside the repository cloned in the previous phase. Its installation requires two adjustments specific to the Colab environment:
 
@@ -123,7 +123,7 @@ python setup.py install
 
 ---
 
-## Phase 5 — Locating the ADSimulator Executable
+## Phase 5 : Locating the ADSimulator Executable
 
 Once installed, ADSimulator is accessible as a system command (an `adsimulator` binary somewhere in the `PATH`). This short Python cell locates that executable dynamically using `shutil.which`, exactly as the `which adsimulator` command would in a terminal.
 
@@ -141,7 +141,7 @@ if adsim_exe is None:
 
 ---
 
-## Phase 6 — Importing the Project Modules
+## Phase 6 : Importing the Project Modules
 
 The project is now installed and located. This cell loads all the necessary Python modules into memory for the rest of the pipeline.
 
@@ -181,7 +181,7 @@ print(f"[+] viz_package: {len([n for n in dir(vp) if not n.startswith('_') and c
 
 ---
 
-## Phase 7 — Generating the Synthetic Active Directory Graph
+## Phase 7 : Generating the Synthetic Active Directory Graph
 
 This is the central phase of the entire setup: it produces the AD graph that will serve as the training ground for all attack simulations.
 
