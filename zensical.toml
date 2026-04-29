@@ -54,6 +54,15 @@ nav = [
     { "Glossary" = "context/glossary.md" },
   ]},
 
+  { "Set up & Graph Generation" = [
+    { "Environment initialization" = "setup-graph-generation/environment-initialization.md" },
+    { "Salles de Visio" = "divers/multimedia.md" },
+    { "Zimbra" = "divers/zimbra.md" },
+    { "Téléphonie ToIP" = "divers/ToIP.md" },
+    { "Outils collaboratifs" = "divers/outils-collaboratifs.md" },
+    { "Tablette ReMarkable 2" = "divers/remarkable.md" },
+  ] },
+
   { "Create your own attack" = [
     { "Step 1 : generate the graph" = "create-your-own-attack/generate-graph.md" },
   ] },
@@ -72,14 +81,7 @@ nav = [
     { "How create your own attacks?" = "game-tutorial/own-attack-creation.md" },
   ] },
 
-  { "Divers" = [
-    { "Scanners sur copieurs" = "divers/scan-mee.md" },
-    { "Salles de Visio" = "divers/multimedia.md" },
-    { "Zimbra" = "divers/zimbra.md" },
-    { "Téléphonie ToIP" = "divers/ToIP.md" },
-    { "Outils collaboratifs" = "divers/outils-collaboratifs.md" },
-    { "Tablette ReMarkable 2" = "divers/remarkable.md" },
-  ] },
+
 
 
 # { "" = "" },
