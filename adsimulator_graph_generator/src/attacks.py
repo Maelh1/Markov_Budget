@@ -25,58 +25,58 @@ from IPython.display import display, clear_output
 # ======================================================================
 # Phishing Attack Simulation
 # ======================================================================
-# Cette section simule une campagne de phishing sur un graphe d'utilisateurs.
-# Les fonctions principales sont :
-# - load_users_from_jsonl : charge les utilisateurs depuis un fichier JSONL.
-# - select_phishing_targets : sélectionne aléatoirement des cibles.
-# - simulate_phishing : simule la réussite de l'attaque sur chaque cible.
-# - plot_phishing_results : visualise les résultats.
-# - run_phishing_campaign : pipeline complet, retourne les résultats et affiche un résumé.
+# This section simulates a phishing campaign on a user graph.
+# The main functions are:
+# - load_users_from_jsonl: loads users from a JSONL file.
+# - select_phishing_targets: randomly selects targets.
+# - simulate_phishing: simulates the success of the attack on each target.
+# - plot_phishing_results: visualizes the results.
+# - run_phishing_campaign: full pipeline, returns results and displays a summary.
 
 def load_users_from_jsonl(jsonl_path: str, user_label: str = 'User', name_property: str = 'name') -> List[str]:
     """Read a JSONL graph file and return a list of user names."""
     users: List[str] = []
     seen = set()
 
-    # Ouvre le fichier JSONL et lit chaque ligne
+    # Opens the jsonl file and reads it line by line
     with open(jsonl_path, 'r', encoding='utf-8') as f:
         for line in f:
             if not line.strip():
-                continue  # Ignore les lignes vides
+                continue  # Ignores the empty rows
 
             data = json.loads(line)
             if data.get('type') != 'node':
-                continue  # Ignore les relations
+                continue  # Ignores the relationships
 
             labels = data.get('labels', [])
             if user_label not in labels:
-                continue  # Ignore les nœuds qui ne sont pas des utilisateurs
+                continue  # Ignores the nodes that are not users
 
             name = data.get('properties', {}).get(name_property, 'Unknown')
             if name not in seen:
                 seen.add(name)
                 users.append(name)
 
-    # Retourne la liste des utilisateurs trouvés
+    # Returns the list of found users
     return users
 
 
 def select_phishing_targets(users: List[str], count: int = 10, seed: Optional[int] = None) -> List[str]:
     """Select a random sample of users for a phishing campaign."""
-    # Permet de fixer la graine pour la reproductibilité
+    # Fixes the seed for reproducibility if provided
     if seed is not None:
         rng = random.Random(seed)
     else:
         rng = random
 
     sample_count = min(count, len(users))
-    # Sélectionne un échantillon aléatoire d'utilisateurs
+    # Selects a random sample of users
     return rng.sample(users, sample_count)
 
 
 def simulate_phishing(targets: List[str], prob_range: Tuple[float, float] = (0.0, 0.1), seed: Optional[int] = None) -> Tuple[List[str], Dict[str, float]]:
     """Simulate a phishing campaign and return compromised users plus probabilities."""
-    # Permet de fixer la graine pour la reproductibilité
+    # Fixes the seed for reproducibility if provided
     if seed is not None:
         rng = random.Random(seed)
     else:
@@ -85,7 +85,7 @@ def simulate_phishing(targets: List[str], prob_range: Tuple[float, float] = (0.0
     success_users: List[str] = []
     probabilities: Dict[str, float] = {}
 
-    # Pour chaque cible, tire une probabilité de succès et simule l'attaque
+    # For each target, randomly determine if the phishing attack is successful based on a random probability within the given range
     for user in targets:
         prob = rng.uniform(*prob_range)  # Probabilité de succès pour cet utilisateur
         success = rng.random() < prob    # L'attaque réussit-elle ?
@@ -94,7 +94,7 @@ def simulate_phishing(targets: List[str], prob_range: Tuple[float, float] = (0.0
         if success:
             success_users.append(user)
 
-    # Retourne la liste des utilisateurs compromis et les probabilités associées
+    # Returns the list of compromised users and their associated probabilities
     return success_users, probabilities
 
 
@@ -103,13 +103,13 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
     G = nx.DiGraph()
     pos = {attacker_name: (-1, 0)}
 
-    # Place chaque utilisateur sur l'axe vertical
+    # Place each user on the vertical axis
     for i, user in enumerate(targets):
         pos[user] = (1, i)
 
     plt.figure(figsize=figsize)
 
-    # Noeud de l'attaquant
+    # Attacker's node
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=[attacker_name],
@@ -118,7 +118,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         edgecolors='black',
     )
 
-    # Noeuds compromis
+    # Compromised nodes
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=success_users,
@@ -126,7 +126,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         node_size=700,
     )
 
-    # Noeuds non compromis
+    # Uncompromised nodes
     failed_users = [u for u in targets if u not in success_users]
     nx.draw_networkx_nodes(
         G, pos,
@@ -135,7 +135,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         node_size=500,
     )
 
-    # Arêtes vers les compromis
+    # Edges towards the compromised users
     success_edges = [(attacker_name, u) for u in success_users]
     nx.draw_networkx_edges(
         G, pos,
@@ -145,7 +145,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         arrowsize=20,
     )
 
-    # Arêtes vers les échecs
+    # Edges towards the failed targets
     fail_edges = [(attacker_name, u) for u in failed_users]
     nx.draw_networkx_edges(
         G, pos,
@@ -156,7 +156,7 @@ def plot_phishing_results(targets: List[str], success_users: List[str], attacker
         arrowsize=15,
     )
 
-    # Affichage des labels
+    # Displaying the labels
     labels = {attacker_name: attacker_name}
     labels.update({u: u for u in targets})
     nx.draw_networkx_labels(G, pos, labels, font_size=9, font_weight='bold')
@@ -176,11 +176,11 @@ def run_phishing_campaign(
     show_plot: bool = True,
 ) -> Dict[str, object]:
     """Run a complete phishing campaign from a JSONL dataset."""
-    # Charge tous les utilisateurs du graphe
+    # Loads the users of the graph
     users = load_users_from_jsonl(jsonl_path, user_label=user_label, name_property=name_property)
     print(f"[+] Total users found: {len(users)}")
 
-    # Si aucun utilisateur trouvé, retourne un résultat vide
+    # If no user is found, returns an empty result
     if not users:
         return {
             'users': users,
@@ -190,17 +190,17 @@ def run_phishing_campaign(
             'probabilities': {},
         }
 
-    # Sélectionne les cibles de la campagne
+    # Selects the targets for the phishing campaign
     targets = select_phishing_targets(users, count=target_count, seed=seed)
     print("\nUsers targeted by phishing:")
     for u in targets:
         print(' -', u)
 
-    # Simule la campagne de phishing
+    # Simulates the phishing campaign
     success_users, probabilities = simulate_phishing(targets, prob_range=prob_range, seed=seed)
     print("\nPhishing simulation:\n")
 
-    # Affiche le résultat pour chaque cible
+    # Displays the result for each target
     for user in targets:
         prob = probabilities[user]
         success = user in success_users
@@ -208,17 +208,17 @@ def run_phishing_campaign(
         print(f"   probability = {round(prob, 2)}")
         print(f"   RESULT = {'SUCCESS' if success else 'FAIL'}\n")
 
-    # Affiche la visualisation si demandé
+    # Displays the visualization if requested
     if show_plot:
         plot_phishing_results(targets, success_users)
 
-    # Liste des utilisateurs non compromis
+    # List of non-compromised users
     failed_users = [u for u in targets if u not in success_users]
     print('=================================')
     print(f"Users compromised: {len(success_users)}")
     print(success_users)
 
-    # Retourne un résumé de la campagne
+    # Returns a summary of the campaign
     return {
         'users': users,
         'targets': targets,
@@ -231,13 +231,14 @@ def run_phishing_campaign(
 # ======================================================================
 # Lateral Admin Movement Attack Simulation
 # ======================================================================
-# Cette section recherche des chemins de mouvement latéral admin dans un graphe AD.
-# Les helpers permettent de classifier les nœuds (User, Group, Computer, Domain).
-# Critères :
-#   - Source = User ou Computer non privilégié
-#   - Cible = groupe/machine/compte admin
-#   - Chemin avec au moins 2 relations latérales et un Computer
-# La fonction run_lateral_admin_movement affiche un résumé, exporte les résultats, et retourne les cas trouvés.
+# This section searches for lateral admin movement paths in an AD graph.
+# Helper functions are used to classify nodes (User, Group, Computer, Domain).
+# Criteria:
+#   - Source = non-privileged User or Computer
+#   - Target = admin group/machine/account
+#   - Path with at least 2 lateral relationships and one Computer
+# The run_lateral_admin_movement function displays a summary, exports the results, and returns the identified cases.
+
 
 def run_lateral_admin_movement(
     jsonl_path: str,
@@ -248,16 +249,17 @@ def run_lateral_admin_movement(
 ) -> List[Dict[str, object]]:
     """Run lateral admin movement analysis on a JSONL graph dataset."""
     
-    # ===========================================
-    # 1. Charger le graphe depuis le fichier JSONL
-    # ===========================================
-    # Initialiser un graphe dirigé et des dictionnaires pour stocker les types de nœuds et les relations
+# ===========================================
+# 1. Load the graph from the JSONL file
+# ===========================================
+# Initialize a directed graph and dictionaries to store node types and relationships
+
     G = nx.DiGraph()
     node_types = {}
     node_ids = {}
     edge_evidence = defaultdict(list)
 
-    # Lire le fichier JSONL ligne par ligne
+    # Reads jsonl line by line
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
@@ -265,7 +267,7 @@ def run_lateral_admin_movement(
 
             data = json.loads(line)
 
-            # Traiter les nœuds : extraire le nom et les labels
+            # Extract nodes: get name, labels, and id (if available)
             if data.get("type") == "node":
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
@@ -274,7 +276,7 @@ def run_lateral_admin_movement(
                 node_types[name] = labels
                 node_ids[name] = node_id
 
-            # Traiter les relations : extraire les nœuds de départ et d'arrivée, et le type de relation
+            # Extract relationships: get start and end nodes, and the relationship type
             elif data.get("type") == "relationship":
                 start = data.get("start", {}).get("properties", {}).get("name")
                 end = data.get("end", {}).get("properties", {}).get("name")
@@ -290,11 +292,11 @@ def run_lateral_admin_movement(
                     G.add_edge(start, end)
                     edge_evidence[(start, end)].append(rel_type)
 
-    print(f"[+] Nodes chargés : {len(G.nodes())}")
-    print(f"[+] Edges chargées : {len(G.edges())}")
+    print(f"[+] Nodes loaded : {len(G.nodes())}")
+    print(f"[+] Edges loaded : {len(G.edges())}")
 
     # ===========================================
-    # 2. Fonctions auxiliaires pour classifier les nœuds
+    # 2. Helper functions for classifying nodes
     # ===========================================
     def labels(node):
         return set(node_types.get(node, []))
@@ -322,7 +324,7 @@ def run_lateral_admin_movement(
             return "Domain"
         return "Other"
 
-    # Vérifier si un nœud a un nom d'admin (pour exclure les sources privilégiées)
+    # Check if a node has an admin name (to exclude privileged sources)
     def is_admin_like_name(node):
         n = node.upper()
         return any(k in n for k in [
@@ -338,11 +340,11 @@ def run_lateral_admin_movement(
             "KRBTGT"
         ])
 
-    # Définir les cibles intéressantes : groupes privilégiés, machines critiques, comptes admin
+    # Define interesting targets: privileged groups, critical machines, admin accounts
     def is_interesting_target(node):
         n = node.upper()
 
-        # Groupes privilégiés
+        # Privileged groups
         if is_group(node) and any(k in n for k in [
             "DOMAIN ADMINS",
             "ENTERPRISE ADMINS",
@@ -357,17 +359,17 @@ def run_lateral_admin_movement(
         ]):
             return True
 
-        # Machines critiques (comme les contrôleurs de domaine)
+        # Critical machines (like domain controllers)
         if is_computer(node) and any(k in n for k in ["DC", "MAINDC"]):
             return True
 
-        # Compte admin natif
+        # Native admin account
         if is_user(node) and "ADMINISTRATOR" in n:
             return True
 
         return False
 
-    # Extraire les relations d'un chemin
+    # Extract relationships from a path
     def path_rels(path):
         rels = []
         for i in range(len(path) - 1):
@@ -375,9 +377,10 @@ def run_lateral_admin_movement(
         return rels
 
     # ===========================================
-    # 3. Définition des chaînes de mouvement latéral admin
-    # ===========================================
-    # Relations considérées comme latérales (mouvement horizontal dans le réseau)
+# 3. Definition of lateral admin movement chains
+# ===========================================
+# Relationships considered as lateral (horizontal movement within the network)
+
     LATERAL_RELS = {"AdminTo", "CanRDP", "CanPSRemote", "ExecuteDCOM", "HasSession"}
 
     def classify_lateral_admin_chain(path):
@@ -391,22 +394,22 @@ def run_lateral_admin_movement(
         if len(path) < 2:
             return False
 
-        # Vérifier la source
+        # Check the source
         if not (is_user(path[0]) or is_computer(path[0])):
             return False
 
-        # Vérifier la cible
+        # Check the target
         if not is_interesting_target(path[-1]):
             return False
 
         rels = path_rels(path)
         rel_set = set(rels)
 
-        # Compter les relations latérales
+        # Count the lateral relationships
         lateral_count = sum(1 for r in rels if r in LATERAL_RELS)
         has_computer = any(is_computer(n) for n in path)
 
-        # Critères minimaux
+        # Minimal criteria
         if lateral_count < 2:
             return False
 
@@ -418,45 +421,46 @@ def run_lateral_admin_movement(
 
         return True
 
-    # ===========================================
-    # 4. Identifier les sources et cibles réalistes
-    # ===========================================
-    # Sources : Users ou Computers non-admin (pour simuler un attaquant réaliste)
+# ===========================================
+# 4. Identify realistic sources and targets
+# ===========================================
+# Sources: non-admin Users or Computers (to simulate a realistic attacker)
+    
     realistic_sources = [
         n for n in G.nodes()
         if (is_user(n) or is_computer(n)) and not is_admin_like_name(n)
     ]
 
-    # Cibles : Nœuds intéressants (privilégiés)
+    # Targets: privileged groups, critical machines, admin accounts
     interesting_targets = [n for n in G.nodes() if is_interesting_target(n)]
 
-    print(f"[+] Sources réalistes : {len(realistic_sources)}")
-    print(f"[+] Targets intéressantes : {len(interesting_targets)}")
+    print(f"[+] Realistic sources : {len(realistic_sources)}")
+    print(f"[+] Interesting targets : {len(interesting_targets)}")
 
     # ===========================================
-    # 5. Recherche des cas de mouvement latéral
+    # 5. Research for lateral admin movement chains
     # ===========================================
     cases = []
-    seen = set()  # Pour éviter les doublons
+    seen = set()  # To avoid duplicates
 
-    # Pour chaque paire source-cible, chercher tous les chemins simples
+    # For each realistic source and interesting target, find all simple paths up to max_cutoff 
     for source in realistic_sources:
         for target in interesting_targets:
             if source == target:
                 continue
 
             try:
-                # Utiliser NetworkX pour trouver tous les chemins simples jusqu'à max_cutoff
+                # Use networkx to find all simple paths between source and target 
                 for path in nx.all_simple_paths(G, source=source, target=target, cutoff=max_cutoff):
                     if not classify_lateral_admin_chain(path):
                         continue
 
-                    sig = tuple(path)  # Signature du chemin pour éviter les doublons
+                    sig = tuple(path)  # Path signature to avoid duplicates
                     if sig in seen:
                         continue
                     seen.add(sig)
 
-                    # Enregistrer le cas
+                    # Save the case
                     cases.append({
                         "source": source,
                         "target": target,
@@ -467,24 +471,24 @@ def run_lateral_admin_movement(
                         "characterization": "LateralAdminChain"
                     })
             except nx.NetworkXNoPath:
-                continue  # Aucun chemin trouvé
+                continue  # No path found
 
     # ===========================================
-    # 6. Affichage du résumé
+    # 6. Summary display
     # ===========================================
     print("\n" + "=" * 100)
-    print("[+] CAS LATERAL ADMIN CHAIN")
+    print("[+] LATERAL ADMIN CHAIN CASE")
     print("=" * 100)
-    print(f"Nombre total de cas : {len(cases)}")
+    print(f"Total cases found: {len(cases)}")
 
-    # Afficher les top_k_print premiers cas
+    #display the top cases with details
     for i, case in enumerate(cases[:top_k_print], start=1):
         print("-" * 100)
         print(f"Cas #{i}")
         print(f"Source      : {case['source']} ({case['source_type']})")
-        print(f"Cible       : {case['target']}")
-        print(f"Longueur    : {case['length']}")
-        print("Chemin      :")
+        print(f"Target       : {case['target']}")
+        print(f"Length    : {case['length']}")
+        print("Path      :")
 
         p = case["path"]
         for j in range(len(p) - 1):
@@ -494,7 +498,7 @@ def run_lateral_admin_movement(
             print(f"  {src} --{rels}--> {dst}")
 
     # ===========================================
-    # 7. Statistiques
+    # 7. Statistics
     # ===========================================
     source_type_counter = Counter()
     target_counter = Counter()
@@ -507,30 +511,30 @@ def run_lateral_admin_movement(
             rel_counter[r] += 1
 
     print("\n" + "=" * 100)
-    print("[+] RÉSUMÉ")
+    print("[+] SUMMARY")
     print("=" * 100)
 
-    print("\n[+] Répartition des sources :")
+    print("\n[+] Sources repartition :")
     for k, v in source_type_counter.items():
         print(f"{k}: {v}")
 
-    print("\n[+] Relations les plus fréquentes :")
+    print("\n[+] Most frequent relations :")
     for rel, count in rel_counter.most_common(10):
         print(f"{rel}: {count}")
 
-    print("\n[+] Cibles les plus atteintes :")
+    print("\n[+] Most targeted nodes :")
     for tgt, count in target_counter.most_common(10):
         print(f"{tgt}: {count}")
 
     # ===========================================
-    # 8. Exports des résultats (optionnel)
+    # 8. Exports the results
     # ===========================================
     if not export_files:
         return cases
 
     selected_cases = cases[:top_k_export]
 
-    # === Export JSON au format demandé ===
+    # === Exports in JSON format===
     export_data = []
     def get_type(node):
         labs = node_types.get(node, [])
@@ -544,7 +548,7 @@ def run_lateral_admin_movement(
             return "Domain"
         return "Other"
     def get_id(node):
-        # Prend l'id du noeud si dispo, sinon le nom
+        # Takes the node id if available, otherwise returns the name
         return node_ids.get(node, node)
     def get_label_type(node):
         labs = node_types.get(node, [])
@@ -555,7 +559,7 @@ def run_lateral_admin_movement(
         rels = []
         for i in range(len(path) - 1):
             rel_labels = edge_evidence.get((path[i], path[i+1]), ["UNKNOWN_REL"])
-            # On prend le premier label si plusieurs, sinon UNKNOWN_REL
+            # We take the first label if there are multiple, otherwise "UNKNOWN_REL"
             rels.append(rel_labels[0] if rel_labels else "UNKNOWN_REL")
         export_data.append({
             "attack": "lateraladmin",
@@ -604,18 +608,18 @@ def run_lateral_admin_movement(
         })
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(formatted_export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON {output_path} généré ({len(formatted_export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} generated ({len(formatted_export_data)} paths)")
     return cases
 
 
 # ======================================================================
 # Shadow Admin Attack Simulation
 # ======================================================================
-# Cette section détecte les "shadow admins" (utilisateurs ayant des droits indirects sur des groupes privilégiés).
-# Critères :
-#   - Chemin contenant à la fois une relation ACL (GenericAll, WriteDacl, etc.) et une relation de groupe (MemberOf, AddMember)
-#   - Exclut les admins directs
-# La fonction run_shadow_admin_attack filtre les vrais shadow admins, affiche un résumé, visualise les cas, et retourne la liste filtrée.
+# This section detects "shadow admins" (users with indirect privileges over privileged groups).
+# Criteria:
+#   - Path containing both an ACL relationship (GenericAll, WriteDacl, etc.) and a group relationship (MemberOf, AddMember)
+#   - Excludes direct admins
+# The run_shadow_admin_attack function filters true shadow admins, displays a summary, visualizes the cases, and returns the filtered list.
 
 def run_shadow_admin_attack(
     jsonl_path: str,
@@ -626,7 +630,7 @@ def run_shadow_admin_attack(
     """Run shadow admin attack analysis on a JSONL graph dataset."""
     
     # ===========================================
-    # 1. Charger le graphe depuis le fichier JSONL
+    # 1. Loads the graph from the JSONL file
     # ===========================================
     G = nx.DiGraph()
     node_types = {}
@@ -663,11 +667,11 @@ def run_shadow_admin_attack(
                     G.add_edge(start, end)
                     edge_evidence[(start, end)].append(rel_type)
 
-    print(f"[+] Nodes chargés : {len(G.nodes())}")
-    print(f"[+] Edges chargées : {len(G.edges())}")
+    print(f"[+] Loaded nodes : {len(G.nodes())}")
+    print(f"[+] Loaded edges : {len(G.edges())}")
 
     # ===========================================
-    # 2. Fonctions auxiliaires
+    # 2. Auxiliary functions
     # ===========================================
     def labels(node):
         return set(node_types.get(node, []))
@@ -715,7 +719,7 @@ def run_shadow_admin_attack(
         return rels
 
     # ===========================================
-    # 3. Définition des relations pour Shadow Admin
+    # 3. Definition of relationships for Shadow Admin
     # ===========================================
     ACL_RELS = {"GenericAll", "GenericWrite", "WriteDacl", "WriteOwner", "Owns", "AllExtendedRights"}
     GROUP_RELS = {"MemberOf", "AddMember"}
@@ -724,13 +728,13 @@ def run_shadow_admin_attack(
         path = case["path"]
         rels = path_rel_set(path)
 
-        # Doit contenir au moins une relation ACL et une relation de groupe
+        # Must contain at least one ACL relationship and one group relationship
         if not (rels & ACL_RELS):
             return False
         if not (rels & GROUP_RELS):
             return False
 
-        # Exclure si déjà admin direct (MemberOf vers groupe privilégié)
+        # Exclude direct admins: if the first relationship is a group relationship to a privileged group, it's not a shadow admin but a direct admin
         if len(path) >= 2:
             first, second = path[0], path[1]
             if "MemberOf" in edge_evidence.get((first, second), []):
@@ -740,15 +744,15 @@ def run_shadow_admin_attack(
         return True
 
     # ===========================================
-    # 4. Recherche des cas de Shadow Admin
+    # 4. Research for potential shadow admin paths
     # ===========================================
     # Sources : Users ou Computers
     sources = [n for n in G.nodes() if is_user(n) or is_computer(n)]
-    # Cibles : Groupes privilégiés
+    # Targets: privileged groups
     targets = [n for n in G.nodes() if is_group(n) and is_privileged_group(n)]
 
-    print(f"[+] Sources potentielles : {len(sources)}")
-    print(f"[+] Cibles privilégiées : {len(targets)}")
+    print(f"[+] Potential sources : {len(sources)}")
+    print(f"[+] Privileged targets : {len(targets)}")
 
     cases = []
     seen = set()
@@ -778,15 +782,15 @@ def run_shadow_admin_attack(
                 continue
 
     # ===========================================
-    # 5. Filtrage des vrais Shadow Admin
+    # 5. filtering for true Shadow Admin
     # ===========================================
     filtered_shadow_cases = [c for c in cases if is_real_shadow(c)]
 
-    print(f"[+] Cas Shadow Admin totaux : {len(cases)}")
-    print(f"[+] Shadow admin réalistes : {len(filtered_shadow_cases)}")
+    print(f"[+] Total Shadow Admin cases : {len(cases)}")
+    print(f"[+] Realistic Shadow admins : {len(filtered_shadow_cases)}")
 
     # ===========================================
-    # 6. Visualisation (optionnelle)
+    # 6. Visualization
     # ===========================================
     if show_plots and filtered_shadow_cases:
         def visualize_cases(cases, max_cases=5):
@@ -799,7 +803,7 @@ def run_shadow_admin_attack(
                 subG = nx.DiGraph()
                 edge_labels = {}
 
-                # Construction du sous-graphe
+                # Build of subgraph
                 for j in range(len(path) - 1):
                     src = path[j]
                     dst = path[j + 1]
@@ -808,7 +812,7 @@ def run_shadow_admin_attack(
                     rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                     edge_labels[(src, dst)] = "/".join(rels)
 
-                # Couleurs des nœuds
+                # Nodes colors
                 node_colors = []
                 for node in subG.nodes():
                     if node == path[0]:
@@ -826,7 +830,7 @@ def run_shadow_admin_attack(
                     else:
                         node_colors.append("lightgray")
 
-                # Position en quinconce (zig-zag)
+                # Layout
                 pos = {}
                 for k, node in enumerate(path):
                     x = k * 3
@@ -859,7 +863,7 @@ def run_shadow_admin_attack(
 
         visualize_cases(filtered_shadow_cases, max_cases=max_visualize)
 
-    # === Export JSON au format demandé ===
+    # === Json export ===
     export_data = []
     graph_name = os.path.basename(jsonl_path)
     for idx, case in enumerate(filtered_shadow_cases, start=1):
@@ -936,18 +940,18 @@ def run_shadow_admin_attack(
         })
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(formatted_export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON {output_path} généré ({len(formatted_export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} generated ({len(formatted_export_data)} paths)")
     return filtered_shadow_cases
 
 
 # ======================================================================
-# Kerberos Adjusted Attack Simulation
+# Kerberoasting Attack Simulation
 # ======================================================================
-# Cette section recherche des chemins d'attaque Kerberos ajustés :
-#   - Chemin de 4 arêtes (5 nœuds)
-#   - Doit contenir un utilisateur avec SPN (sauf dernier)
-#   - Doit finir sur un admin
-# La fonction run_kerberos_adjusted_attack retourne et visualise les chemins valides.
+# This section searches for Kerberoasting attack paths:
+#   - Path of 4 edges (5 nodes)
+#   - Must include a user with an SPN (except the last node)
+#   - Must end on an admin
+# The run_kerberoast_attack function returns and visualizes the valid paths.
 
 def run_kerberoast_attack(
     jsonl_path: str,
@@ -962,7 +966,7 @@ def run_kerberoast_attack(
     """
 
 
-    # 1. Charger le graphe
+    # 1. Loads the graph
     G = nx.DiGraph()
     node_types = {}
     node_props = {}
@@ -989,11 +993,11 @@ def run_kerberoast_attack(
     print(f"[+] Nodes: {len(G.nodes())}")
     print(f"[+] Edges: {len(G.edges())}")
 
-    # 2. Identifier les nœuds
+    # 2. Identify the nodes
     users = [n for n in G.nodes() if "User" in node_types.get(n, [])]
     spn_users = [n for n in G.nodes() if node_props.get(n, {}).get("hasspn", 0) == 1]
     if len(spn_users) == 0:
-        print("[!] Aucun SPN trouvé → fallback activé")
+        print("[!] No SPN found → fallback activated")
         spn_users = users[:3]
 
     PRIV_GROUPS = [
@@ -1014,7 +1018,7 @@ def run_kerberoast_attack(
     print(f"[+] SPN Users: {len(spn_users)}")
     print(f"[+] Admin nodes: {len(admins)}")
 
-    # 3. Trouver les chemins valides (4 arêtes)
+    # 3. Find valid paths
     valid_paths = []
     for user in users:
         try:
@@ -1031,7 +1035,7 @@ def run_kerberoast_attack(
             valid_paths.append(path)
     print(f"[+] Valid paths found (4 steps): {len(valid_paths)}")
 
-    # === Export JSON au format demandé ===
+    # === Json export ===
     export_data = []
     def get_type(node):
         labs = node_types.get(node, [])
@@ -1078,9 +1082,9 @@ def run_kerberoast_attack(
     output_path = os.path.join(output_dir, "kerberosadjusted_results.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON {output_path} généré ({len(export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} generated ({len(export_data)} paths)")
 
-    # 4. Visualisation
+    # 4. Visualization
     def visualize_paths(paths, max_show=5):
         for idx, path in enumerate(paths[:max_show]):
             subG = nx.DiGraph()
@@ -1132,22 +1136,22 @@ def run_kerberoast_attack(
     if show_plots and valid_paths:
         visualize_paths(valid_paths, max_show=max_paths)
     elif not valid_paths:
-        print("\n[-] Aucun chemin trouvé avec ces contraintes")
-        print("La Cause probable :")
-        print("- pas assez de SPN")
-        print("- pas de lien vers admin")
-        print("- graph trop petit")
-        print("- on remarque qu'en fonction de la génération de l'architecture ADsimulator, les résultats peuvent être 0")
+        print("\n[-] No path found with these criteria.")
+        print("The probable cause is:")
+        print("- not enough SPNs")
+        print("- no link to admin")
+        print("- graph too small")
+        print("- we notice that depending on the generation of the ADsimulator architecture, the results can be 0")
     return valid_paths
 
 
 # ======================================================================
 # Louise Attack Simulation (Random Walk)
 # ======================================================================
-# Cette section lance des random walks depuis des users jusqu'à des cibles intéressantes.
-# S'arrête après min_success chemins ou un chemin long trouvé.
-# Affiche un résumé, tous les chemins trouvés, et ceux de longueur >= min_nodes_for_long.
-# La fonction run_louise_attack retourne la liste des chemins trouvés.
+# This section runs random walks from users to interesting targets.
+# Stops after reaching min_success paths or when a long path is found.
+# Displays a summary, all discovered paths, and those with length >= min_nodes_for_long.
+# The run_louise_attack function returns the list of discovered paths.
 
 def run_louise_attack(
     jsonl_path: str,
@@ -1159,12 +1163,12 @@ def run_louise_attack(
     show_long_paths: bool = True,
 ) -> list:
     """
-    Lance des random walks depuis des users jusqu'à des cibles intéressantes.
-    S'arrête après min_success chemins ou un chemin long trouvé.
-    Affiche un résumé et retourne la liste des chemins trouvés.
+    Runs random walks from users to interesting targets.
+    Stops after reaching min_success paths or when a long path is found.
+    Displays a summary and returns the list of discovered paths.
     """
 
-    # 1. Charger le graphe depuis le fichier JSONL
+    # 1. Loads the graph
     G = nx.DiGraph()
     node_types = {}
     node_ids = {}
@@ -1172,10 +1176,10 @@ def run_louise_attack(
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
             if not line.strip():
-                continue  # Ignore les lignes vides
+                continue  # Ignores empty lines
             data = json.loads(line)
             if data.get("type") == "node":
-                # Ajoute le nœud et ses labels
+                # Adds the nodes and labels
                 name = data.get("properties", {}).get("name", str(data.get("id")))
                 labels = data.get("labels", [])
                 node_id = data.get("id", name)
@@ -1183,7 +1187,7 @@ def run_louise_attack(
                 node_types[name] = labels
                 node_ids[name] = node_id
             elif data.get("type") == "relationship":
-                # Ajoute l'arête et le type de relation
+                # Adds the edge and relationship type
                 start = data.get("start", {}).get("properties", {}).get("name")
                 end = data.get("end", {}).get("properties", {}).get("name")
                 rel_type = (
@@ -1198,12 +1202,12 @@ def run_louise_attack(
     print(f"[+] Nodes: {len(G.nodes())}")
     print(f"[+] Edges: {len(G.edges())}")
 
-    # 2. Fonctions utilitaires pour identifier les types de nœuds
+    # 2. Utility functions to identify node types
     def is_user(node):
         return "User" in node_types.get(node, [])
     def is_interesting_target(node):
         n = node.upper()
-        # Définition des cibles intéressantes (groupes admins, DC, etc.)
+        # Definition of interesting targets (admin groups, DC, etc.)
         return (
             "DOMAIN ADMINS" in n
             or "ENTERPRISE ADMINS" in n
@@ -1220,21 +1224,21 @@ def run_louise_attack(
             or "MAINDC" in n
         )
     def random_walk(G, source, max_steps=100):
-        # Effectue un random walk depuis la source jusqu'à une cible intéressante ou max_steps
+        # Does a random walk from source, stopping if it reaches an interesting target or after max_steps
         current = source
         path = [current]
         for _ in range(max_steps):
             neighbors = list(G.successors(current))
             if not neighbors:
-                return path  # Arrêt si plus de voisins
+                return path  # Stop if no more neighbors
             nxt = random.choice(neighbors)
             path.append(nxt)
             current = nxt
             if is_interesting_target(current):
-                return path  # Arrêt si cible atteinte
+                return path  # Stop if we reached an interesting target
         return path
 
-    # 3. Lancer des random walks jusqu'à min_success chemins ou un chemin long
+    # 3. Run random walks until min_success paths are found or a long path is discovered
     users = [n for n in G.nodes() if is_user(n)]
     success_paths = []
     attempts = 0
@@ -1247,10 +1251,10 @@ def run_louise_attack(
         if not path:
             continue
         if not is_interesting_target(path[-1]):
-            continue  # Ignore si la cible n'est pas intéressante
+            continue  # Ignores if target not interesting
         sig = tuple(path)
         if sig in seen_paths:
-            continue  # Ignore les doublons
+            continue  # Ignores duplicates
         seen_paths.add(sig)
         success_paths.append((source, path))
         if len(path) >= min_nodes_for_long:
@@ -1258,51 +1262,51 @@ def run_louise_attack(
         if len(success_paths) >= min_success or found_long_path:
             break
 
-    # 4. Affiche un résumé des résultats
+    # 4. Display summary of results
     print("\n" + "=" * 100)
-    print(f"[+] RÉSULTATS (en {attempts} tentatives)")
+    print(f"[+] Results (in {attempts} tries)")
     print("=" * 100)
-    print(f"Nombre de chemins trouvés : {len(success_paths)}")
-    print(f"Au moins un chemin avec >= {min_nodes_for_long} noeuds : {found_long_path}")
+    print(f"Number of paths found : {len(success_paths)}")
+    print(f"At least one path with >= {min_nodes_for_long} nodes : {found_long_path}")
 
-    # 5. Affiche tous les chemins trouvés
+    # 5. Display all found paths
     if show_paths:
         for i, (source, path) in enumerate(success_paths, start=1):
             print("-" * 100)
-            print(f"Cas #{i}")
+            print(f"Case #{i}")
             print(f"Source   : {source}")
-            print(f"Cible    : {path[-1]}")
-            print(f"Noeuds   : {len(path)}")
-            print(f"Longueur : {len(path)-1}")
-            print("Chemin   :")
+            print(f"Target    : {path[-1]}")
+            print(f"Nodes : {len(path)}")
+            print(f"Length : {len(path)-1}")
+            print("Path   :")
             for j in range(len(path) - 1):
                 src = path[j]
                 dst = path[j + 1]
                 rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                 print(f"  {src} --{rels}--> {dst}")
-    # 6. Affiche explicitement les chemins longs
+    # 6. Display paths with length >= min_nodes_for_long
     if show_long_paths:
         long_paths = [(s, p) for (s, p) in success_paths if len(p) >= min_nodes_for_long]
         print("\n" + "=" * 100)
-        print(f"[+] CHEMINS AVEC AU MOINS {min_nodes_for_long} NOEUDS")
+        print(f"[+] PATHS WITH AT LEAST {min_nodes_for_long} NODES")
         print("=" * 100)
         if not long_paths:
-            print(f"[-] Aucun chemin >= {min_nodes_for_long} noeuds trouvé dans cet échantillon.")
+            print(f"[-] No path >= {min_nodes_for_long} nodes found in this sample.")
         else:
             for i, (source, path) in enumerate(long_paths, start=1):
                 print("-" * 100)
                 print(f"Long path #{i}")
                 print(f"Source   : {source}")
-                print(f"Cible    : {path[-1]}")
-                print(f"Noeuds   : {len(path)}")
-                print("Chemin   :")
+                print(f"Target    : {path[-1]}")
+                print(f"Nodes   : {len(path)}")
+                print("Path   :")
                 for j in range(len(path) - 1):
                     src = path[j]
                     dst = path[j + 1]
                     rels = edge_evidence.get((src, dst), ["UNKNOWN_REL"])
                     print(f"  {src} --{rels}--> {dst}")
-    # Retourne la liste des chemins trouvés
-    # === Export JSON au format demandé ===
+    # Returns the list of successful paths (source, path)
+    # === Export in JSON format ===
     export_data = []
     def get_type(node):
         labs = node_types.get(node, [])
@@ -1348,7 +1352,7 @@ def run_louise_attack(
     output_path = os.path.join(output_dir, "louise_results.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
-    print(f"[+] Export JSON {output_path} généré ({len(export_data)} chemins)")
+    print(f"[+] Export JSON {output_path} generated ({len(export_data)} paths)")
     return success_paths
 
 # ======================================================================
@@ -1356,11 +1360,11 @@ def run_louise_attack(
 # ======================================================================
 def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
     """
-    Calcule le plus court chemin entre deux noeuds (par ID) dans un graph AD au format JSONL.
-    Retourne un dictionnaire au même format que les autres attaques.
+    Calculates the shortest path between two nodes (by ID) in an AD graph in JSONL format.
+    Returns a dictionary in the same format as the other attacks.
     """
 
-    # 1. Charger le graphe au format NetworkX
+    # 1. Loads the graph in NetworkX format
     G = nx.DiGraph()
     node_types = {}
     node_labels = {}
@@ -1387,7 +1391,7 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
                 rel_type = data.get('label', 'UNKNOWN_REL')
                 G.add_edge(u, v, label=rel_type)
 
-    # 2. Calcul du plus court chemin
+    # 2. Calculates the shortest path between source and target
     try:
         path = nx.shortest_path(G, source=source, target=target)
     except nx.NetworkXNoPath:
@@ -1395,7 +1399,7 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
     except nx.NodeNotFound as e:
         return {"error": str(e)}
 
-    # 3. Construction du résultat au format attaque
+    # 3. Builds the results dictionary
     def get_type(node_id):
         labs = node_types.get(node_id, [])
         if "User" in labs:
@@ -1434,7 +1438,7 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
         "path_type": [get_label_type(n) for n in path]
     }
 
-    # 4. Écriture dans un fichier JSON (append si existe, sinon crée)
+    # 4. Writes a json file or append if already exists
     output_dir = os.path.join(os.path.dirname(graph), "..", "attack_datasets")
     os.makedirs(output_dir, exist_ok=True)
     out_file = os.path.join(output_dir, "shortestpath_results.json")
