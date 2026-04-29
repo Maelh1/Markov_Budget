@@ -63,10 +63,6 @@ nav = [
     { "Tablette ReMarkable 2" = "divers/remarkable.md" },
   ] },
 
-  { "Create your own attack" = [
-    { "Step 1 : generate the graph" = "create-your-own-attack/generate-graph.md" },
-  ] },
-
   { "Attacks examples" = [
     { "The Phishing attack" = "attacks-examples/phising.md" },
     { "The Shortest Path attack" = "attacks-examples/shortest-path.md" },
@@ -78,8 +74,14 @@ nav = [
 
   { "Attack Path Controller" = [
     { "Concepts and prerequisites" = "attack-path-controller/concepts.md" },
-    { "How create your own attacks?" = "game-tutorial/own-attack-creation.md" },
+    { "Analysis modes" = "attack-path-controller/analyses-modes.md" },
   ] },
+
+  { "Create your own attack" = [
+    { "Step 1 : generate the graph" = "create-your-own-attack/generate-graph.md" },
+  ] },
+
+
 
 
 
