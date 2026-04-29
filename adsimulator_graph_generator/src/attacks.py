@@ -1326,9 +1326,7 @@ def run_louise_attack(
             "relationships": rels,
             "length": len(path),
             "graph": graph_name,
-            "source_id": get_id(path[0]),
-            "target_id": get_id(path[-1]),
-            "path_id": [get_id(n) for n in path],
+            "path_name": [n for n in path],
             "path_type": [get_label_type(n) for n in path]
         })
     output_dir = os.path.join(os.path.dirname(jsonl_path), "..", "attack_datasets")
@@ -1418,9 +1416,7 @@ def run_shortest_path_attack(graph: str, source: str, target: str) -> dict:
         "relationships": rels,
         "length": len(path),
         "graph": graph_name,
-        "source_id": source,
-        "target_id": target,
-        "path_id": path,
+        "path_name": [node_names.get(n, n) for n in path],
         "path_type": [get_label_type(n) for n in path]
     }
 
