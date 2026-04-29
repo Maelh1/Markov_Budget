@@ -56,8 +56,9 @@ The Explorer exposes both views: Analysis modes operate on the filtered subgraph
 
 The controller widget contains two mutually exclusive groups:
 
-- **Analysis** (blue banner) — operates on the filtered subgraph. Four modes: inspect a single attack path, compare *k* shortest paths, show all attackers reaching one target, defense simulator under the framework's model.
-- **Browse & Play** (red-orange banner) — operates on the complete graph. Three modes: browse a single generated attack, browse multiple attacks overlaid, defense game on generated attacks.
+- **Analysis** (blue banner)  operates on the filtered subgraph. Four modes: inspect a single attack path, compare *k* shortest paths, show all attackers reaching one target, defense simulator under the framework's model.
+
+- **Browse & Play** (red-orange banner) operates on the complete graph. Three modes: browse a single generated attack, browse multiple attacks overlaid, defense game on generated attacks.
 
 Selecting any mode in one group automatically deselects the other. Only the widgets relevant to the active mode are visible at any time. This design enforces the conceptual split: the operator is always working either inside the framework (Analysis) or against generated attack data (Browse & Play), never accidentally mixing the two.
 
@@ -67,6 +68,6 @@ Selecting any mode in one group automatically deselects the other. Only the widg
 
 ### Click-to-highlight on every visualization
 
-Every visualization rendered by the Explorer (whether produced by Analysis, Browse, or Play) injects the same JavaScript hook: clicking on any node highlights its incident edges in vivid red with a yellow halo on the relation labels. Clicking on empty space clears the highlight. This is independent of the mode and is meant to support targeted inspection — the user picks a node they suspect is critical and immediately sees what it is connected to.
+Every visualization rendered by the Explorer (whether produced by Analysis, Browse, or Play) injects the same JavaScript hook: clicking on any node highlights its incident edges in vivid red with a yellow halo on the relation labels. Clicking on empty space clears the highlight. This is independent of the mode and is meant to support targeted inspection, the user picks a node they suspect is critical and immediately sees what it is connected to.
 
 ![Visualisation highlight lien](../images/game-tutorial/Capture d’écran 2026-04-29 à 17.55.15.png)

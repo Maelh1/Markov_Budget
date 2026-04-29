@@ -27,7 +27,7 @@ Examine a single shortest path between a chosen attacker and a chosen target. Us
 The path is drawn in colour (one colour from the path palette); all other nodes and edges of the filtered subgraph are dimmed for context. Each edge is labelled with its AD relation type (e.g. `MemberOf`, `AdminTo`, `GenericAll`).
 
 #### What to observe
-The relation type on each edge tells you the privilege required at each hop. A path consisting mostly of `MemberOf` edges is low-privilege traversal (group membership chain); a path containing `GenericAll` or `WriteDacl` hops is high-privilege exploitation. The path's overall feasibility is the product of edge probabilities — paths with many `HasSession` or `AllowedToDelegate` edges are less reliable for the attacker.
+The relation type on each edge tells you the privilege required at each hop. A path consisting mostly of `MemberOf` edges is low-privilege traversal (group membership chain); a path containing `GenericAll` or `WriteDacl` hops is high-privilege exploitation. The path's overall feasibility is the product of edge probabilities  paths with many `HasSession` or `AllowedToDelegate` edges are less reliable for the attacker.
 
 ![Visualisation 6](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.36.32.png)
 
@@ -38,12 +38,15 @@ Visualize the *k* shortest paths between a chosen attacker and a chosen target s
 
 #### How to use
 1. Same Attacker / Target selection as Mode 1.
+
 2. Set k to the number of paths to overlay (1–10).
+
 3. Optionally enable "Show neighbors" to dim non-path nodes.
+
 4. Click Visualize.
 
 #### What to observe
-Look for nodes through which multiple coloured paths pass — these are candidate chokepoints. A single defended node breaking many coloured paths simultaneously is what the Defense simulator (Mode 4) will rank highly. This mode is the visual prerequisite for understanding why a chokepoint matters.
+Look for nodes through which multiple coloured paths pass these are candidate chokepoints. A single defended node breaking many coloured paths simultaneously is what the Defense simulator (Mode 4) will rank highly. This mode is the visual prerequisite for understanding why a chokepoint matters.
 
 ![Visualisation 7](../images/game-tutorial/Capture d’écran 2026-04-29 à 23.37.25.png)
 
@@ -55,7 +58,7 @@ Pivot the analysis: fix one high-value target and visualize how every declared a
 #### How to use
 1. Select a Target (the Attacker dropdown is hidden in this mode).
 
-2. Set Paths-to-compute (k) — interpreted here as **paths per source**.
+2. Set Paths-to-compute (k) interpreted here as **paths per source**.
 
 3. Optionally enable "Show neighbors".
 
@@ -64,7 +67,7 @@ Pivot the analysis: fix one high-value target and visualize how every declared a
 For each source, the *k* shortest paths to the chosen target are computed and rendered. Paths from different sources are shown together; the visualization scales to the worst case (number of sources × k).
 
 #### What to observe
-A single target with many short paths from many sources is more exposed than one with few long paths from few sources. Nodes that appear on paths from multiple sources are stronger chokepoints than nodes on paths from a single source — defending them protects against a wider class of adversaries.
+A single target with many short paths from many sources is more exposed than one with few long paths from few sources. Nodes that appear on paths from multiple sources are stronger chokepoints than nodes on paths from a single source, defending them protects against a wider class of adversaries.
 
 ### Mode 4 : Defense simulator
 
