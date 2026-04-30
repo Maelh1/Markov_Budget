@@ -20,7 +20,7 @@ Our work was built upon the foundations of the [**Markov_Budget**](https://githu
 
 ---
 
-## Project Management: Agile Method
+## Project Management : Agile Method
 
 To ensure efficiency and continuous delivery, our team operated using the **Agile methodology**. We have defined 3 core **User Stories** that guide our development sprints:
 
