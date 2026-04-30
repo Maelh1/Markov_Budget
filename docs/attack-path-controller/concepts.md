@@ -1,4 +1,4 @@
-# Attack Path Controller — Documentation
+# Attack Path Controller : Documentation
 
 > *This page documents the Attack Path Controller, a visualization and decision-support module for the Random Walk Interdiction Problem on Active Directory graphs. The Explorer transforms the analytical outputs of the Markov-Budget framework into interactive, inspectable artifacts: attack-path renderings, chokepoint rankings, and a defense game grounded in generated attacks.*
 
